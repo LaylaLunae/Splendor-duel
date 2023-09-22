@@ -1,0 +1,65 @@
+@startuml
+class Joueur{
+-nom string
+}
+class Jeton{
+-type TypeJeton
+}
+
+class Carte{
+-cout(Un booléen par couleur ?)
+-point_prestige int
+}
+
+class Carte_Ressource{
+-visible booléen
+-type_ressource string
+-niveau int
+}
+
+class Action{}
+
+class Prendre_2_jetons_couleur_identiques{
+-couleur string
+}
+
+class Reserver_carte{
+}
+
+class Acheter_carte{
+}
+
+class Prendre_3_jetons_couleurs_differents{
+-couleur1 string
+-couleur2 string
+-couleur3 string
+}
+
+
+Joueur "1" --- "1" Action : Realise >
+
+Joueur "2"-* Jeu
+Jeu *-"1" Plateau
+Jeu *-"1" Regles
+Plateau *--"*" Carte
+Jeu *--"3" Pioche
+Pioche <|-- Pioche1
+Pioche <|-- Pioche2
+Pioche <|-- Pioche3
+Pioche o--- Carte
+Banque "1"--* Plateau
+Banque *-"*" Jeton
+Carte <|-- Carte_Noble
+Carte <|-- Carte_Ressource
+Humain --|> Joueur
+IA --|> Joueur
+Action <|-- Prendre_3_jetons_couleurs_differents
+Action <|-- Prendre_2_jetons_couleur_identiques
+Action <|-- Acheter_carte
+Action <|-- Reserver_carte
+
+note top of Banque #aqua: 2 Joueurs(2 Humains ou 1 Humain et 1 IA) \n5 or et 4 des autres types
+note bottom of Pioche1 #aqua: Début:40 cartes
+note bottom of Pioche2 #aqua: Début:30 cartes
+note bottom of Pioche3 #aqua: Début:20 cartes
+@enduml
