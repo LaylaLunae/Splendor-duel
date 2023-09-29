@@ -57,23 +57,30 @@ class Pioche{
 + distribution(numero_pioche:int, numero_carte:int)
 }
 
+class Graphisme {
++ mise_a_jour()
++ remettre_jetons_sur_plateau()
+}
+
 /'Héritage :'/
 Carte <|-- Carte_Ressource
 Carte <|-- Carte_Noble
 
 /'Relation :'/
-Joueur "1"-* Carte_Ressource
-Joueur "1"-* Carte_Noble
-Joueur "1"-*Privilege
-Plateau --* Jeton
-Pioche --* Carte_Ressource
-Carte_Ressource --* Bonus
+Joueur "1"-"*" Carte_Ressource
+Joueur "1"-"*" Carte_Noble
+Joueur "1"-"*"Privilege
+Plateau --"*" Jeton
+Pioche --"*" Carte_Ressource
+Carte_Ressource --"*" Bonus
 Jeu --"2" Joueur
 Jeu --"1" Plateau
 Jeu --"3" Pioche
 Jeu --"3" Privilege
+Jeu "1"-"1" Graphisme
 
 
 title Une autre version en tenant davantage compte du schéma de la version papier de vendredi à la BU
 note top of Carte #aqua: To-Do : mettre les fonctions partout
+note bottom of Graphisme #yellow: Voir TD sur Qt()
 @enduml
