@@ -24,7 +24,7 @@ class Plateau {
 --
 + etatPlateau()
 + remplissagePlateau(): Plateau
-+ verificationChoixJeton_plateau()
++ verificationChoixJetonPlateau()
 + ajouterSac(Jeton)
 + prendreJeton(position_x:int, position_y:int):Jeton
 + prendrePrivilege():Privilege
@@ -83,8 +83,8 @@ class Couleur <<enumeration>> {
 
 class Pioche{
 - numero_pioche:int
-- cartes_dans_pioche:Carte_Ressource[]
-- cartes_dehors:Carte_Ressource[]
+- cartes_dans_pioche:CarteJoaillerie[]
+- cartes_dehors:CarteJoaillerie[]
 - max_cartes_revelees:int
 + joueurPrend(numero_carte:int):CarteJoaillerie
 + distribution()
