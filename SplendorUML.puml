@@ -2,13 +2,13 @@
 
 class Jeu {
 --
-- nouvelle_partie():void
-- reprendre_partie():void
-- verif_ancienne_partie():void
-- verif_gagnant(): void
-- sauvegarder_partie():void
+- nouvellePartie():void
+- reprendrePartie():void
+- verifAnciennePartie():void
+- verifGagnant(): void
+- sauvegarderPartie():void
 - vainqueur(): Joueur
-- au_suivant(): Joueur
+- auSuivant(): Joueur
 - affichage()
 - afficherRegles()
 - afficherConditionVictoire()
@@ -18,11 +18,11 @@ class Jeu {
 
 class Plateau {
 - jetons:Jeton[25]
-- privileges:Privilege[]
+- privilege:Privilege[]
 - sac:Jeton[]
 - cartes_nobles:CarteNoble[]
 --
-+ etat_plateau()
++ etatPlateau()
 + remplissagePlateau(): Plateau
 + verificationChoixJeton_plateau()
 + ajouterSac(Jeton)
@@ -72,12 +72,12 @@ class Gemme {
 -couleur: Couleur
 }
 class Couleur <<enumeration>> {
- Bleu
- Vert
- Rouge
- Blanc
- Noir
- Rose
+ bleu
+ vert
+ rouge
+ blanc
+ noir
+ rose
 }
 
 
@@ -86,7 +86,7 @@ class Pioche{
 - cartes_dans_pioche:Carte_Ressource[]
 - cartes_dehors:Carte_Ressource[]
 - max_cartes_revelees:int
-+ joueur_prend(numero_carte:int):CarteJoaillerie
++ joueurPrend(numero_carte:int):CarteJoaillerie
 + distribution()
 }
 class Carte {
@@ -94,8 +94,8 @@ class Carte {
 - point_prestige:int
 - courronnes:int
 - pouvoir: Pouvoir
-+ action_pouvoir()
-- existance_pouvoir():Pouvoir
++ actionPouvoir()
+- existancePouvoir():Pouvoir
 - prendrePrivilege():Privilege
 - volerJeton():Jeton
 - prendreJeton():Jeton
@@ -119,18 +119,18 @@ class CarteJoaillerie {
 
 class Pouvoir <<enumeration>> {
  rien
- nouveauTour
- bonusPierre
- pierreEnPlus
- privilegeEnPlus
- volPierre
+ nouveau_tour
+ bonus_pierre
+ pierre_en_plus
+ privilege_en_plus
+ vol_pierre
 }
 
 
 
 class Action {
-- verif_obligation_remplissage()
-+ validation_action()
+- verifObligationRemplissage()
++ validationAction()
 }
 
 class Optionnelle {
