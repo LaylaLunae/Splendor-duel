@@ -104,12 +104,12 @@ class Carte {
 }
 
 class CarteNoble {
--couronne: int [2,3]
+-couronne{2,3}: int
 }
 
 class CarteJoaillerie {
--niveau: int [1..3]
--couronne: int [0..2]
+-niveau[1..3]: int
+-couronne[0..2]: int
 -pierre: boolean
 -type_pierre: Couleur
 --
