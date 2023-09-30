@@ -150,14 +150,14 @@ class Obligatoire {
 Joueur <|-- IA
 Joueur <|-- Humain
 
-Jeu "1" -- "1" Plateau: possède >
+Jeu "1" -- "1" Plateau: comporte >
 Jeu "1" -- "2" Joueur: possède >
 Jeu "1" -- "3" Pioche: possède >
 
 
-Plateau "1" -- "25" Jeton: possède >
-Plateau --"0..3" Privilege
-Plateau --"0...4" CarteNoble
+Plateau "1" -- "0...25" Jeton: possède >
+Plateau "1"--"0..3" Privilege: comporte >
+Plateau "1"--"0...4" CarteNoble: contient >
 'Plateau "1"-"3" Pioche
 
 Pioche "1"--* CarteJoaillerie
@@ -176,7 +176,7 @@ Carte <|-- CarteJoaillerie
 
 Action <|-- Optionnelle
 Action <|-- Obligatoire
-Action "1"-"1" Plateau : concerne >
+Action "0...1"-"1" Plateau : concerne >
 Obligatoire "1"-"1" Pioche : concerne >
 
 
