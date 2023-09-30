@@ -1,65 +1,184 @@
 @startuml
-class Joueur{
--nom string
-}
-class Jeton{
--type TypeJeton
-}
 
-class Carte{
--cout(Un booléen par couleur ?)
--point_prestige int
-}
-
-class Carte_Ressource{
--visible booléen
--type_ressource string
--niveau int
-}
-
-class Action{}
-
-class Prendre_2_jetons_couleur_identiques{
--couleur string
-}
-
-class Reserver_carte{
-}
-
-class Acheter_carte{
-}
-
-class Prendre_3_jetons_couleurs_differents{
--couleur1 string
--couleur2 string
--couleur3 string
+class Jeu {
+--
+- nouvelle_partie():void
+- reprendre_partie():void
+- verif_ancienne_partie():void
+- verif_gagnant(): void
+- sauvegarder_partie():void
+- vainqueur(): Joueur
+- au_suivant(): Joueur
+- affichage()
+- afficherRegles()
+- afficherConditionVictoire()
+- afficherPoint()
 }
 
 
-Joueur "1" --- "1" Action : Realise >
+class Plateau {
+- jetons:Jeton[25]
+- privileges:Privilege[]
+- sac:Jeton[]
+- cartes_nobles:CarteNoble[]
+--
++ etat_plateau()
++ remplissagePlateau(): Plateau
++ verificationChoixJeton_plateau()
++ ajouterSac(Jeton)
++ prendreJeton(position_x:int, position_y:int):Jeton
++ prendrePrivilege():Privilege
++ prendreCarteNoble(numero:int):CarteNoble
+- verifierSiOrDansChoix()
+}
 
-Joueur "2"-* Jeu
-Jeu *-"1" Plateau
-Jeu *-"1" Regles
-Plateau *--"*" Carte
-Jeu *--"3" Pioche
-Pioche <|-- Pioche1
-Pioche <|-- Pioche2
-Pioche <|-- Pioche3
-Pioche o--- Carte
-Banque "1"--* Plateau
-Banque *-"*" Jeton
-Carte <|-- Carte_Noble
-Carte <|-- Carte_Ressource
-Humain --|> Joueur
-IA --|> Joueur
-Action <|-- Prendre_3_jetons_couleurs_differents
-Action <|-- Prendre_2_jetons_couleur_identiques
-Action <|-- Acheter_carte
-Action <|-- Reserver_carte
 
-note top of Banque #aqua: 2 Joueurs(2 Humains ou 1 Humain et 1 IA) \n5 or et 4 des autres types
-note bottom of Pioche1 #aqua: Début:40 cartes
-note bottom of Pioche2 #aqua: Début:30 cartes
-note bottom of Pioche3 #aqua: Début:20 cartes
+
+class Joueur {
+- pseudo: string
+- nombre_couronnes: int
+- points_prestige_total:int
+- points_prestige_couleurs:int[5]
+- cartes_reservees:CarteJoaillerie[]
+- cartes_main:CarteJoaillerie[6]
+- cartes_noble:CarteNoble[]
+- gemmes_bonus:int[5]
+- privileges:Privilege[]
++ getPoints():int[3]
++ ajouterCarteJoaillerie(CarteJoaillerie)
++ ajouterCarteNoble(CarteNoble)
++ ajouterCarteReservee(CarteJoaillerie)
++ ajouterPrivilege(Privilege)
+}
+
+class IA {
+- difficulte: Difficulte
+}
+
+class Difficulte <<enumeration>> {
+ facile
+ moyen
+ difficile
+}
+
+class Jeton {
+- chemin_vers_image:string
+}
+class Privilege {
+}
+class Or {
+}
+class Gemme {
+-couleur: Couleur
+}
+class Couleur <<enumeration>> {
+ Bleu
+ Vert
+ Rouge
+ Blanc
+ Noir
+ Rose
+}
+
+
+class Pioche{
+- numero_pioche:int
+- cartes_dans_pioche:Carte_Ressource[]
+- cartes_dehors:Carte_Ressource[]
+- max_cartes_revelees:int
++ joueur_prend(numero_carte:int):CarteJoaillerie
++ distribution()
+}
+class Carte {
+- chemin_vers_image:string
+- point_prestige:int
+- courronnes:int
+- pouvoir: Pouvoir
++ action_pouvoir()
+- existance_pouvoir():Pouvoir
+- prendrePrivilege():Privilege
+- volerJeton():Jeton
+- prendreJeton():Jeton
+- rejouer()
+- rajouteBonus()
+}
+
+class CarteNoble {
+-couronne: int [2,3]
+}
+
+class CarteJoaillerie {
+-niveau: int [1..3]
+-couronne: int [0..2]
+-pierre: boolean
+-type_pierre: Couleur
+--
++ getPrix():Gemme[]
+}
+
+
+class Pouvoir <<enumeration>> {
+ rien
+ nouveauTour
+ bonusPierre
+ pierreEnPlus
+ privilegeEnPlus
+ volPierre
+}
+
+
+
+class Action {
+- verif_obligation_remplissage()
++ validation_action()
+}
+
+class Optionnelle {
+- depenserPrivilege()
+- remplissagePlateau(): Plateau
+}
+
+class Obligatoire {
+- prendreJeton(): Jeton[]
+- reserverCarte():CarteJoaillerie
+- acheterCarte():CarteJoaillerie
+}
+
+
+
+
+Joueur <|-- IA
+Joueur <|-- Humain
+
+Jeu "1" -- "1" Plateau: possède >
+Jeu "1" -- "2" Joueur: possède >
+Jeu "1" -- "3" Pioche: possède >
+
+
+Plateau "1" -- "25" Jeton: possède >
+Plateau --"0..3" Privilege
+Plateau --"0...4" CarteNoble
+'Plateau "1"-"3" Pioche
+
+Pioche "1"--* CarteJoaillerie
+
+Jeton <|-- Or
+Jeton <|-- Gemme
+
+Joueur "1" -- "0..3" Privilege: détient >
+Joueur "1" -- "0..10" Jeton: possède >
+Joueur "1"-- "1..3" Action: effectue >
+
+Carte <|-- CarteNoble
+Carte <|-- CarteJoaillerie
+'(CarteJoaillerie, Pierre) .. AchatCarte
+
+
+Action <|-- Optionnelle
+Action <|-- Obligatoire
+Action "1"-"1" Plateau : concerne >
+Obligatoire "1"-"1" Pioche : concerne >
+
+
+
 @enduml
