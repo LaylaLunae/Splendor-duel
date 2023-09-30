@@ -115,6 +115,7 @@ class CarteJoaillerie {
 --
 + getPrix():Gemme[]
 }
+note left: type_pierre null quand pierre = false
 
 
 class Pouvoir <<enumeration>> {
