@@ -151,17 +151,17 @@ class Obligatoire {
 Joueur <|-- IA
 Joueur <|-- Humain
 
-Jeu "1" -- "1" Plateau: comporte >
-Jeu "1" -- "2" Joueur: possède >
-Jeu "1" -- "3" Pioche: possède >
+Jeu "1" *-- "1" Plateau
+Jeu "1" *-- "2" Joueur
+Jeu "1" *-- "3" Pioche
 
 
 Plateau "1" -- "0...25" Jeton: possède >
 Plateau "1"--"0..3" Privilege: comporte >
-Plateau "1"--"0...4" CarteNoble: contient >
+Plateau o--"0...4" CarteNoble: contient >
 'Plateau "1"-"3" Pioche
 
-Pioche "1"--o CarteJoaillerie
+Pioche o-- CarteJoaillerie
 
 Jeton <|-- Or
 Jeton <|-- Gemme
@@ -169,6 +169,7 @@ Jeton <|-- Gemme
 Joueur "1" -- "0..3" Privilege: détient >
 Joueur "1" -- "0..10" Jeton: possède >
 Joueur "1"-- "1..3" Action: effectue >
+Joueur o-- CarteNoble
 
 Carte <|-- CarteNoble
 Carte <|-- CarteJoaillerie
