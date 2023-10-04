@@ -9,8 +9,7 @@ class Jeu {
 - sauvegarderPartie():void
 - vainqueur(): Joueur
 - auSuivant(): Joueur
-- verifObligationRemplissage()
-+ validationAction()
+
 }
 
 Class Affichage{
@@ -85,6 +84,10 @@ enum Couleur <<enumeration>> {
  rose
 }
 
+class Action {
+- verifObligationRemplissage()
++ validationAction()
+}
 
 class Pioche{
 - numero_pioche:int
@@ -93,6 +96,7 @@ class Pioche{
 - max_cartes_revelees:int
 + joueurPrend(numero_carte:int):CarteJoaillerie
 + distribution()
+- melanger()
 }
 class Carte {
 - chemin_vers_image:string
@@ -148,17 +152,22 @@ class Obligatoire {
 Joueur <|-- IA
 Joueur <|-- Humain
 
-Jeu "1" *-- "1" Plateau
-Jeu "1" *-- "2" Joueur
-Jeu "1" *-- "3" Pioche
+Jeu  *-- "1" Plateau
+Jeu  *-- "2" Joueur
+Jeu  *-- "3" Pioche
+Jeu *-- "1..3"Action
+Jeu *--"1" Affichage
+
+Action <|-- Optionnelle
+Action <|-- Obligatoire
 
 
 Plateau "1" -- "0...25" Jeton: possède >
 Plateau "1"--"0..3" Privilege: comporte >
-Plateau o--"0...4" CarteNoble: contient >
+Plateau o--"0...4" CarteNoble
 'Plateau "1"-"3" Pioche
 
-Pioche o-- CarteJoaillerie
+Pioche o-- "0...67" CarteJoaillerie
 
 Jeton <|-- Or
 Jeton <|-- Gemme
@@ -171,10 +180,9 @@ Carte <|-- CarteNoble
 Carte <|-- CarteJoaillerie
 '(CarteJoaillerie, Pierre) .. AchatCarte
 
-Jeu -- Affichage
 
-Jeu o-- Optionnelle
-Jeu o-- Obligatoire
+
+
 
 
 
