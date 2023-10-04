@@ -9,6 +9,11 @@ class Jeu {
 - sauvegarderPartie():void
 - vainqueur(): Joueur
 - auSuivant(): Joueur
+- verifObligationRemplissage()
++ validationAction()
+}
+
+Class Affichage{
 - affichage()
 - afficherRegles()
 - afficherConditionVictoire()
@@ -128,12 +133,6 @@ enum Pouvoir <<enumeration>> {
 }
 
 
-
-class Action {
-- verifObligationRemplissage()
-+ validationAction()
-}
-
 class Optionnelle {
 - depenserPrivilege()
 - remplissagePlateau(): Plateau
@@ -144,8 +143,6 @@ class Obligatoire {
 - reserverCarte():CarteJoaillerie
 - acheterCarte():CarteJoaillerie
 }
-
-
 
 
 Joueur <|-- IA
@@ -168,18 +165,17 @@ Jeton <|-- Gemme
 
 Joueur "1" -- "0..3" Privilege: détient >
 Joueur "1" -- "0..10" Jeton: possède >
-Joueur "1"-- "1..3" Action: effectue >
 Joueur o-- CarteNoble
 
 Carte <|-- CarteNoble
 Carte <|-- CarteJoaillerie
 '(CarteJoaillerie, Pierre) .. AchatCarte
 
+Jeu -- Affichage
 
-Action <|-- Optionnelle
-Action <|-- Obligatoire
-Action "0...1"-"1" Plateau : concerne >
-Obligatoire "1"-"1" Pioche : concerne >
+Jeu o-- Optionnelle
+Jeu o-- Obligatoire
+
 
 
 
