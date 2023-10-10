@@ -1,48 +1,101 @@
 #include "../include/joueur.h"
 #include <iostream>
 
-Joueur::Joueur(std::string nom)
-        : pseudo(nom), nombre_couronnes(0), points_prestige_total(0),
-          cartes_reservees_count(0), cartes_main_count(0), cartes_noble_count(0), privileges_count(0) {}
 
-int Joueur::getPoints() {
+Joueur::Joueur(const std::string nom)
+        : pseudo(nom), nombre_couronnes(0), points_prestige_total(0) {
+
+    for (int i = 0; i < 6; i++) {
+        cartes_reservees[i] = CarteJoaillerie();  // Initialisez avec des valeurs par défaut
+        cartes_main[i] = CarteJoaillerie();       // Initialisez avec des valeurs par défaut
+        cartes_noble[i] = CarteNoble();            // Initialisez avec des valeurs par défaut
+        privileges[i] = Privilege();               // Initialisez avec des valeurs par défaut
+    }
+
+    for (int i = 0; i < 5; i++) {
+        gemmes_bonus[i] = 0;                      // Initialisez avec des valeurs par défaut
+        points_prestige_couleurs[i] = 0;          // Initialisez avec des valeurs par défaut
+    }
+}
+
+
+int Joueur::getPointsPrestigeTotal() const{
     return points_prestige_total;
 }
 
-std::string Joueur::getPseudo() {
+std::string Joueur::getPseudo() const {
     return pseudo;
 }
 
-void Joueur::ajouterCarteJoaillerie(CarteJoaillerie carte) {
-    if (cartes_main_count < MAX_CARTES) {
-        cartes_main[cartes_main_count++] = carte;
-        points_prestige_total += carte.couronne;
-    } else {
-        std::cerr << "Erreur: Le joueur a atteint la limite maximale de cartes." << std::endl;
-    }
+int Joueur::getNombreCouronnes()const {
+    return nombre_couronnes;
 }
 
-void Joueur::ajouterCarteNoble(CarteNoble carte) {
-    if (cartes_noble_count < MAX_CARTES) {
-        cartes_noble[cartes_noble_count++] = carte;
-        points_prestige_total += carte.couronne;
-    } else {
-        std::cerr << "Erreur: Le joueur a atteint la limite maximale de cartes nobles." << std::endl;
+int Joueur:: getPointsPrestigeCouleurs(int index) const {
+    if (index >= 0 && index < 5) {
+        return points_prestige_couleurs[index];
     }
+    return 0;
 }
 
-void Joueur::ajouterCarteReservee(CarteJoaillerie carte) {
-    if (cartes_reservees_count < MAX_CARTES) {
-        cartes_reservees[cartes_reservees_count++] = carte;
-    } else {
-        std::cerr << "Erreur: Le joueur a atteint la limite maximale de cartes réservées." << std::endl;
+CarteJoaillerie Joueur::getCarteReservee(int index) const {
+    if (index >= 0 && index < 6) {
+        return cartes_reservees[index];
     }
+    return CarteJoaillerie(); // Retourne une carte vide par défaut
 }
 
-void Joueur::ajouterPrivilege(Privilege privilege) {
-    if (privileges_count < MAX_PRIVILEGES) {
-        privileges[privileges_count++] = privilege;
-    } else {
-        std::cerr << "Erreur: Le joueur a atteint la limite maximale de privilèges." << std::endl;
+CarteJoaillerie Joueur::getCarteMain(int index) const {
+    if (index >= 0 && index < 6) {
+        return cartes_main[index];
     }
+    return CarteJoaillerie();
 }
+
+
+CarteNoble Joueur::getCarteNoble(int index) const {
+    if (index >= 0 && index < 6) {
+        return cartes_noble[index];
+    }
+    return CarteNoble();
+}
+
+int Joueur::getGemmesBonus(int index) const {
+    if (index >= 0 && index < 5) {
+        return gemmes_bonus[index];
+    }
+    return 0;
+}
+
+
+Privilege Joueur::getPrivilege(int index) const {
+    if (index >= 0 && index < 6) {
+        return privileges[index];
+    }
+    return Privilege();
+}
+
+
+void Joueur::ajouterCarteJoaillerie(const CarteJoaillerie& carte) {
+
+    /* si ya des couronnes on rajoute le nombre de couronnes dans le compteur
+     * pareil pour point de pestiges
+     * point dans une couleur en particullier
+     *
+
+
+}
+
+
+void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
+
+}
+
+void Joueur::ajouterCarteReservee(const CarteJoaillerie& carte) {
+
+}
+
+void Joueur::ajouterPrivilege(const Privilege& privilege) {
+
+}
+
