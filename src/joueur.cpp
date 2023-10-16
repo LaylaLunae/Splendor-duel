@@ -67,7 +67,6 @@ int Joueur::getGemmesBonus(int index) const {
     return 0;
 }
 
-
 Privilege Joueur::getPrivilege(int index) const {
     if (index >= 0 && index < 6) {
         return privileges[index];
@@ -75,27 +74,63 @@ Privilege Joueur::getPrivilege(int index) const {
     return Privilege();
 }
 
-
 void Joueur::ajouterCarteJoaillerie(const CarteJoaillerie& carte) {
+    int nombrePointsCarte = carte.getPointsPrestige();
+    int nombreCouronnesCarte = carte.getNombreCouronnes();
 
-    /* si ya des couronnes on rajoute le nombre de couronnes dans le compteur
-     * pareil pour point de pestiges
-     * point dans une couleur en particullier
-     *
+    // Ajouter les points de prestige si la carte en a
+    if (nombrePointsCarte > 0) {
+        points_prestige_total += nombrePointsCarte;
+    }
 
+    // Ajouter les points dans la couleur du bijou si la carte en a
+    Couleur couleurBijou = carte.getCouleurBijou();
+    if (couleurBijou != Couleur::aucune) {
+        points_prestige_couleurs[static_cast<int>(couleurBijou)] += nombrePointsCarte;
+    }
 
-}
+    // Ajouter le nombre de couronnes si la carte en a
+    if (nombreCouronnesCarte > 0) {
+        nombre_couronnes += nombreCouronnesCarte;
+    }
 
+    // Ajouter le nombre de bonus (gemme) si la carte en a
+    for (const auto& [couleur, nombreGemmes] : carte.getGemmesBonus()) {
+        gemmes_bonus[static_cast<int>(couleur)] += nombreGemmes;
+    }
 
 void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
 
+    int nombreCouronnesCarte = carteNoble.getNombreCouronnes();
+
+    // Vérifier si le joueur a 3 ou 6 couronnes dans son jeu
+    if (nombre_couronnes == 3 || nombre_couronnes == 6) {
+        // Ajouter le nombre de couronnes à la variable nombre_couronnes
+        nombre_couronnes += nombreCouronnesCarte;
+
+        // Ajouter les points de prestige de la carte à la variable points_prestige_total
+        points_prestige_total += carteNoble.getPointsPrestige();
+    }
+    else{
+        throw std::runtime_error("Le joueur doit avoir 3 ou 6 couronnes pour ajouter une carte noble.");
+    }
 }
 
-void Joueur::ajouterCarteReservee(const CarteJoaillerie& carte) {
 
+void Joueur::ajouterCarteReservee(const CarteJoaillerie& carte) {
+    if (compteur_cartes_reservees < 3) {
+        compteur_cartes_reservees++;
+    }
+    else {
+        throw std::runtime_error("Le joueur ne peut pas réserver plus de 3 cartes.");
+    }
 }
 
 void Joueur::ajouterPrivilege(const Privilege& privilege) {
-
+    if (compteur_privileges < 3) {
+        compteur_privileges++;
+    } else {
+        throw std::runtime_error("Le joueur ne peut pas avoir plus de 3 privilèges.");
+    }
 }
 
