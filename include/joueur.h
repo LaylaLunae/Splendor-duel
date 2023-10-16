@@ -61,7 +61,9 @@ public:
     Humain(const std::string& pseudo) : Joueur(pseudo) {
 
     }
+
 };
+
 
 
 #endif // JOUEUR_H
