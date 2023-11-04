@@ -25,6 +25,11 @@ public:
     const std::string& get_info() const {return info;}
 };
 
+struct ReponseValidationSelection {
+    const Jeton** jetons;
+    unsigned int nombre;
+};
+
 class Plateau {
     const Jeton** jetons;
     const Privilege** privileges;
@@ -62,7 +67,7 @@ public:
     void ajouterSac(const Jeton *j);
 
     void selectionJeton(unsigned int position_x, unsigned int position_y);
-    const Jeton** validerSelectionEtPrendreJetons();
+    ReponseValidationSelection validerSelectionEtPrendreJetons();
 
     const Privilege* prendrePrivilege();
     void donnePrivilege(const Privilege* p);

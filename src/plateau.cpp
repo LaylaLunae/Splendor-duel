@@ -21,25 +21,57 @@ std::tuple<int, int> choisir_jeton() {
     return std::make_tuple(x, y);
 }
 
+
 void testes_pour_plateau() {
     /**
      * Fonction pour tester le plateau.
-     * On peut choisir deux jetons sur le plateau.
+     * On peut choisir des jetons sur le plateau.
      * Et ensuite la première carte noble est prise automatiquement.
+     * Puis on remet ces jetons dans le sac, et on reremplit le plateau.
+     * On verra que les jetons pris apparaissent sur le tableau avec un
+     *      autre ordre! (distribution aléatoire)
      */
     Plateau* p = new Plateau();
     std::cout<<p->etatPlateau();
 
     int x, y;
-    std::tie (x, y) = choisir_jeton();
+    int valider_selection = 0;
     try {
-        p->selectionJeton(x, y);
+        while (valider_selection != 1) {
+            std::tie(x, y) = choisir_jeton();
+            p->selectionJeton(x, y);
 
-        std::tie (x, y) = choisir_jeton();
-        p->selectionJeton(x, y);
+            std::cout<<"\n\nVoulez vous valider la selection ? 1:oui ; 0:non";
+            std::string reponse;
+            std::cin >> reponse;
+            valider_selection = std::stoi(reponse);
+        }
+
+        ReponseValidationSelection reponse = p->validerSelectionEtPrendreJetons();
+        std::cout<<"\nVous avez en main les jetons de valeurs : ";
+        for (unsigned int index_jeton = 0; index_jeton < reponse.nombre; index_jeton++) {
+            std::cout<<reponse.jetons[index_jeton]->geta()<<", ";
+        }
 
         const CarteNoble* c = p->prendreCarteNoble(0);
-        std::cout<<"La carte noble 0 a ete prise. Son nombre de couronnes : "<<c->getCouronne();
+        std::cout<<"\nLa carte noble 0 a ete prise. Son nombre de couronnes : "<<c->getCouronne();
+
+        std::cout<<p->etatPlateau();
+
+        std::cout<<"\nRemise dans le sac des jetons...";
+        for (unsigned int index_jeton = 0; index_jeton < reponse.nombre; index_jeton++) {
+            p->ajouterSac(reponse.jetons[index_jeton]);
+        }
+        std::cout<<" ...fini.";
+
+        std::cout<<p->etatPlateau();
+
+        std::cout<<"\nRemplissage du plateau...";
+        p->remplissagePlateau();
+        std::cout<<" ...fini.";
+
+        std::cout<<p->etatPlateau();
+
     }
     catch (PlateauException exc) {std::cout<<exc.get_info();}
 }
@@ -140,6 +172,17 @@ std::string Plateau::etatPlateau() {
 
 
 void Plateau::remplissagePlateau(bool avecAffichage) {
+
+    // Initialisation de la première case libre du plateau = là où le premier jeton sera distribué.
+    // Cette case n'est pas forcément la première : un joueur peut décider de remplir le plateau même s'il
+    // reste des jetons sur le plateau.
+    pointeur_case_libre = 0;
+    while (pointeur_case_libre < nb_jetons_plateau_MAX && jetons[pointeur_case_libre] != nullptr) {
+        pointeur_case_libre++;
+    }
+    if (pointeur_case_libre == nb_jetons_plateau_MAX) throw PlateauException("Tous les jetons sont déjà sur le plateau ! ¯\\_(^^')_/¯");
+
+
     // Tant qu'il reste des jetons dans le sac : on pioche et on dépose sur le plateau
     unsigned int i = 0;
     while (nb_jetons_sac > 0) {
@@ -155,9 +198,10 @@ void Plateau::remplissagePlateau(bool avecAffichage) {
         for (unsigned  int j = r; j <nb_jetons_sac_MAX;j++) {
             sac[j] = sac[j+1];
         }
-
         sac[nb_jetons_sac_MAX-1] = nullptr;
+        nb_jetons_sac--;
 
+        // Pour debug console
         if (avecAffichage) {
             for (unsigned int j = 0; j < nb_jetons_sac_MAX; j++) {
                 std::cout << "\n" << j << ": ";
@@ -166,11 +210,8 @@ void Plateau::remplissagePlateau(bool avecAffichage) {
                 } else {
                     std::cout << sac[j]->geta();
                 }
-
             }
         }
-
-        nb_jetons_sac--;
 
         // On l'ajoute au plateau.
         jetons[pointeur_case_libre++] = jeton_aleatoire;
@@ -401,18 +442,41 @@ void Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
 }
 
 
-const Jeton** Plateau::validerSelectionEtPrendreJetons() {
+ReponseValidationSelection Plateau::validerSelectionEtPrendreJetons() {
     if (nombre_jetons_dans_selection == 0) throw PlateauException("Aucun jeton dans la selection <('o'<)");
+
+    // Création de la liste et du nombre à retourner :
     const Jeton** liste = new const Jeton * [nombre_jetons_dans_selection];
+    unsigned int nb_jetons_dans_liste = nombre_jetons_dans_selection;
+
+    // Ajoute les jetons à la liste à retourner :
     for (unsigned int i = 0 ; i < nombre_jetons_dans_selection; i++) {
         liste[i] = selection_courante[i];
     }
+
+    // Supprime les jetons du plateau :
+    unsigned int position_dans_plateau;
+    unsigned int position_x;
+    unsigned int position_y;
+    for (unsigned int i = 0 ; i < nombre_jetons_dans_selection*2; i+=2) {
+        position_x = selection_courante_positions[i];
+        position_y = selection_courante_positions[i+1];
+        position_dans_plateau = nombre_jetons_par_cote_de_plateau  *  (position_y-1) + position_x-1;
+        jetons[position_dans_plateau] = nullptr;
+        nb_jetons_plateau--;
+    }
+
+    // Remise à zéro des attributs
     delete[] selection_courante_positions;
     delete[] selection_courante;
     nombre_jetons_dans_selection = 0;
     selection_courante_positions = new int[nombre_jetons_dans_selection_MAX*2];
     selection_courante = new const Jeton*[nombre_jetons_dans_selection_MAX];
-    return liste;
+
+    // Envoi du résultat
+
+    ReponseValidationSelection reponse = {liste, nb_jetons_dans_liste};
+    return reponse;
 }
 
 
