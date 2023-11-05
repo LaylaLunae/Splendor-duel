@@ -2,8 +2,7 @@
 #include <iostream>
 
 
-Joueur::Joueur(const std::string nom)
-        : pseudo(nom), nombre_couronnes(0), points_prestige_total(0) {
+Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0) {
 
     for (int i = 0; i < 6; i++) {
         cartes_reservees[i] = CarteJoaillerie();
@@ -17,7 +16,6 @@ Joueur::Joueur(const std::string nom)
         points_prestige_couleurs[i] = 0;
     }
 }
-
 
 int Joueur::getPointsPrestigeTotal() const{
     return points_prestige_total;
@@ -45,27 +43,27 @@ CarteJoaillerie Joueur::getCarteReservee(int index) const {
 }
 
 CarteJoaillerie Joueur::getCarteMain(int index) const {
-    if (index >= 0 && index < 6) {
+    if (index >= 0 ) {
         return cartes_main[index];
     }
 }
 
 
 CarteNoble Joueur::getCarteNoble(int index) const {
-    if (index >= 0 && index < 6) {
+    if (index >= 0 && index < 3) {
         return cartes_noble[index];
     }
 }
 
 int Joueur::getGemmesBonus(int index) const {
-    if (index >= 0 && index < 5) {
+    if (index >= 0 && index < 6) {
         return gemmes_bonus[index];
     }
     return 0;
 }
 
 Privilege Joueur::getPrivilege(int index) const {
-    if (index >= 0 && index < 6) {
+    if (index >= 0 && index < 3) {
         return privileges[index];
     }
 }
