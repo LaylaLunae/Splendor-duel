@@ -1,9 +1,13 @@
 #include "../include/carteJoaillerie.h"
 
-CarteJoaillerie::CarteJoaillerie() : niveau(0), couronne(0), pierre(false), type_pierre(Couleur::bleu) {}
+CarteJoaillerie::CarteJoaillerie(int niv, int cour, bool pier, Couleur couleur, std::map<Couleur, int> prx, const std::string& chemin, int prestige, const Pouvoir& pvr)
+        : Carte(chemin, prestige, cour, pvr), niveau(niv), couronne(cour), pierre(pier), type_pierre(couleur), prix(prx) {
+    // Constructor implementation
+}
 
-CarteJoaillerie::CarteJoaillerie(int niv, int cour, bool pier, Couleur couleur, std::map<Couleur, int> prx)
-        : niveau(niv), couronne(cour), pierre(pier), type_pierre(couleur), prix(prx) {}
+CarteJoaillerie::~CarteJoaillerie() {
+    // Destructor implementation, if needed
+}
 
 std::map<Couleur, int> CarteJoaillerie::getPrix() const {
     return prix;

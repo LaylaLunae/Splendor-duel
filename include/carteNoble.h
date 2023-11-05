@@ -3,6 +3,7 @@
 
 #include <map>
 #include "couleur.h"
+#include "carte.h"
 
 class CarteNoble {
 private:

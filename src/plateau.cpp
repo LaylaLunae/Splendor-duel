@@ -519,6 +519,11 @@ const CarteNoble* Plateau::prendreCarteNoble(unsigned int numero) {
     return  resultat;
 }
 
+bool Plateau::hasJeton() {
+    if (this->nb_jetons_plateau != 0)
+        return true;
+    return false;
+}
 
 Plateau::~Plateau() {
     delete[] jetons;

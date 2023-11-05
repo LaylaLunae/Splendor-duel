@@ -15,7 +15,7 @@ const int MAX_PRIVILEGES = 3;
 enum Difficulte {facile, moyen, difficile};
 
 class Joueur {
-private:
+protected:
     //std::map<Couleur, int> gemmes_bonus;
     //std::map<Couleur, int> points_prestige_couleurs;
     std::string pseudo;
@@ -27,6 +27,9 @@ private:
     CarteNoble cartes_noble[6];
     int gemmes_bonus[5];
     Privilege privileges[6];
+
+    Joueur* adversaire; // Pointeur vers le joueur adverse
+    bool droitDeRejouer; // Marqueur pour le droit de jouer un tour supplémentaire
 
 public:
     Joueur(const std::string nom);
@@ -43,6 +46,19 @@ public:
     void ajouterCarteNoble(const CarteNoble& carte);
     void ajouterCarteReservee(const CarteJoaillerie& carte);
     void ajouterPrivilege(const Privilege& privilege);
+    void setPointsPrestigeCouleurs(int index, int value);
+    void setGemmesBonus(int index, int value);
+
+    // Définir l'adversaire
+    Joueur* getAdversaire();
+    void setAdversaire(Joueur* adv);
+    bool hasPrivilege();
+    Privilege removePrivilege();
+    // Méthode pour vérifier si le joueur a le droit de jouer à nouveau.
+    bool peutRejouer() const;
+    // Réinitialisez le droit de jouer à la fin du tour du joueur.
+    void resetRejouer();
+    void resetRejouer(bool reset);
 };
 
 
