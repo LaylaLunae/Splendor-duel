@@ -37,7 +37,7 @@ int Joueur:: getPointsPrestigeCouleurs(int index) const {
 }
 
 CarteJoaillerie Joueur::getCarteReservee(int index) const {
-    if (index >= 0 && index < 6) {
+    if (index >= 0 && index <= 3) {
         return cartes_reservees[index];
     }
 }
@@ -106,7 +106,7 @@ void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
         points_prestige_total += carteNoble.getPointsPrestige();
     }
     else{
-        throw std::runtime_error("Le joueur doit avoir 3 ou 6 couronnes pour ajouter une carte noble.");
+        throw ("Le joueur doit avoir 3 ou 6 couronnes pour ajouter une carte noble.");
     }
 }
 
@@ -116,7 +116,7 @@ void Joueur::ajouterCarteReservee(const CarteJoaillerie& carte) {
         compteur_cartes_reservees++;
     }
     else {
-        throw std::runtime_error("Le joueur ne peut pas réserver plus de 3 cartes.");
+        throw ("Le joueur ne peut pas réserver plus de 3 cartes.");
     }
 }
 
@@ -124,7 +124,7 @@ void Joueur::ajouterPrivilege(const Privilege& privilege) {
     if (compteur_privileges < 3) {
         compteur_privileges++;
     } else {
-        throw std::runtime_error("Le joueur ne peut pas avoir plus de 3 privilèges.");
+        throw ("Le joueur ne peut pas avoir plus de 3 privilèges.");
     }
 }
 
