@@ -2,7 +2,6 @@
 #define JOUEUR_H
 
 #include <string>
-#include <map>
 #include <iostream>
 #include "couleur.h"
 #include "carteJoaillerie.h"
@@ -16,8 +15,6 @@ enum Difficulte {facile, moyen, difficile};
 
 class Joueur {
 private:
-    //std::map<Couleur, int> gemmes_bonus;
-    //std::map<Couleur, int> points_prestige_couleurs;
     std::string pseudo;
     int nombre_couronnes;
     int points_prestige_total;
