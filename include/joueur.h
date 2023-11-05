@@ -3,38 +3,71 @@
 
 #include <string>
 #include <map>
+#include <iostream>
 #include "couleur.h"
 #include "carteJoaillerie.h"
 #include "carteNoble.h"
 #include "privilege.h"
 
 const int MAX_CARTES = 10;
-const int MAX_PRIVILEGES = 5;
+const int MAX_PRIVILEGES = 3;
+
+enum Difficulte {facile, moyen, difficile};
 
 class Joueur {
 private:
+    //std::map<Couleur, int> gemmes_bonus;
+    //std::map<Couleur, int> points_prestige_couleurs;
     std::string pseudo;
     int nombre_couronnes;
     int points_prestige_total;
-    std::map<Couleur, int> points_prestige_couleurs;
-    CarteJoaillerie cartes_reservees[MAX_CARTES];
-    int cartes_reservees_count;
-    CarteJoaillerie cartes_main[MAX_CARTES];
-    int cartes_main_count;
-    CarteNoble cartes_noble[MAX_CARTES];
-    int cartes_noble_count;
-    std::map<Couleur, int> gemmes_bonus;
-    Privilege privileges[MAX_PRIVILEGES];
-    int privileges_count;
+    int points_prestige_couleurs[5];
+    CarteJoaillerie cartes_reservees[6];
+    CarteJoaillerie cartes_main[6];
+    CarteNoble cartes_noble[6];
+    int gemmes_bonus[5];
+    Privilege privileges[6];
 
 public:
-    Joueur(std::string nom);
-    int getPoints() const;
+    Joueur(const std::string nom);
+    int getPointsPrestigeTotal() const;
     std::string getPseudo() const;
+    int getNombreCouronnes()const;
+    int getPointsPrestigeCouleurs(int index) const;
+    CarteJoaillerie getCarteReservee(int index) const;
+    CarteJoaillerie getCarteMain(int index) const;
+    CarteNoble getCarteNoble(int index) const;
+    int getGemmesBonus(int index) const;
+    Privilege getPrivilege(int index) const;
     void ajouterCarteJoaillerie(const CarteJoaillerie& carte);
     void ajouterCarteNoble(const CarteNoble& carte);
     void ajouterCarteReservee(const CarteJoaillerie& carte);
     void ajouterPrivilege(const Privilege& privilege);
 };
 
+
+class IA : public Joueur {
+private:
+    Difficulte difficulte;
+
+public:
+    IA(const std::string& pseudo, Difficulte diff) : Joueur(pseudo),difficulte(diff) {
+
+    }
+};
+
+class Humain : public Joueur {
+public:
+    Humain(const std::string& pseudo) : Joueur(pseudo) {
+
+    }
+
+};
+
+
+
 #endif // JOUEUR_H
+
+
+
+
