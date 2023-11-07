@@ -2,7 +2,7 @@
 
 CarteNoble::CarteNoble() : couronne(0) {}
 
-CarteNoble::CarteNoble(int cour, std::map<Couleur, int> exg) : couronne(cour), exigences(exg) {}
+CarteNoble::CarteNoble(int cour,int pointPres, std::map<Couleur, int> exg) : couronne(cour), pointPrestige(pointPres), exigences(exg) {}
 
 int CarteNoble::getCouronne() const {
     return couronne;

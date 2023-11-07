@@ -5,7 +5,6 @@
 #include <vector>
 #include "couleur.h"
 #include "carte.h"
-#include "Gemme.h"
 
 class CarteJoaillerie : public Carte { // Inherits from Carte
 private:

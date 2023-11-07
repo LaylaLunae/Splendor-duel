@@ -1,7 +1,4 @@
 #include "../include/carteJoaillerie.h"
-#include "../include/couleur.h"
-#include "../include/carte.h"
-#include "../include/plateau.h"
 
 CarteJoaillerie::CarteJoaillerie(Plateau* p, Joueur* j, int niv, int cour, bool pier, Couleur couleur, std::map<Couleur, int> prx, const std::string& chemin, int prestige, const Pouvoir& pvr)
         : Carte(chemin, prestige, cour, pvr, p, j), niveau(niv), couronne(cour), pierre(pier), type_pierre(couleur), prix(prx) {
