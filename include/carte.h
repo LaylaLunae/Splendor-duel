@@ -23,6 +23,7 @@ protected:
 
 public:
     Carte(const std::string& chemin, int prestige, int cour, const Pouvoir& pvr, Plateau* p, Joueur* j);
+    Carte();
     virtual ~Carte() {}
 
     void actionPouvoir();

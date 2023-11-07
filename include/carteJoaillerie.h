@@ -16,7 +16,8 @@ private:
     std::map<Couleur, int> prix;
 
 public:
-    CarteJoaillerie(int niv, int cour, bool pier, Couleur couleur, std::map<Couleur, int> prx, const std::string& chemin, int prestige, const Pouvoir& pvr);
+    CarteJoaillerie(Plateau* p, Joueur* j, int niv, int cour, bool pier, Couleur couleur, std::map<Couleur, int> prx, const std::string& chemin, int prestige, const Pouvoir& pvr);
+    CarteJoaillerie();
     ~CarteJoaillerie();
 
     // Specific methods for CarteJoaillerie
