@@ -25,7 +25,7 @@ private:
     CarteJoaillerie cartes_reservees[3];
     CarteJoaillerie cartes_main[60];
     CarteNoble cartes_noble[6];
-    int gemmes_bonus[5];
+    int gemmes_bonus[6];
     Privilege privileges[6];
     int nombre_de_privileges;
 

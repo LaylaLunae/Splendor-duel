@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr) {
+Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr){
 
     for (int i = 0; i < 6; i++) {
         cartes_reservees[i] = CarteJoaillerie();
@@ -78,7 +78,7 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie carte) {
     }
     // Ajouter les points dans la couleur du bijou si la carte en a
     Couleur couleurBijou = carte.getTypePierre();
-    if (nullptr != couleurBijou) {
+    if (Couleur::rien != couleurBijou) {
         points_prestige_couleurs[static_cast<int>(couleurBijou)] += nombrePointsCarte;
     }
 
