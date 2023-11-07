@@ -10,7 +10,7 @@
 
 #include "privilege.h"
 #include "carteNoble.h"
-#include "jeton_tmp.h"
+#include "jeton.h"
 
 
 class Jeu{
@@ -72,6 +72,8 @@ public:
     const Privilege* prendrePrivilege();
     void donnePrivilege(const Privilege* p);
     const CarteNoble* prendreCarteNoble(unsigned int numero);
+
+    bool hasJeton(); // Vérifiez s'il y a jeton en plateau
 
     ~Plateau();
 

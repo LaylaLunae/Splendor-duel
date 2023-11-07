@@ -11,4 +11,13 @@ add_executable(Splendor main.cpp
         src/carteNoble.cpp
         include/privilege.h
         include/joueur.h
-        src/joueur.cpp)
+        src/joueur.cpp
+        include/carte.h
+        include/pouvoir.h
+        src/carte.cpp
+        src/jeton.cpp
+        include/or.h
+        src/or.cpp
+        include/gemme.h
+        src/gemme.cpp
+        src/privilege.cpp)
