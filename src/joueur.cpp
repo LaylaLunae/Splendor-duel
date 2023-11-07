@@ -68,7 +68,7 @@ Privilege Joueur::getPrivilege(int index) const {
     }
 }
 
-void Joueur::ajouterCarteJoaillerie(const Carte & carte) {
+void Joueur::ajouterCarteJoaillerie(CarteJoaillerie carte) {
     int nombrePointsCarte = carte.getPointsPrestige();
     int nombreCouronnesCarte = carte.getCourronnes();
 
@@ -76,10 +76,9 @@ void Joueur::ajouterCarteJoaillerie(const Carte & carte) {
     if (nombrePointsCarte > 0) {
         points_prestige_total += nombrePointsCarte;
     }
-
     // Ajouter les points dans la couleur du bijou si la carte en a
     Couleur couleurBijou = carte.getTypePierre();
-    if (couleurBijou != Couleur::aucune) {
+    if (nullptr != couleurBijou) {
         points_prestige_couleurs[static_cast<int>(couleurBijou)] += nombrePointsCarte;
     }
 
@@ -93,6 +92,7 @@ void Joueur::ajouterCarteJoaillerie(const Carte & carte) {
         gemmes_bonus[static_cast<int>(couleur)] += nombreGemmes;
     }
 }
+
 void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
 
     int nombreCouronnesCarte = carte.getCouronne();
@@ -103,27 +103,30 @@ void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
         nombre_couronnes += nombreCouronnesCarte;
 
         // Ajouter les points de prestige de la carte à la variable points_prestige_total
-        points_prestige_total += carteNoble.getPointsPrestige();
+        points_prestige_total += carte.getPointPrestige();
     }
     else{
         throw ("Le joueur doit avoir 3 ou 6 couronnes pour ajouter une carte noble.");
     }
 }
 
-
 void Joueur::ajouterCarteReservee(const CarteJoaillerie& carte) {
-    if (compteur_cartes_reservees < 3) {
-        compteur_cartes_reservees++;
+    if (nb_cartes_reservees < 3) {
+        cartes_reservees[nb_cartes_reservees] = carte;
+        nb_cartes_reservees++;
     }
     else {
-        throw ("Le joueur ne peut pas réserver plus de 3 cartes.");
+        throw std::runtime_error("Le joueur ne peut pas réserver plus de 3 cartes.");
     }
 }
 
+
 void Joueur::ajouterPrivilege(const Privilege& privilege) {
-    if (compteur_privileges < 3) {
-        compteur_privileges++;
-    } else {
+    if (nombre_de_privileges < 3) {
+        privileges[nombre_de_privileges]=privilege;
+        nombre_de_privileges++;
+    }
+    else {
         throw ("Le joueur ne peut pas avoir plus de 3 privilèges.");
     }
 }

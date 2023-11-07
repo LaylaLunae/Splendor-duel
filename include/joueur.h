@@ -7,6 +7,7 @@
 #include "couleur.h"
 #include "carteJoaillerie.h"
 #include "carteNoble.h"
+#include "carte.h"
 #include "privilege.h"
 
 const int MAX_CARTES = 10;
@@ -20,11 +21,13 @@ private:
     int nombre_couronnes;
     int points_prestige_total;
     int points_prestige_couleurs[5];
-    CarteJoaillerie cartes_reservees[6];
-    CarteJoaillerie cartes_main[6];
+    int nb_cartes_reservees;
+    CarteJoaillerie cartes_reservees[3];
+    CarteJoaillerie cartes_main[60];
     CarteNoble cartes_noble[6];
     int gemmes_bonus[5];
     Privilege privileges[6];
+    int nombre_de_privileges;
 
 
     Joueur* adversaire; // Pointeur vers le joueur adverse
@@ -41,7 +44,7 @@ public:
     CarteNoble getCarteNoble(int index) const;
     int getGemmesBonus(int index) const;
     Privilege getPrivilege(int index) const;
-    void ajouterCarteJoaillerie(const Carte& carte);
+    void ajouterCarteJoaillerie(CarteJoaillerie carte);
     void ajouterCarteNoble(const CarteNoble& carte);
     void ajouterCarteReservee(const CarteJoaillerie& carte);
     void ajouterPrivilege(const Privilege& privilege);
