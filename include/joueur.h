@@ -2,7 +2,6 @@
 #define JOUEUR_H
 
 #include <string>
-#include <map>
 #include <iostream>
 #include "couleur.h"
 #include "carteJoaillerie.h"

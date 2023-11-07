@@ -78,7 +78,7 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie carte) {
     }
     // Ajouter les points dans la couleur du bijou si la carte en a
     Couleur couleurBijou = carte.getTypePierre();
-    if (nullptr != couleurBijou) {
+    if (Couleur::rien!= couleurBijou) {
         points_prestige_couleurs[static_cast<int>(couleurBijou)] += nombrePointsCarte;
     }
 
