@@ -24,7 +24,7 @@ void Carte::actionPouvoir() {
             break;
         case Pouvoir::bonus_pierre:
             while (true) {
-                std::cout << "Quel bonus de couleur souhaitez-vous ? bleu, vert, rouge, blanc, noir?" << std::endl;
+                std::cout << "Quel bonus de couleur souhaitez-vous ? bleu, vert, rouge, blanc, noir, rose?" << std::endl;
                 std::cin >> couleurChoisie;
 
                 std::transform(couleurChoisie.begin(), couleurChoisie.end(), couleurChoisie.begin(), ::tolower);
@@ -51,7 +51,7 @@ void Carte::actionPouvoir() {
             break;
         case Pouvoir::vol_pierre:
             while (true) {
-                std::cout << "Quel bonus de jeton voulez-vous voler ? bleu, vert, rouge, blanc, noir?" << std::endl;
+                std::cout << "Quel bonus de jeton voulez-vous voler ? bleu, vert, rouge, blanc, noir, rose?" << std::endl;
                 std::cin >> couleurChoisie;
 
                 std::transform(couleurChoisie.begin(), couleurChoisie.end(), couleurChoisie.begin(), ::tolower);
