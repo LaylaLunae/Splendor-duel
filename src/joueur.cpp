@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0) {
+Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr) {
 
     for (int i = 0; i < 6; i++) {
         cartes_reservees[i] = CarteJoaillerie();
@@ -68,9 +68,9 @@ Privilege Joueur::getPrivilege(int index) const {
     }
 }
 
-void Joueur::ajouterCarteJoaillerie(const CarteJoaillerie& carte) {
+void Joueur::ajouterCarteJoaillerie(const Carte & carte) {
     int nombrePointsCarte = carte.getPointsPrestige();
-    int nombreCouronnesCarte = carte.getNombreCouronnes();
+    int nombreCouronnesCarte = carte.getCourronnes();
 
     // Ajouter les points de prestige si la carte en a
     if (nombrePointsCarte > 0) {
@@ -78,7 +78,7 @@ void Joueur::ajouterCarteJoaillerie(const CarteJoaillerie& carte) {
     }
 
     // Ajouter les points dans la couleur du bijou si la carte en a
-    Couleur couleurBijou = carte.getCouleurBijou();
+    Couleur couleurBijou = carte.getTypePierre();
     if (couleurBijou != Couleur::aucune) {
         points_prestige_couleurs[static_cast<int>(couleurBijou)] += nombrePointsCarte;
     }
@@ -89,13 +89,13 @@ void Joueur::ajouterCarteJoaillerie(const CarteJoaillerie& carte) {
     }
 
     // Ajouter le nombre de bonus (gemme) si la carte en a
-    for (const auto &[couleur, nombreGemmes]: carte.getGemmesBonus()) {
+    for (const auto &[couleur, nombreGemmes]: carte.getTypePierre()) {
         gemmes_bonus[static_cast<int>(couleur)] += nombreGemmes;
     }
 }
 void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
 
-    int nombreCouronnesCarte = carteNoble.getNombreCouronnes();
+    int nombreCouronnesCarte = carte.getCouronne();
 
     // Vérifier si le joueur a 3 ou 6 couronnes dans son jeu
     if (nombre_couronnes == 3 || nombre_couronnes == 6) {

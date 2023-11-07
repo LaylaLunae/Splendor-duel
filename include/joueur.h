@@ -41,10 +41,13 @@ public:
     CarteNoble getCarteNoble(int index) const;
     int getGemmesBonus(int index) const;
     Privilege getPrivilege(int index) const;
-    void ajouterCarteJoaillerie(const CarteJoaillerie& carte);
+    void ajouterCarteJoaillerie(const Carte& carte);
     void ajouterCarteNoble(const CarteNoble& carte);
     void ajouterCarteReservee(const CarteJoaillerie& carte);
     void ajouterPrivilege(const Privilege& privilege);
+
+    void setPointsPrestigeCouleurs(int index, int valeur);
+    void setGemmesBonus(int index, int value);
 
 
     // Définir l'adversaire
