@@ -15,9 +15,7 @@ const int MAX_PRIVILEGES = 3;
 enum Difficulte {facile, moyen, difficile};
 
 class Joueur {
-protected:
-    //std::map<Couleur, int> gemmes_bonus;
-    //std::map<Couleur, int> points_prestige_couleurs;
+private:
     std::string pseudo;
     int nombre_couronnes;
     int points_prestige_total;
@@ -27,6 +25,7 @@ protected:
     CarteNoble cartes_noble[6];
     int gemmes_bonus[5];
     Privilege privileges[6];
+
 
     Joueur* adversaire; // Pointeur vers le joueur adverse
     bool droitDeRejouer; // Marqueur pour le droit de jouer un tour supplémentaire
@@ -46,8 +45,7 @@ public:
     void ajouterCarteNoble(const CarteNoble& carte);
     void ajouterCarteReservee(const CarteJoaillerie& carte);
     void ajouterPrivilege(const Privilege& privilege);
-    void setPointsPrestigeCouleurs(int index, int value);
-    void setGemmesBonus(int index, int value);
+
 
     // Définir l'adversaire
     Joueur* getAdversaire();
