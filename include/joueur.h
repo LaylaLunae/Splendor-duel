@@ -16,6 +16,7 @@ enum Difficulte {facile, moyen, difficile};
 
 class Joueur {
 private:
+    bool IA;
     std::string pseudo;
     int nombre_couronnes;
     int points_prestige_total;
@@ -75,13 +76,6 @@ public:
     }
 };
 
-class Humain : public Joueur {
-public:
-    Humain(const std::string& pseudo) : Joueur(pseudo) {
-
-    }
-
-};
 
 
 

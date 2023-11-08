@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr) {
+Joueur::Joueur(const std::string nom): pseudo(nom), IA(false), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr) {
 
     for (int i = 0; i < 6; i++) {
         cartes_reservees[i] = CarteJoaillerie();
