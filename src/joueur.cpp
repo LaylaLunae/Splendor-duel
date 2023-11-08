@@ -88,8 +88,9 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie carte) {
     }
 
     // Ajouter le nombre de bonus (gemme) si la carte en a
-    for (const auto &[couleur, nombreGemmes]: carte.getTypePierre()) {
-        gemmes_bonus[static_cast<int>(couleur)] += nombreGemmes;
+    if(carte.getTypePierre()!=Couleur::rien){
+        Couleur i = carte.getTypePierre();
+        gemmes_bonus[i]++;
     }
 }
 
