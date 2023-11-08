@@ -2,15 +2,26 @@
 #define JETON_H
 
 #include <string>
+#include "couleur.h"
+
+enum class JetonType {
+    Or,
+    Gemme,
+};
 
 class Jeton {
 protected:
+    JetonType type;
+    Couleur couleur; // Utilisé uniquement lorsque type = Gemme
     std::string chemin_vers_image;
+
 public:
-    Jeton() {}
+    Jeton(JetonType t, Couleur c = Couleur::rien) : type(t), couleur(c) {}
     virtual ~Jeton() {}
 
-    virtual void afficher() const = 0;
+    void afficher() const;
+    Couleur getCouleur() const;
+    JetonType getType() const { return type; }
 };
 
 #endif // JETON_H

@@ -1,11 +1,14 @@
 #ifndef COULEUR_H
 #define COULEUR_H
 
+#include <map>
+#include <string>
+
 enum class Couleur {
     bleu, vert, rouge, blanc, noir, rose, rien
 };
 
-std::map<std::string, Couleur> couleurMap = {
+inline std::map<std::string, Couleur> couleurMap = {
         {"bleu", Couleur::bleu},
         {"vert", Couleur::vert},
         {"rouge", Couleur::rouge},

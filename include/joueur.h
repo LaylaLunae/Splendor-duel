@@ -60,8 +60,8 @@ public:
     // Méthode pour vérifier si le joueur a le droit de jouer à nouveau.
     bool peutRejouer() const;
     // Réinitialisez le droit de jouer à la fin du tour du joueur.
-    void resetRejouer();
-    void resetRejouer(bool reset);
+    void resetRejouer(); // Normalement, on passe au tour de l'adversaire
+    void resetRejouer(bool reset); // Si vous obtenez le pouvoir, vous pouvez passer au tour suivant et appeler cette fonction
 };
 
 

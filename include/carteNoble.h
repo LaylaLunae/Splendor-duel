@@ -13,7 +13,7 @@ private:
 
 public:
     CarteNoble();
-    CarteNoble(int cour, std::map<Couleur, int> exg);
+    CarteNoble(int cour, int pointPrestige, std::map<Couleur, int> exg);
     int getCouronne() const;
     int getPointPrestige()const;
     std::map<Couleur, int> getExigences() const;
