@@ -106,6 +106,7 @@ enum Couleur <<enumeration>> {
  blanc
  noir
  rose
+ rien
 }
 
 
