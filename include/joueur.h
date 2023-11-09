@@ -3,10 +3,8 @@
 
 #include <string>
 #include <iostream>
-#include "couleur.h"
 #include "carteJoaillerie.h"
 #include "carteNoble.h"
-#include "carte.h"
 #include "privilege.h"
 
 const int MAX_CARTES = 10;
@@ -15,8 +13,7 @@ const int MAX_PRIVILEGES = 3;
 enum Difficulte {facile, moyen, difficile};
 
 class Joueur {
-private:
-    bool IA;
+protected:
     std::string pseudo;
     int nombre_couronnes;
     int points_prestige_total;
@@ -75,6 +72,13 @@ public:
 
     }
 };
+
+class Humain : public Joueur {
+public:
+    Humain(const std::string& pseudo) : Joueur(pseudo) {
+    }
+};
+
 
 
 

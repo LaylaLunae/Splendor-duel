@@ -83,6 +83,10 @@ class IA {
 + IA(pseudo : const string&, diff : difficulte)
 }
 
+class Humain {
++ Humain(pseudo : const string&)
+}
+
 enum Difficulte <<enumeration>> {
  facile
  moyen
@@ -168,8 +172,8 @@ class Obligatoire {
 - acheterCarte():CarteJoaillerie
 }
 
-
 Joueur <|-- IA
+Joueur <|-- Humain
 
 Jeu *--- "1" Plateau
 Jeu *-- "2" Joueur
