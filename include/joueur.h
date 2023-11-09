@@ -3,11 +3,15 @@
 
 #include <string>
 #include <iostream>
-#include "couleur.h"
-#include "carteJoaillerie.h"
-#include "carteNoble.h"
-#include "carte.h"
+
 #include "privilege.h"
+#include "couleur.h"
+//#include "carteJoaillerie.h"
+//#include "carteNoble.h"
+// #include "carte.h" -> pas besoin ??
+class CarteJoaillerie;
+class CarteNoble;
+
 
 const int MAX_CARTES = 10;
 const int MAX_PRIVILEGES = 3;
@@ -21,9 +25,9 @@ private:
     int points_prestige_total;
     int points_prestige_couleurs[5];
     int nb_cartes_reservees;
-    CarteJoaillerie cartes_reservees[3];
-    CarteJoaillerie cartes_main[60];
-    CarteNoble cartes_noble[6];
+    CarteJoaillerie* cartes_reservees[3];
+    CarteJoaillerie* cartes_main[60];
+    CarteNoble* cartes_noble[6];
     int gemmes_bonus[5];
     Privilege privileges[6];
     int nombre_de_privileges;

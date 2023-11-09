@@ -2,7 +2,8 @@
 #define CARTENOBLE_H
 
 #include <map>
-#include "couleur.h"
+
+#include "couleur.h" // safe
 #include "carte.h"
 
 class CarteNoble {

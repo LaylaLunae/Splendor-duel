@@ -2,6 +2,8 @@
 #include "../include/privilege.h"
 #include "../include/couleur.h"
 
+#include <bits/stdc++.h>
+
 Carte::Carte(const std::string& chemin, int prestige, int cour, const Pouvoir& pvr, Plateau* p, Joueur* j)
         : chemin_vers_image(chemin), point_prestige(prestige), courronnes(cour), pouvoir(pvr), plateau(p), joueur(j) {
 }
@@ -81,26 +83,26 @@ Pouvoir Carte::existancePouvoir() {
 }
 
 Privilege Carte::prendrePrivilege() {
-    // Essayez d'obtenir le privilège du Plateau.
-    // 1. Si le Plateau a un Privilège disponible, le Joueur actuel appelle ajouterPrivilege() pour l'ajouter à sa propre liste de privilèges.
-    // 2. S'il n'y a pas de Privilège disponible sur le Plateau, le Joueur actuel doit en prendre un au Privilège de l'adversaire (si celui-ci en a un).
-    const Privilege* privilegeDuPlateau = plateau->prendrePrivilege();
-    if (privilegeDuPlateau != nullptr) {
-        // Copie du privilège retourné par le plateau
-        Privilege privilegeTemp = *privilegeDuPlateau;
-
-        // Ajout du privilège temporaire au joueur
-        joueur->ajouterPrivilege(privilegeTemp);
-
-        // Retour du privilège temporaire pour une utilisation future si nécessaire
-        return privilegeTemp;
-    } else {
-        // Il n'y a aucun privilege sur le plateau, essayez d'en prendre un à adversaire
-        if (this->joueur->getAdversaire()->hasPrivilege()) { // 检查对手是否有特权
-            Privilege oppPrivilege = this->joueur->getAdversaire()->removePrivilege();
-            this->joueur->ajouterPrivilege(oppPrivilege);
-        }
-    }
+//    // Essayez d'obtenir le privilège du Plateau.
+//    // 1. Si le Plateau a un Privilège disponible, le Joueur actuel appelle ajouterPrivilege() pour l'ajouter à sa propre liste de privilèges.
+//    // 2. S'il n'y a pas de Privilège disponible sur le Plateau, le Joueur actuel doit en prendre un au Privilège de l'adversaire (si celui-ci en a un).
+//    const Privilege* privilegeDuPlateau = plateau->prendrePrivilege();
+//    if (privilegeDuPlateau != nullptr) {
+//        // Copie du privilège retourné par le plateau
+//        Privilege privilegeTemp = *privilegeDuPlateau;
+//
+//        // Ajout du privilège temporaire au joueur
+//        joueur->ajouterPrivilege(privilegeTemp);
+//
+//        // Retour du privilège temporaire pour une utilisation future si nécessaire
+//        return privilegeTemp;
+//    } else {
+//        // Il n'y a aucun privilege sur le plateau, essayez d'en prendre un à adversaire
+//        if (this->joueur->getAdversaire()->hasPrivilege()) { // 检查对手是否有特权
+//            Privilege oppPrivilege = this->joueur->getAdversaire()->removePrivilege();
+//            this->joueur->ajouterPrivilege(oppPrivilege);
+//        }
+//    }
 }
 
 
@@ -130,13 +132,13 @@ bool Carte::volerJeton(int couleurIndex) {
 
 
 bool Carte::prendreJeton(unsigned int position_x, unsigned int position_y) {
-    if (plateau->hasJeton()) {
-        const Jeton j = plateau->prendreJeton(position_x, position_y);
-        int couleurIndex = static_cast<int>(j.getCouleur());
-        joueur->setPointsPrestigeCouleurs(couleurIndex, this->joueur->getPointsPrestigeCouleurs(couleurIndex) + 1); // Add one token of the specified color to the player's inventory
-            return true;
-    }
-    return false;
+//    if (plateau->hasJeton()) {
+//        const Jeton j = plateau->prendreJeton(position_x, position_y);
+//        int couleurIndex = static_cast<int>(j.getCouleur());
+//        joueur->setPointsPrestigeCouleurs(couleurIndex, this->joueur->getPointsPrestigeCouleurs(couleurIndex) + 1); // Add one token of the specified color to the player's inventory
+//            return true;
+//    }
+//    return false;
 }
 
 void Carte::rejouer() {

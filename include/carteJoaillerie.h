@@ -3,8 +3,13 @@
 
 #include <map>
 #include <vector>
-#include "couleur.h"
+
 #include "carte.h"
+//#include "joueur.h"
+//#include "plateau.h"
+
+enum class Couleur;
+class Joueur;
 
 class CarteJoaillerie : public Carte { // Inherits from Carte
 private:
@@ -15,7 +20,17 @@ private:
     std::map<Couleur, int> prix;
 
 public:
-    CarteJoaillerie(Plateau* p, Joueur* j, int niv, int cour, bool pier, Couleur couleur, std::map<Couleur, int> prx, const std::string& chemin, int prestige, const Pouvoir& pvr);
+    CarteJoaillerie(
+            Plateau* p,
+            Joueur* j,
+            int niv,
+            int cour,
+            bool pier,
+            Couleur couleur,
+            std::map<Couleur, int> prx,
+            const std::string& chemin,
+            int prestige,
+            const Pouvoir& pvr);
     CarteJoaillerie();
     ~CarteJoaillerie();
 

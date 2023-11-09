@@ -51,3 +51,39 @@ Couleur Jeton::getCouleur() const {
     }
     return Couleur::rien;
 }
+
+std::string Jeton::getCouleurString() const {
+    std::string type_str;
+    switch (type) {
+        case JetonType::Or: {
+            type_str = "Or";
+            return type_str;
+        }
+        case JetonType::Gemme: {
+            switch (couleur) {
+                case Couleur::rouge:
+                    type_str = "Rouge";
+                    break;
+                case Couleur::vert:
+                    type_str = "Vert";
+                    break;
+                case Couleur::bleu:
+                    type_str = "Bleu";
+                    break;
+                case Couleur::noir:
+                    type_str = "Noir";
+                    break;
+                case Couleur::blanc:
+                    type_str = "Blanc";
+                    break;
+                case Couleur::rose:
+                    type_str = "Rose";
+                    break;
+                case Couleur::rien:
+                    type_str = "Rien";
+                    break;
+            }
+            return type_str;
+        }
+    }
+}

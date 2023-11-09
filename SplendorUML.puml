@@ -13,7 +13,7 @@ class Jeu {
 + validationAction()
 }
 
-Class Affichage{
+class Affichage{
 - affichage()
 - afficherRegles()
 - afficherConditionVictoire()
@@ -36,7 +36,10 @@ class Plateau {
 + prendreCarteNoble(numero:int):CarteNoble
 - verifierSiOrDansChoix()
 }
-
+struct ReponseValidationSelection {
+    + jetons:const Jeton*[25]
+    + nombre: unsigned int;
+}
 
 
 class Joueur {
@@ -158,6 +161,7 @@ Jeu *--"0..3" Obligatoire
 Plateau "1" --- "0...25" Jeton: possède >
 Plateau "1"--"0..3" Privilege: comporte >
 Plateau o---"0...4" CarteNoble: contient >
+Plateau --- ReponseValidationSelection
 'Plateau "1"-"3" Pioche
 
 Pioche o--"0..67" CarteJoaillerie

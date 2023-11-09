@@ -20,6 +20,7 @@ public:
     virtual ~Jeton() {}
 
     void afficher() const;
+    std::string getCouleurString() const;
     Couleur getCouleur() const;
     JetonType getType() const { return type; }
 };

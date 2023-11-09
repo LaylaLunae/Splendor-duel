@@ -6,11 +6,17 @@
 #define SPLENDOR_CARTE_H
 
 #include <string>
-#include "pouvoir.h"
+
 #include "privilege.h"
-#include "jeton.h"
+#include "pouvoir.h" // safe
+#include "jeton.h" // safe
+#include "joueur.h" //
 #include "plateau.h"
-#include "joueur.h"
+
+
+class CarteNoble;
+class CarteJoaillerie;
+class Plateau;
 
 class Carte {
 protected:
