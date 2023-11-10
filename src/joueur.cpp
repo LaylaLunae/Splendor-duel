@@ -1,6 +1,7 @@
 #include "../include/joueur.h"
 #include <iostream>
 
+#include "../include/carteJoaillerie.h"
 
 Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr) {
 
@@ -86,7 +87,7 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie carte) {
     if (nombreCouronnesCarte > 0) {
         nombre_couronnes += nombreCouronnesCarte;
     }
-    //static_cast<int>
+    /*
     // Ajouter le nombre de bonus (gemme) si la carte en a
     if(carte.getTypePierre()!=Couleur::rien){
         if(carte.getNombrePierre()==1) {//TO DO: wait for Xu's update and correct
@@ -94,6 +95,7 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie carte) {
             gemmes_bonus[i]+=carte.getNombrePierre();
         }
     }
+     */
 }
 
 void Joueur::ajouterCarteNoble(const CarteNoble& carte) {

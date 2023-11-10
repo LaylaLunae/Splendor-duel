@@ -1,6 +1,5 @@
+
 #include "../include/carte.h"
-#include "../include/privilege.h"
-#include "../include/couleur.h"
 
 Carte::Carte(const std::string& chemin, int prestige, int cour, const Pouvoir& pvr, Plateau* p, Joueur* j)
         : chemin_vers_image(chemin), point_prestige(prestige), courronnes(cour), pouvoir(pvr), plateau(p), joueur(j) {
