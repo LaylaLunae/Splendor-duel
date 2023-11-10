@@ -577,7 +577,7 @@ const Jeton Plateau::prendreJeton(unsigned int position_x, unsigned int position
 
     const Jeton* resultat = jetons[position_dans_plateau];
 
-    jetons[position_dans_plateau] == nullptr;
+    jetons[position_dans_plateau] = nullptr;
     nb_jetons_plateau--;
 
     return *resultat;
