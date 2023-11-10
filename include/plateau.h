@@ -79,7 +79,12 @@ public:
 
     ~Plateau();
 
-
+    // Usefull for Optionnelle and Obligatoire
+    unsigned int getNbJetonsPlateau() { return nb_jetons_plateau; }
+    unsigned int getNbJetonsPlateauMAX() { return nb_jetons_plateau_MAX; }
+    unsigned int getNbJetonsSac() { return nb_jetons_sac; }
+    unsigned int getNbPrivilegeMAX() { return nb_privileges_MAX; }
+    unsigned int getNbPrivileges() { return nb_privileges; }
 };
 
 std::tuple<int, int> choisir_jeton();

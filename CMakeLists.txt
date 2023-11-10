@@ -16,4 +16,9 @@ add_executable(Splendor main.cpp
         include/pouvoir.h
         src/carte.cpp
         src/jeton.cpp
-        src/privilege.cpp)
+        src/privilege.cpp
+        include/optionnelle.h
+        src/optionnelle.cpp
+        src/plateau.cpp
+        include/pioche.h
+        src/pioche.cpp)

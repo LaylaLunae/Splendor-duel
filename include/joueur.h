@@ -70,6 +70,9 @@ public:
     // Réinitialisez le droit de jouer à la fin du tour du joueur.
     void resetRejouer(); // Normalement, on passe au tour de l'adversaire
     void resetRejouer(bool reset); // Si vous obtenez le pouvoir, vous pouvez passer au tour suivant et appeler cette fonction
+
+    // Usefull for Optionnelle and Obligatoire
+    int getNombreDePrivileges() { return nombre_de_privileges; }
 };
 
 
