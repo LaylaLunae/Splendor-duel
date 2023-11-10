@@ -2,6 +2,7 @@
 #include "../include/carteJoaillerie.h"
 #include <iostream>
 
+#include "../include/carteJoaillerie.h"
 
 Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr) {
 //
@@ -70,28 +71,32 @@ Privilege Joueur::getPrivilege(int index) const {
 }
 
 void Joueur::ajouterCarteJoaillerie(CarteJoaillerie carte) {
-//    int nombrePointsCarte = carte.getPointsPrestige();
-//    int nombreCouronnesCarte = carte.getCourronnes();
-//
-//    // Ajouter les points de prestige si la carte en a
-//    if (nombrePointsCarte > 0) {
-//        points_prestige_total += nombrePointsCarte;
-//    }
-//    // Ajouter les points dans la couleur du bijou si la carte en a
-//    Couleur couleurBijou = carte.getTypePierre();
-//    if (Couleur::rien!= couleurBijou) {
-//        points_prestige_couleurs[static_cast<int>(couleurBijou)] += nombrePointsCarte;
-//    }
-//
-//    // Ajouter le nombre de couronnes si la carte en a
-//    if (nombreCouronnesCarte > 0) {
-//        nombre_couronnes += nombreCouronnesCarte;
-//    }
-//
-//    // Ajouter le nombre de bonus (gemme) si la carte en a
-//    for (const auto &[couleur, nombreGemmes]: carte.getTypePierre()) {
-//        gemmes_bonus[static_cast<int>(couleur)] += nombreGemmes;
-//    }
+    int nombrePointsCarte = carte.getPointsPrestige();
+    int nombreCouronnesCarte = carte.getCourronnes();
+
+    // Ajouter les points de prestige si la carte en a
+    if (nombrePointsCarte > 0) {
+        points_prestige_total += nombrePointsCarte;
+    }
+    // Ajouter les points dans la couleur du bijou si la carte en a
+    Couleur couleurBijou = carte.getTypePierre();
+    if (Couleur::rien!= couleurBijou) {
+        points_prestige_couleurs[static_cast<int>(couleurBijou)] += nombrePointsCarte;
+    }
+
+    // Ajouter le nombre de couronnes si la carte en a
+    if (nombreCouronnesCarte > 0) {
+        nombre_couronnes += nombreCouronnesCarte;
+    }
+    /*
+    // Ajouter le nombre de bonus (gemme) si la carte en a
+    if(carte.getTypePierre()!=Couleur::rien){
+        if(carte.getNombrePierre()==1) {//TO DO: wait for Xu's update and correct
+            int i = static_cast<int>(carte.getTypePierre());
+            gemmes_bonus[i]+=carte.getNombrePierre();
+        }
+    }
+     */
 }
 
 void Joueur::ajouterCarteNoble(const CarteNoble& carte) {

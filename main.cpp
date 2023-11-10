@@ -2,7 +2,6 @@
 #include <tuple>
 
 #include "./include/carte.h"
-//#include "./include/plateau.h"
 
 // M-A
 

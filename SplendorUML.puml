@@ -43,24 +43,51 @@ struct ReponseValidationSelection {
 
 
 class Joueur {
+- IA : bool
 - pseudo: string
 - nombre_couronnes: int
 - points_prestige_total:int
 - points_prestige_couleurs:int[5]
+- nb_cartes_reservees : int
 - cartes_reservees:CarteJoaillerie[]
 - cartes_main:CarteJoaillerie[6]
 - cartes_noble:CarteNoble[]
 - gemmes_bonus:int[5]
 - privileges:Privilege[]
-+ getPoints():int[3]
-+ ajouterCarteJoaillerie(CarteJoaillerie)
-+ ajouterCarteNoble(CarteNoble)
-+ ajouterCarteReservee(CarteJoaillerie)
-+ ajouterPrivilege(Privilege)
+- nombre_de_privileges : int
+- adversaire : Joueur*
+- droit_de_rejouer : bool
+
++ Joueur(nom : string const)
++ getPointsPrestigeTotal() : int const
++ getPseudo() : string const
++ getNombreCouronnes() : int const
++ getPointsPrestigeCouleurs(index : int) : int const
++ getCarteReservee(index : int) : CarteJoaillerie const
++ getCarteNoble(index : int) : CarteNoble const
++ getGemmesBonus(index : int) : int const
++ getPrivilege(index : int) : Privilege const
++ ajouterCarteJoaillerie(carte : CarteJoaillerie) : void
++ ajouterCarteNoble(carte : const CarteNoble&) : void : void
++ ajouterCarteReservee(carte : const CarteJoaillerie&) : void
++ ajouterPrivilege(privilege : const Privilege&) : void
++ setPointsPrestigeCouleurs(index : int, valeur : int) void
++ setGemmesBonus(index : int, value : int) : void
++ getAdversaire() : Joueur *
++ setAdverxaire(adv : Joueur *) : void
++ hasPrivilege() : bool
++ removePrivilege() : Privilege
++ peutRejouer() : bool
++ resetRejouer(reset : bool) : void
 }
 
 class IA {
 - difficulte: Difficulte
++ IA(pseudo : const string&, diff : difficulte)
+}
+
+class Humain {
++ Humain(pseudo : const string&)
 }
 
 enum Difficulte <<enumeration>> {
@@ -86,6 +113,7 @@ enum Couleur <<enumeration>> {
  blanc
  noir
  rose
+ rien
 }
 
 
@@ -146,7 +174,6 @@ class Obligatoire {
 - reserverCarte():CarteJoaillerie
 - acheterCarte():CarteJoaillerie
 }
-
 
 Joueur <|-- IA
 Joueur <|-- Humain

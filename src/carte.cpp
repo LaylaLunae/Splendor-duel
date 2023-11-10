@@ -1,6 +1,5 @@
+
 #include "../include/carte.h"
-#include "../include/privilege.h"
-#include "../include/couleur.h"
 
 #include <bits/stdc++.h>
 

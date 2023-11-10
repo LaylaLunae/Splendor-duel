@@ -3,7 +3,8 @@
 
 #include <string>
 #include <iostream>
-
+//#include "carteJoaillerie.h"
+//#include "carteNoble.h"
 #include "privilege.h"
 #include "couleur.h"
 //#include "carteJoaillerie.h"
@@ -13,22 +14,25 @@ class CarteJoaillerie;
 class CarteNoble;
 
 
+class CarteJoaillerie;
+class CarteNoble;
+
 const int MAX_CARTES = 10;
 const int MAX_PRIVILEGES = 3;
 
 enum Difficulte {facile, moyen, difficile};
 
 class Joueur {
-private:
+protected:
     std::string pseudo;
     int nombre_couronnes;
     int points_prestige_total;
     int points_prestige_couleurs[5];
     int nb_cartes_reservees;
-    CarteJoaillerie* cartes_reservees[3];
-    CarteJoaillerie* cartes_main[60];
-    CarteNoble* cartes_noble[6];
-    int gemmes_bonus[5];
+    CarteJoaillerie *cartes_reservees[3];
+    CarteJoaillerie *cartes_main[60];
+    CarteNoble *cartes_noble[6];
+    int gemmes_bonus[6];
     Privilege privileges[6];
     int nombre_de_privileges;
 
@@ -82,10 +86,10 @@ public:
 class Humain : public Joueur {
 public:
     Humain(const std::string& pseudo) : Joueur(pseudo) {
-
     }
-
 };
+
+
 
 
 
