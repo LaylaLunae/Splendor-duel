@@ -35,6 +35,9 @@ void Jeton::afficher() const {
                 case Couleur::rien:
                     couleur_str = "Rien";
                     break;
+                case Couleur::choix_utilisateur:
+                    couleur_str = "Choix_Utilisateur";
+                    break;
             }
             std::cout << "Jeton " << type_str << " de couleur " << couleur_str << std::endl;
             break;
