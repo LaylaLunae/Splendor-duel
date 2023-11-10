@@ -5,56 +5,56 @@
 #include "../include/carteJoaillerie.h"
 
 Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr) {
-//
-//    for (int i = 0; i < 6; i++) {
-//        cartes_reservees[i] = CarteJoaillerie();
-//        cartes_main[i] = CarteJoaillerie();
-//        cartes_noble[i] = CarteNoble();
-//        privileges[i] = Privilege();
-//    }
-//
-//    for (int i = 0; i < 5; i++) {
-//        gemmes_bonus[i] = 0;
-//        points_prestige_couleurs[i] = 0;
-//    }
+
+    for (int i = 0; i < 6; i++) {
+        cartes_reservees[i] = CarteJoaillerie();
+        cartes_main[i] = CarteJoaillerie();
+        cartes_noble[i] = CarteNoble();
+        privileges[i] = Privilege();
+    }
+
+    for (int i = 0; i < 5; i++) {
+        gemmes_bonus[i] = 0;
+        points_prestige_couleurs[i] = 0;
+    }
 }
-//
+
 int Joueur::getPointsPrestigeTotal() const{
-//    return points_prestige_total;
+    return points_prestige_total;
 }
-//
+
 std::string Joueur::getPseudo() const {
-//    return pseudo;
+    return pseudo;
 }
-//
+
 int Joueur::getNombreCouronnes()const {
-//    return nombre_couronnes;
+    return nombre_couronnes;
 }
-//
+
 int Joueur:: getPointsPrestigeCouleurs(int index) const {
-//    if (index >= 0 && index < 5) {
-//        return points_prestige_couleurs[index];
-//    }
-//    return 0;
+    if (index >= 0 && index < 5) {
+        return points_prestige_couleurs[index];
+    }
+    return 0;
 }
-//
+
 CarteJoaillerie Joueur::getCarteReservee(int index) const {
-//    if (index >= 0 && index <= 3) {
-//        return cartes_reservees[index];
-//    }
+    if (index >= 0 && index <= 3) {
+        return reinterpret_cast<const CarteJoaillerie &>(cartes_reservees[index]);
+    }
 }
-//
+
 CarteJoaillerie Joueur::getCarteMain(int index) const {
-//    if (index >= 0 ) {
-//        return cartes_main[index];
-//    }
+    if (index >= 0 ) {
+        return reinterpret_cast<const CarteJoaillerie &>(cartes_main[index]);
+    }
 }
 
 
 CarteNoble Joueur::getCarteNoble(int index) const {
-//    if (index >= 0 && index < 3) {
-//        return cartes_noble[index];
-//    }
+    if (index >= 0 && index < 3) {
+        return reinterpret_cast<const CarteNoble &>(cartes_noble[index]);
+    }
 }
 
 int Joueur::getGemmesBonus(int index) const {
@@ -70,7 +70,7 @@ Privilege Joueur::getPrivilege(int index) const {
     }
 }
 
-void Joueur::ajouterCarteJoaillerie(CarteJoaillerie carte) {
+void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {
     int nombrePointsCarte = carte.getPointsPrestige();
     int nombreCouronnesCarte = carte.getCourronnes();
 
@@ -88,15 +88,19 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie carte) {
     if (nombreCouronnesCarte > 0) {
         nombre_couronnes += nombreCouronnesCarte;
     }
-    /*
+
+    if(carte.getTypePierre()!=Couleur::choix_utilisateur){
+        int j = static_cast<int>(carte.getTypePierre());
+        gemmes_bonus[j]++;
+    }
+
     // Ajouter le nombre de bonus (gemme) si la carte en a
     if(carte.getTypePierre()!=Couleur::rien){
-        if(carte.getNombrePierre()==1) {//TO DO: wait for Xu's update and correct
+        if(carte.getNombrePierre()==1) {
             int i = static_cast<int>(carte.getTypePierre());
             gemmes_bonus[i]+=carte.getNombrePierre();
         }
     }
-     */
 }
 
 void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
@@ -116,16 +120,15 @@ void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
     }
 }
 
-void Joueur::ajouterCarteReservee(const CarteJoaillerie& carte) {
-//    if (nb_cartes_reservees < 3) {
-//        cartes_reservees[nb_cartes_reservees] = carte;
-//        nb_cartes_reservees++;
-//    }
-//    else {
-//        throw std::runtime_error("Le joueur ne peut pas réserver plus de 3 cartes.");
-//    }
+void Joueur::ajouterCarteReservee(CarteJoaillerie *carte) {
+    if (nb_cartes_reservees < 3) {
+        cartes_reservees[nb_cartes_reservees] = carte;
+        nb_cartes_reservees++;
+    }
+    else {
+        throw std::runtime_error("Le joueur ne peut pas réserver plus de 3 cartes.");
+    }
 }
-
 
 void Joueur::ajouterPrivilege(const Privilege& privilege) {
     if (nombre_de_privileges < 3) {
