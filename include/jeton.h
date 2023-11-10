@@ -10,14 +10,14 @@ enum class JetonType {
 };
 
 class Jeton {
-protected:
+private:
     JetonType type;
     Couleur couleur; // Utilisé uniquement lorsque type = Gemme
     std::string chemin_vers_image;
 
 public:
     Jeton(JetonType t, Couleur c = Couleur::rien) : type(t), couleur(c) {}
-    virtual ~Jeton() {}
+    ~Jeton() {}
 
     void afficher() const;
     std::string getCouleurString() const;

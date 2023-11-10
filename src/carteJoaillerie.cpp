@@ -1,11 +1,13 @@
 #include "../include/carteJoaillerie.h"
 
-CarteJoaillerie::CarteJoaillerie(Plateau* p, Joueur* j, int niv, int cour, bool pier, Couleur couleur, std::map<Couleur, int> prx, const std::string& chemin, int prestige, const Pouvoir& pvr)
-        : Carte(chemin, prestige, cour, pvr, p, j), niveau(niv), couronne(cour), pierre(pier), type_pierre(couleur), prix(prx) {
+CarteJoaillerie::CarteJoaillerie(Plateau* p, Joueur* j, int niv, int cour, const std::array<Couleur, 2>& pierres, std::map<Couleur, int> prx, const std::string& chemin, int prestige, const Pouvoir& pvr1, const Pouvoir& pvr2)
+        : Carte(chemin, prestige, cour, pvr1, pvr2, p, j), niveau(niv), couronne(cour), pierres(pierres), prix(prx) {
     // Constructor implementation
 }
 
-CarteJoaillerie::CarteJoaillerie() : Carte(), niveau(0), couronne(0), pierre(false), type_pierre(Couleur::rien), prix() {}
+CarteJoaillerie::CarteJoaillerie()
+        : Carte(), niveau(0), couronne(0), pierres({Couleur::rien, Couleur::rien}), prix() {}
+
 
 CarteJoaillerie::~CarteJoaillerie() {
     // Destructor implementation, if needed
@@ -24,9 +26,41 @@ int CarteJoaillerie::getCouronne() const {
 }
 
 bool CarteJoaillerie::hasPierre() const {
-    return pierre;
+    for (const auto& pierre : pierres) {
+        if (pierre != Couleur::rien) {
+            return true;  // Au moins il y a une pierre sans rien dessus
+        }
+    }
+    return false;
 }
 
+// 如果您想返回第一个非rien的pierre的类型
 Couleur CarteJoaillerie::getTypePierre() const {
-    return type_pierre;
+    for (const auto& pierre : pierres) {
+        if (pierre != Couleur::rien) {
+            return pierre;  // Au moins il y a une pierre sans rien dessus
+        }
+    }
+    return Couleur::rien;
+}
+
+
+void CarteJoaillerie::setPierreColor(int index, Couleur couleur) {
+    if (index >= 0 && index < pierres.size()) {
+        pierres[index] = couleur;
+    }
+}
+
+std::array<Couleur, 2> CarteJoaillerie::getPierres() const {
+    return pierres;
+}
+
+int CarteJoaillerie::getNombrePierre() const {
+    int count = 0;
+    for (const auto& pierre : pierres) {
+        if (pierre != Couleur::rien) {
+            count++;
+        }
+    }
+    return count;
 }

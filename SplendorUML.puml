@@ -96,16 +96,31 @@ enum Difficulte <<enumeration>> {
  difficile
 }
 
+enum JetonType <<enumeration>> {
+Or
+Gemme
+}
 class Jeton {
-- chemin_vers_image:string
+-type: JetonType
+-couleur: Couleur
+-chemin_vers_image: string
++afficher() const;
++getCouleurString() const: string;
++getCouleur() const: Couleur;
++getType() const: JetonType
+}
+
+enum PrivilegeStatus <<enumeration>> {
+NONE
+POSSEDE
 }
 class Privilege {
+-status: PrivilegeStatus
++getStatus(): PrivilegeStatus
++setStatus(p:PrivilegeStatus)
 }
-class Or {
-}
-class Gemme {
--couleur: Couleur
-}
+
+
 enum Couleur <<enumeration>> {
  bleu
  vert
@@ -114,8 +129,8 @@ enum Couleur <<enumeration>> {
  noir
  rose
  rien
+ choix_utilisateur
 }
-
 
 class Pioche{
 - numero_pioche:int
@@ -125,33 +140,49 @@ class Pioche{
 + joueurPrend(numero_carte:int):CarteJoaillerie
 + distribution()
 }
+
 class Carte {
-- chemin_vers_image:string
-- point_prestige:int
-- courronnes:int
-- pouvoir: Pouvoir
+# chemin_vers_image:string
+# point_prestige:int
+# courronnes:int
+# pouvoirs: array<Pouvoir, 2>
+# plateau: Plateau*
+# joueur: Joueur*
 + actionPouvoir()
-- existancePouvoir():Pouvoir
-- prendrePrivilege():Privilege
-- volerJeton():Jeton
-- prendreJeton():Jeton
-- rejouer()
-- rajouteBonus()
++ getPointsPrestige(): int
++ getCourronnes(): int
++ existancePouvoir():array<Pouvoir, 2>
+# prendrePrivilege():Privilege
+# volerJeton():bool
+# prendreJeton():bool
+# rejouer()
+# rajouteBonus()
 }
+note left: S'il n'y a pas de pouvoir, alors pouvoirs[index]=rien
 
 class CarteNoble {
 -couronne{2,3}: int
+-pointPrestige: int
+-exigences: map<Couleur, int>
++getCouronne(): int const;
++getPointPrestige(): int const;
++getExigences(): map<Couleur, int> const;
 }
 
 class CarteJoaillerie {
 -niveau[1..3]: int
 -couronne[0..2]: int
--pierre: boolean
--type_pierre: Couleur
---
-+ getPrix():Gemme[]
+-pierres: array<Couleur, 2>
+-prix: map<Couleur, int>
++getPrix():map<Couleur, int> const
++getNiveau(): int const
++hasPierre(): bool const;
++getTypePierre(): Couleur const;
++setPierreColor(index:int, couleur:Couleur);
++getPierres(): array<Couleur, 2> const;
++getNombrePierre(): int const;
 }
-note left: type_pierre null quand pierre = false
+note left: S'il n'y a pas de pierre, alors pierres[index]=rien
 
 
 enum Pouvoir <<enumeration>> {
@@ -192,9 +223,6 @@ Plateau --- ReponseValidationSelection
 'Plateau "1"-"3" Pioche
 
 Pioche o--"0..67" CarteJoaillerie
-
-Jeton <|-- Or
-Jeton <|-- Gemme
 
 Joueur "1" -- "0..3" Privilege: détient >
 Joueur "1" --- "0..10" Jeton: possède >

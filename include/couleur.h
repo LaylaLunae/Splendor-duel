@@ -5,7 +5,7 @@
 #include <string>
 
 enum class Couleur {
-    bleu, vert, rouge, blanc, noir, rose, rien
+    bleu, vert, rouge, blanc, noir, rose, rien, choix_utilisateur
 };
 
 inline std::map<std::string, Couleur> couleurMap = {
@@ -15,7 +15,8 @@ inline std::map<std::string, Couleur> couleurMap = {
         {"blanc", Couleur::blanc},
         {"noir", Couleur::noir},
         {"rose", Couleur::rose},
-        {"rien", Couleur::rien}
+        {"rien", Couleur::rien},
+        {"choix_utilisateur", Couleur::choix_utilisateur}
 };
 
 #endif // COULEUR_H
