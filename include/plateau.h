@@ -8,10 +8,11 @@
 #include <iostream>
 #include <tuple>
 
-#include "privilege.h"
+#include "privilege.h" // safe
+#include "jeton.h" // safe
 #include "carteNoble.h"
-#include "jeton.h"
 
+class CarteNoble;
 
 class Jeu{
 public:
@@ -68,6 +69,7 @@ public:
 
     void selectionJeton(unsigned int position_x, unsigned int position_y);
     ReponseValidationSelection validerSelectionEtPrendreJetons();
+    const Jeton prendreJeton(unsigned int position_x, unsigned int position_y);
 
     const Privilege* prendrePrivilege();
     void donnePrivilege(const Privilege* p);
@@ -79,7 +81,6 @@ public:
 
 
 };
-
 
 std::tuple<int, int> choisir_jeton();
 
