@@ -131,6 +131,7 @@ enum PrivilegeStatus <<enumeration>> {
 NONE
 POSSEDE
 }
+
 class Privilege {
 -status: PrivilegeStatus
 +getStatus(): PrivilegeStatus
@@ -150,11 +151,12 @@ enum Couleur <<enumeration>> {
 }
 
 class Pioche{
-- numero_pioche:int
-- cartes_dans_pioche:CarteJoaillerie[]
-- cartes_dehors:CarteJoaillerie[]
+- numero_pioche:int const
+- cartes_dans_pioche:CarteJoaillerie*[] const
+- cartes_dehors:CarteJoaillerie*[] const
 - max_cartes_revelees:int
-+ joueurPrend(numero_carte:int):CarteJoaillerie
+- max_cartes_pioche:int const
++ joueurPrend(numero_carte:int):CarteJoaillerie* const
 + distribution()
 }
 
