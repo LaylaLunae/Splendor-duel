@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include <array>
 
 #include "carte.h"
 //#include "joueur.h"

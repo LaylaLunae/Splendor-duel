@@ -9,7 +9,7 @@
 #include "couleur.h"
 //#include "carteJoaillerie.h"
 //#include "carteNoble.h"
-// #include "carte.h" -> pas besoin ??
+#include "carte.h" //-> pas besoin ??
 class CarteJoaillerie;
 class CarteNoble;
 
@@ -30,10 +30,10 @@ protected:
     int points_prestige_couleurs[5];
     int nb_cartes_reservees;
     CarteJoaillerie *cartes_reservees[3];
-    CarteJoaillerie *cartes_main[60];
-    CarteNoble *cartes_noble[6];
+    CarteJoaillerie *cartes_main[MAX_CARTES];
+    CarteNoble *cartes_noble[2];
     int gemmes_bonus[6];
-    Privilege privileges[6];
+    Privilege *privileges[3];
     int nombre_de_privileges;
 
 
@@ -50,11 +50,11 @@ public:
     CarteJoaillerie getCarteMain(int index) const;
     CarteNoble getCarteNoble(int index) const;
     int getGemmesBonus(int index) const;
-    Privilege getPrivilege(int index) const;
+    Privilege* getPrivilege(int index) const;
     void ajouterCarteJoaillerie(CarteJoaillerie& carte);
     void ajouterCarteNoble(const CarteNoble& carte);
     void ajouterCarteReservee(CarteJoaillerie *carte);
-    void ajouterPrivilege(const Privilege& privilege);
+    void ajouterPrivilege(Privilege *privilege);
 
     void setPointsPrestigeCouleurs(int index, int valeur);
     void setGemmesBonus(int index, int value);

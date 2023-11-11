@@ -6,6 +6,7 @@
 #define SPLENDOR_CARTE_H
 
 #include <string>
+#include <array>
 
 #include "privilege.h"
 #include "pouvoir.h" // safe

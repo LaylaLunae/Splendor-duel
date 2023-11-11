@@ -6,13 +6,16 @@
 
 Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr) {
 
-    for (int i = 0; i < 6; i++) {
-        cartes_reservees[i] = CarteJoaillerie();
-        cartes_main[i] = CarteJoaillerie();
-        cartes_noble[i] = CarteNoble();
-        privileges[i] = Privilege();
+    for (int i = 0; i < 3; i++) {
+        cartes_reservees[i] = nullptr;
+        privileges[i] = nullptr;
     }
-
+    for(int i=0; i<MAX_CARTES;i++){
+        cartes_main[i] = nullptr;
+    }
+    for (int i=0; i<2;i++){
+        cartes_noble[i] = nullptr;
+    }
     for (int i = 0; i < 5; i++) {
         gemmes_bonus[i] = 0;
         points_prestige_couleurs[i] = 0;
@@ -50,7 +53,6 @@ CarteJoaillerie Joueur::getCarteMain(int index) const {
     }
 }
 
-
 CarteNoble Joueur::getCarteNoble(int index) const {
     if (index >= 0 && index < 3) {
         return reinterpret_cast<const CarteNoble &>(cartes_noble[index]);
@@ -64,7 +66,7 @@ int Joueur::getGemmesBonus(int index) const {
     return 0;
 }
 
-Privilege Joueur::getPrivilege(int index) const {
+Privilege* Joueur::getPrivilege(int index) const {
     if (index >= 0 && index < 3) {
         return privileges[index];
     }
@@ -130,13 +132,13 @@ void Joueur::ajouterCarteReservee(CarteJoaillerie *carte) {
     }
 }
 
-void Joueur::ajouterPrivilege(const Privilege& privilege) {
+void Joueur::ajouterPrivilege(Privilege *privilege) {
     if (nombre_de_privileges < 3) {
         privileges[nombre_de_privileges]=privilege;
         nombre_de_privileges++;
     }
     else {
-        throw ("Le joueur ne peut pas avoir plus de 3 privilèges.");
+        throw std::runtime_error("Le joueur ne peut pas avoir plus de 3 privilèges.");
     }
 }
 
@@ -161,10 +163,10 @@ bool Joueur::hasPrivilege() {
 
 Privilege Joueur::removePrivilege() {
     for (int i = 0; i < MAX_PRIVILEGES; ++i) {
-        if (privileges[i].getStatus() != PrivilegeStatus::NONE) {
-            Privilege tmp = privileges[i];
-            privileges[i].setStatus(PrivilegeStatus::NONE);
-            return tmp;
+        if (privileges[i]->getStatus() != PrivilegeStatus::NONE) {
+            Privilege* tmp = privileges[i];
+            privileges[i]->setStatus(PrivilegeStatus::NONE);
+            return *tmp;
         }
     }
     throw std::runtime_error("No privilege to remove");
