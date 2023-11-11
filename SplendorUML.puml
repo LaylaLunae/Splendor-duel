@@ -1,7 +1,9 @@
 @startuml
 
 class Jeu {
+    - handler:static Handler
 --
+- libereJeu():void
 - nouvellePartie():void
 - reprendrePartie():void
 - verifAnciennePartie():void
@@ -11,6 +13,10 @@ class Jeu {
 - auSuivant(): Joueur
 - verifObligationRemplissage()
 + validationAction()
+}
+
+struct Handler {
+    + instance:Jeu *
 }
 
 class Affichage{
@@ -53,6 +59,7 @@ class Plateau {
 + prendreCarteNoble(unsigned int numero) : const CarteNoble*
 + hasJeton() : bool
 }
+
 struct ReponseValidationSelection {
     + jetons:const Jeton*[]
     + nombre: unsigned int;
@@ -227,6 +234,8 @@ class Obligatoire {
 
 Joueur <|-- IA
 Joueur <|-- Humain
+
+Jeu <.. Handler
 
 Jeu *--- "1" Plateau
 Jeu *-- "2" Joueur
