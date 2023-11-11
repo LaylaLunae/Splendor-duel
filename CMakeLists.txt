@@ -17,6 +17,8 @@ add_executable(Splendor main.cpp
         src/carte.cpp
         src/jeton.cpp
         src/privilege.cpp
+        include/obligatoire.h
+        src/obligatoire.cpp
         include/optionnelle.h
         src/optionnelle.cpp
         src/plateau.cpp

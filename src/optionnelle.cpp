@@ -15,7 +15,7 @@ void Optionnelle::depenserPrivilege(Joueur* joueur, ReponseValidationSelection R
             case Couleur::blanc: joueur->setGemmesBonus(3, joueur->getGemmesBonus(3)+1);
             case Couleur::noir: joueur->setGemmesBonus(4, joueur->getGemmesBonus(4)+1);
             case Couleur::rose: joueur->setGemmesBonus(5, joueur->getGemmesBonus(5)+1);
-            default: throw PlateauException("Impossible de recuperer un jeton or avec un privilege !");
+            default: throw PlateauException("Impossible de recuperer ce jeton avec un privilege !");
         }
 
         // On remet le privilège sur le plateau

@@ -80,11 +80,12 @@ public:
     ~Plateau();
 
     // Usefull for Optionnelle and Obligatoire
-    unsigned int getNbJetonsPlateau() { return nb_jetons_plateau; }
-    unsigned int getNbJetonsPlateauMAX() { return nb_jetons_plateau_MAX; }
-    unsigned int getNbJetonsSac() { return nb_jetons_sac; }
-    unsigned int getNbPrivilegeMAX() { return nb_privileges_MAX; }
-    unsigned int getNbPrivileges() { return nb_privileges; }
+    unsigned int getNbJetonsPlateau() const { return nb_jetons_plateau; }
+    unsigned int getNbJetonsPlateauMAX() const { return nb_jetons_plateau_MAX; }
+    unsigned int getNbJetonsSac() const { return nb_jetons_sac; }
+    unsigned int getNbPrivilegeMAX() const { return nb_privileges_MAX; }
+    unsigned int getNbPrivileges() const { return nb_privileges; }
+    bool hasJetonOr(); // Vérifier qu'il y a au moins un jeton or sur le plateau
 };
 
 std::tuple<int, int> choisir_jeton();

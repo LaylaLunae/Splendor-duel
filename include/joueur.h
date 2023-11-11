@@ -72,7 +72,8 @@ public:
     void resetRejouer(bool reset); // Si vous obtenez le pouvoir, vous pouvez passer au tour suivant et appeler cette fonction
 
     // Usefull for Optionnelle and Obligatoire
-    int getNombreDePrivileges() { return nombre_de_privileges; }
+    int getNombreDePrivileges() const { return nombre_de_privileges; }
+    int getNbCartesReservees() const { return nb_cartes_reservees; }
 };
 
 

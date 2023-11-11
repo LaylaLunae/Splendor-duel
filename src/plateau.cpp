@@ -582,3 +582,10 @@ const Jeton Plateau::prendreJeton(unsigned int position_x, unsigned int position
 
     return *resultat;
 }
+
+bool Plateau::hasJetonOr() {
+    for (int i=0; i<nb_jetons_plateau_MAX; i++) {
+        if ((*jetons)->getType() == JetonType::Or) return true;
+    }
+    return false
+}

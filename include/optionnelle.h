@@ -2,7 +2,6 @@
 #define SPLENDOR_OPTIONNELLE_H
 
 #include "plateau.h"
-#include <random>
 
 class Optionnelle {
     public:
