@@ -5,12 +5,12 @@
 #include "carteJoaillerie.h"
 
 class Obligatoire {
-    public:
+    private:
         Obligatoire(Plateau* plateau) : plateau(plateau) {};
 
         void prendreJeton(Joueur* joueur, ReponseValidationSelection RVS);
-        CarteJoaillerie reserverCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card);
-        CarteJoaillerie acheterCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card);
+        void reserverCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card);
+        void acheterCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card);
 
     private:
         Plateau* plateau;

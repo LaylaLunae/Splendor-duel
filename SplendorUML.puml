@@ -58,6 +58,12 @@ class Plateau {
 + donnePrivilege(const Privilege* p)
 + prendreCarteNoble(unsigned int numero) : const CarteNoble*
 + hasJeton() : bool
++ getNbJetonsPlateau() const : unsigned int
++ getNbJetonsPlateauMAX() const : unsigned int
++ getNbJetonsSac() const : unsigned int
++ getNbPrivilegeMAX() const : unsigned int
++ getNbPrivileges() const : unsigned int
++ hasJetonOr() : bool
 }
 
 struct ReponseValidationSelection {
@@ -77,6 +83,7 @@ class Joueur {
 - cartes_main:CarteJoaillerie[6]
 - cartes_noble:CarteNoble[]
 - gemmes_bonus:int[5]
+- nb_jeton:int[6]
 - privileges:Privilege[]
 - nombre_de_privileges : int
 - adversaire : Joueur*
@@ -103,6 +110,10 @@ class Joueur {
 + removePrivilege() : Privilege
 + peutRejouer() : bool
 + resetRejouer(reset : bool) : void
++ getNbJeton(int index) const : int;
++ setNbJeton(int index, int value) : void;
++ getNombreDePrivileges() const : int
++ getNbCartesReservees() const : int
 }
 
 class IA {
@@ -222,14 +233,18 @@ enum Pouvoir <<enumeration>> {
 
 
 class Optionnelle {
-- depenserPrivilege()
-- remplissagePlateau(): Plateau
+- plateau : Plateau*
+- Optionnelle(Plateau* plateau)
+- depenserPrivilege(Joueur* joueur, ReponseValidationSelection RVS)
+- remplissagePlateau(Joueur* joueur)
 }
 
 class Obligatoire {
-- prendreJeton(): Jeton[]
-- reserverCarte():CarteJoaillerie
-- acheterCarte():CarteJoaillerie
+- plateau : Plateau*
+- Obligatoire(Plateau* plateau)
+- prendreJeton(Joueur* joueur, ReponseValidationSelection RVS)
+- reserverCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card)
+- acheterCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card)
 }
 
 Joueur <|-- IA

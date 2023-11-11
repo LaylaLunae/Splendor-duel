@@ -51,7 +51,7 @@ void Obligatoire::prendreJeton(Joueur* joueur, ReponseValidationSelection RVS) {
     } else throw PlateauException("Le plateau est vide !");
 };
 
-CarteJoaillerie Obligatoire::reserverCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card) {
+void Obligatoire::reserverCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card) {
     // Vérifier que la sélection est un jeton or et que le joueur n'a pas 3 cartes réservées déjà
     if (joueur->getNbCartesReservees() == 3) throw PlateauException("Le joueur a deja 3 cartes reservees !");
     if (RVS.nombre != 1) throw PlateauException("La selection n'est pas valide !");
@@ -63,7 +63,7 @@ CarteJoaillerie Obligatoire::reserverCarte(Joueur* joueur, ReponseValidationSele
     joueur->ajouterCarteReservee(card);
 };
 
-CarteJoaillerie Obligatoire::acheterCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card) {
+void Obligatoire::acheterCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card) {
     // Vérifier achat possible
     std::map<Couleur, int> prix = card->getPrix();
     bool achat_possible = true;

@@ -4,7 +4,7 @@
 #include "plateau.h"
 
 class Optionnelle {
-    public:
+    private:
         Optionnelle(Plateau* plateau) : plateau(plateau) {};
 
         void depenserPrivilege(Joueur* joueur, ReponseValidationSelection RVS);
