@@ -33,6 +33,7 @@ protected:
     CarteJoaillerie *cartes_main[MAX_CARTES];
     CarteNoble *cartes_noble[2];
     int gemmes_bonus[6];
+    int nb_jeton[6]; // Timo - Temporaire pour actions (a un getter et setter)
     Privilege *privileges[3];
     int nombre_de_privileges;
 
@@ -59,6 +60,9 @@ public:
     void setPointsPrestigeCouleurs(int index, int valeur);
     void setGemmesBonus(int index, int value);
 
+    // Timo - Temporaire pour action
+    int getNbJeton(int index) const;
+    void setNbJeton(int index, int value);
 
     // Définir l'adversaire
     Joueur* getAdversaire();

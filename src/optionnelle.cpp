@@ -9,21 +9,19 @@ void Optionnelle::depenserPrivilege(Joueur* joueur, ReponseValidationSelection R
         // On ajoute le jeton au joueur
         const Jeton* jeton = RVS.jetons[0];
         switch (jeton->getCouleur()) {
-            case Couleur::bleu: joueur->setGemmesBonus(0, joueur->getGemmesBonus(0)+1);
-            case Couleur::vert: joueur->setGemmesBonus(1, joueur->getGemmesBonus(1)+1);
-            case Couleur::rouge: joueur->setGemmesBonus(2, joueur->getGemmesBonus(2)+1);
-            case Couleur::blanc: joueur->setGemmesBonus(3, joueur->getGemmesBonus(3)+1);
-            case Couleur::noir: joueur->setGemmesBonus(4, joueur->getGemmesBonus(4)+1);
-            case Couleur::rose: joueur->setGemmesBonus(5, joueur->getGemmesBonus(5)+1);
+            case Couleur::bleu: joueur->setNbJeton(0, joueur->getNbJeton(0)+1);
+            case Couleur::vert: joueur->setNbJeton(1, joueur->getNbJeton(1)+1);
+            case Couleur::rouge: joueur->setNbJeton(2, joueur->getNbJeton(2)+1);
+            case Couleur::blanc: joueur->setNbJeton(3, joueur->getNbJeton(3)+1);
+            case Couleur::noir: joueur->setNbJeton(4, joueur->getNbJeton(4)+1);
+            case Couleur::rose: joueur->setNbJeton(5, joueur->getNbJeton(5)+1);
             default: throw PlateauException("Impossible de recuperer ce jeton avec un privilege !");
         }
 
         // On remet le privilège sur le plateau
-        Privilege privilege;
+        Privilege* privilege = nullptr;
         privilege = joueur->getPrivilege(0); // Décalage du tableau de privilège à prévoir? Ou suivi de l'index en tant qu'attribut?
-        const Privilege* privilegeConst = nullptr;
-        privilegeConst = &privilege;
-        plateau->donnePrivilege(privilegeConst);
+        plateau->donnePrivilege(privilege);
     } else throw PlateauException("Le joueur ne peut depenser de privilege !");
 }
 
@@ -39,14 +37,13 @@ void Optionnelle::remplissagePlateau(Joueur* joueur) {
 
     // Et on donne un privilège à l'adversaire
     Joueur* adversaire = joueur->getAdversaire();
-    Privilege privilege;
-    const Privilege* privilegeptr = nullptr;
+    const Privilege* privilege;
     if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) throw PlateauException("L'adversaire a deja tous les privileges !");
     if (plateau->getNbPrivileges() == 0) {
         privilege = joueur->getPrivilege(0); // Décalage du tableau de privilège à prévoir? Ou suivi de l'index en tant qu'attribut?
-        adversaire->ajouterPrivilege(privilege);
+        adversaire->ajouterPrivilege(const_cast<Privilege*>(privilege));
     } else {
-        privilegeptr = plateau->prendrePrivilege();
-        adversaire->ajouterPrivilege(*privilegeptr);
+        privilege = plateau->prendrePrivilege();
+        adversaire->ajouterPrivilege(const_cast<Privilege*>(privilege));
     }
 }

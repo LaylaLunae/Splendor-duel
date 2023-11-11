@@ -9,8 +9,8 @@ class Obligatoire {
         Obligatoire(Plateau* plateau) : plateau(plateau) {};
 
         void prendreJeton(Joueur* joueur, ReponseValidationSelection RVS);
-        CarteJoaillerie reserverCarte(Joueur* joueur);
-        CarteJoaillerie acheterCarte(Joueur* joueur);
+        CarteJoaillerie reserverCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card);
+        CarteJoaillerie acheterCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card);
 
     private:
         Plateau* plateau;
