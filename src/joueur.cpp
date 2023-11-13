@@ -4,7 +4,7 @@
 
 #include "../include/carteJoaillerie.h"
 
-Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr) {
+Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr),nb_cartes_reservees(0),nombre_de_privileges(0) {
 
     for (int i = 0; i < 3; i++) {
         cartes_reservees[i] = nullptr;
@@ -19,8 +19,74 @@ Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_
     for (int i = 0; i < 5; i++) {
         gemmes_bonus[i] = 0;
         points_prestige_couleurs[i] = 0;
+        nb_jeton[i]=0;
     }
 }
+
+// Destructeur
+Joueur::~Joueur() {
+
+    for (int i = 0; i < nb_cartes_reservees; ++i) {
+        delete cartes_reservees[i];
+    }
+
+    for (int i = 0; i < MAX_CARTES; ++i) {
+        delete cartes_main[i];
+    }
+
+    for (int i = 0; i < 2; ++i) {
+        delete cartes_noble[i];
+    }
+
+    for (int i = 0; i < nombre_de_privileges; ++i) {
+        delete privileges[i];
+    }
+}
+
+// Constructeur de recopie
+Joueur::Joueur(const Joueur& autre) {
+    pseudo = autre.pseudo;
+    nombre_couronnes = autre.nombre_couronnes;
+    points_prestige_total = autre.points_prestige_total;
+    nb_cartes_reservees = autre.nb_cartes_reservees;
+    nombre_de_privileges = autre.nombre_de_privileges;
+    adversaire = autre.adversaire;
+    droitDeRejouer = autre.droitDeRejouer;
+
+    for (int i = 0; i < 5; ++i) {
+        points_prestige_couleurs[i] = autre.points_prestige_couleurs[i];
+    }
+    for (int i = 0; i < 6; ++i) {
+        gemmes_bonus[i] = autre.gemmes_bonus[i];
+        nb_jeton[i] = autre.nb_jeton[i];
+    }
+
+    for (int i = 0; i < 3; ++i) {
+        cartes_reservees[i] = new CarteJoaillerie(*(autre.cartes_reservees[i]));
+    }
+    for (int i = 0; i < MAX_CARTES; ++i) {
+        cartes_main[i] = new CarteJoaillerie(*(autre.cartes_main[i]));
+    }
+    for (int i = 0; i < 2; ++i) {
+        cartes_noble[i] = new CarteNoble(*(autre.cartes_noble[i]));
+    }
+
+    for (int i = 0; i < 3; ++i) {
+        privileges[i] = new Privilege(*(autre.privileges[i]));
+    }
+}
+
+// Opérateur de recopie
+Joueur& Joueur::operator=(const Joueur& autre) {
+    if (this != &autre) {
+
+        this->~Joueur();
+
+        new (this) Joueur(autre);
+    }
+    return *this;
+}
+
 
 int Joueur::getPointsPrestigeTotal() const{
     return points_prestige_total;
@@ -201,3 +267,34 @@ void Joueur::resetRejouer() {
 void Joueur::resetRejouer(bool reset) {
     droitDeRejouer = reset;
 }
+
+
+
+
+
+// Flux ostream
+std::ostream& operator<<(std::ostream& os, const Joueur& joueur) {
+    os << "Pseudo: " << joueur.getPseudo() << "\n";
+    os << "Nombre de couronnes: " << joueur.getNombreCouronnes() << "\n";
+    os << "Points de prestige total: " << joueur.getPointsPrestigeTotal() << "\n";
+
+    os << "Points de prestige par couleur: ";
+    for (int i = 0; i < 5; ++i) {
+        os << joueur.getPointsPrestigeCouleurs(i) << " ";
+    }
+    os << "\n";
+
+    os << "Gemmes bonus: ";
+    for (int i = 0; i < 6; ++i) {
+        os << joueur.getGemmesBonus(i) << " ";
+    }
+    os << "\n";
+
+    os << "Nombre de jetons: ";
+    for (int i = 0; i < 6; ++i) {
+        os << joueur.getNbJeton(i) << " ";
+    }
+    os << "\n";
+    return os;
+}
+

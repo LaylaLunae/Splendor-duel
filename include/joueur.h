@@ -43,6 +43,10 @@ protected:
 
 public:
     Joueur(const std::string nom);
+    ~Joueur();
+    Joueur(const Joueur& autre);
+    Joueur& operator=(const Joueur& autre);
+
     int getPointsPrestigeTotal() const;
     std::string getPseudo() const;
     int getNombreCouronnes()const;
