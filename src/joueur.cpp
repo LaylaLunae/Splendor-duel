@@ -19,6 +19,8 @@ Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_
     for (int i = 0; i < 5; i++) {
         gemmes_bonus[i] = 0;
         points_prestige_couleurs[i] = 0;
+    }
+    for(int i=0; i<7;i++){
         nb_jeton[i]=0;
     }
 }

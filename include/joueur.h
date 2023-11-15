@@ -33,7 +33,7 @@ protected:
     CarteJoaillerie *cartes_main[MAX_CARTES];
     CarteNoble *cartes_noble[2];
     int gemmes_bonus[6];
-    int nb_jeton[6]; // Timo - Temporaire pour actions (a un getter et setter)
+    int nb_jeton[7]; // Timo - Temporaire pour actions (a un getter et setter)
     Privilege *privileges[3];
     int nombre_de_privileges;
 
