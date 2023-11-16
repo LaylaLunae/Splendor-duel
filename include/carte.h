@@ -7,6 +7,7 @@
 
 #include <string>
 #include <array>
+#include <algorithm>
 
 #include "privilege.h"
 #include "pouvoir.h" // safe
