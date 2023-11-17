@@ -8,9 +8,9 @@
 #include <iostream>
 #include <tuple>
 
-#include "privilege.h" // safe
-#include "jeton.h" // safe
-#include "carteNoble.h"
+//#include "privilege.h" // safe
+//#include "jeton.h" // safe
+//#include "carteNoble.h"
 
 class CarteNoble;
 

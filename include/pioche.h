@@ -1,9 +1,11 @@
 #ifndef PIOCHE_H_INCLUDED
 #define PIOCHE_H_INCLUDED
 
+#include "carteJoaillerie.h"
+
 class Jeu;
 class Pioche;
-
+/*
 class CarteJoaillerie {
 private:
     friend class Jeu;
@@ -17,7 +19,7 @@ public:
     CarteJoaillerie() : carte(0) {} // il faut un constructeur par défaut
 
 };
-
+*/
 class Pioche {
 private:
     friend class Jeu;

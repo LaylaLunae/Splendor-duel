@@ -4,7 +4,7 @@
 #include <map>
 
 #include "couleur.h" // safe
-#include "carte.h"
+//#include "carte.h"
 
 class CarteNoble {
 private:

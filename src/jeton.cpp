@@ -1,7 +1,7 @@
-#include "../include/jeton.h"
+//#include "../include/jeton.h"
 #include <iostream>
 #include <string>
-
+#include "../include/jeu.h"
 void Jeton::afficher() const {
     std::string type_str;
     switch (type) {
@@ -89,4 +89,5 @@ std::string Jeton::getCouleurString() const {
             return type_str;
         }
     }
+    return "";
 }

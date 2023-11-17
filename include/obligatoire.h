@@ -1,8 +1,9 @@
 #ifndef SPLENDOR_OBLIGATOIRE_H
 #define SPLENDOR_OBLIGATOIRE_H
 
-#include "carte.h"
-#include "carteJoaillerie.h"
+
+//#include "carte.h"
+//#include "carteJoaillerie.h"
 
 class Obligatoire {
     private:

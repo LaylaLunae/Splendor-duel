@@ -5,9 +5,9 @@
 #include <string>
 #include <iostream>
 #include <cmath>
-
-#include "./../include/plateau.h"
-#include "./../include/jeton.h"
+#include "../include/jeu.h"
+//#include "./../include/plateau.h"
+//#include "./../include/jeton.h"
 
 
 std::tuple<int, int> choisir_jeton() {
@@ -587,5 +587,5 @@ bool Plateau::hasJetonOr() {
     for (int i=0; i<nb_jetons_plateau_MAX; i++) {
         if ((*jetons)->getType() == JetonType::Or) return true;
     }
-    return false
+    return false;
 }

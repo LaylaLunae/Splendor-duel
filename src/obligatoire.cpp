@@ -1,5 +1,5 @@
-#include "../include/obligatoire.h"
-
+//#include "../include/obligatoire.h"
+#include "../include/jeu.h"
 void Obligatoire::prendreJeton(Joueur* joueur, ReponseValidationSelection RVS) {
     // Vérifier qu'il y a au moins un jeton sur le plateau
     if (plateau->hasJeton()) {

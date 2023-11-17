@@ -1,8 +1,8 @@
-#include "../include/joueur.h"
-#include "../include/carteJoaillerie.h"
+//#include "../include/joueur.h"
+//#include "../include/carteJoaillerie.h"
 #include <iostream>
-
-#include "../include/carteJoaillerie.h"
+#include "../include/jeu.h"
+//#include "../include/carteJoaillerie.h"
 
 Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr),nb_cartes_reservees(0),nombre_de_privileges(0) {
 
@@ -113,18 +113,21 @@ CarteJoaillerie Joueur::getCarteReservee(int index) const {
     if (index >= 0 && index <= 3) {
         return reinterpret_cast<const CarteJoaillerie &>(cartes_reservees[index]);
     }
+    return CarteJoaillerie();
 }
 
 CarteJoaillerie Joueur::getCarteMain(int index) const {
     if (index >= 0 ) {
         return reinterpret_cast<const CarteJoaillerie &>(cartes_main[index]);
     }
+    return CarteJoaillerie();
 }
 
 CarteNoble Joueur::getCarteNoble(int index) const {
     if (index >= 0 && index < 3) {
         return reinterpret_cast<const CarteNoble &>(cartes_noble[index]);
     }
+    return CarteNoble();
 }
 
 int Joueur::getGemmesBonus(int index) const {
@@ -138,6 +141,7 @@ Privilege* Joueur::getPrivilege(int index) const {
     if (index >= 0 && index < 3) {
         return privileges[index];
     }
+    return nullptr;
 }
 
 void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {

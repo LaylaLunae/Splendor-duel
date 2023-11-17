@@ -1,5 +1,5 @@
-#include "../include/carteNoble.h"
-
+//#include "../include/carteNoble.h"
+#include "../include/jeu.h"
 CarteNoble::CarteNoble() : couronne(0) {}
 
 CarteNoble::CarteNoble(int cour,int pointPres, std::map<Couleur, int> exg) : couronne(cour), pointPrestige(pointPres), exigences(exg) {}

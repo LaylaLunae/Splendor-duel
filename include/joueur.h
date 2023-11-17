@@ -5,15 +5,14 @@
 #include <iostream>
 //#include "carteJoaillerie.h"
 //#include "carteNoble.h"
-#include "privilege.h"
-#include "couleur.h"
+//#include "privilege.h"
+//#include "couleur.h"
 //#include "carteJoaillerie.h"
 //#include "carteNoble.h"
-#include "carte.h" //-> pas besoin ??
-class CarteJoaillerie;
+//#include "carte.h" //-> pas besoin ??
+//class CarteJoaillerie;
+
 class CarteNoble;
-
-
 class CarteJoaillerie;
 class CarteNoble;
 

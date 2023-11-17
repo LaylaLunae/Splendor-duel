@@ -1,5 +1,6 @@
-#include "../include/carte.h"
-
+//#include "../include/jeu.h"
+//#include "../include/carte.h"
+#include "../include/jeu.h"
 //#include <bits/stdc++.h>
 
 Carte::Carte(const std::string& chemin, int prestige, int cour, Pouvoir pvr1, Pouvoir pvr2, Plateau* p, Joueur* j)
@@ -92,7 +93,7 @@ Privilege Carte::prendrePrivilege() {
         Privilege privilegeTemp = *privilegeDuPlateau;
 
         // Ajout du privilège temporaire au joueur
-        joueur->ajouterPrivilege(privilegeTemp);
+        joueur->ajouterPrivilege(&privilegeTemp);
 
         // Retour du privilège temporaire pour une utilisation future si nécessaire
         return privilegeTemp;
@@ -100,7 +101,7 @@ Privilege Carte::prendrePrivilege() {
         // Il n'y a aucun privilege sur le plateau, essayez d'en prendre un à adversaire
         if (this->joueur->getAdversaire()->hasPrivilege()) { // 检查对手是否有特权
             Privilege oppPrivilege = this->joueur->getAdversaire()->removePrivilege();
-            this->joueur->ajouterPrivilege(oppPrivilege);
+            this->joueur->ajouterPrivilege(&oppPrivilege);
         }
     }
 }

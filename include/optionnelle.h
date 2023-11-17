@@ -1,7 +1,9 @@
 #ifndef SPLENDOR_OPTIONNELLE_H
 #define SPLENDOR_OPTIONNELLE_H
 
-#include "plateau.h"
+//#include "plateau.h"
+//#include "joueur.h"
+
 
 class Optionnelle {
     private:
