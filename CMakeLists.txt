@@ -3,20 +3,11 @@ project(Splendor)
 
 set(CMAKE_CXX_STANDARD 17)
 
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-
-
 set(CMAKE_PREFIX_PATH "C:/Qt/6.6.0/mingw_64/lib/cmake")
 
-
-find_package(Qt6 COMPONENTS
-        Core
-        Gui
-        Widgets
-        REQUIRED)
 
 
 add_executable(Splendor main.cpp
@@ -42,6 +33,12 @@ add_executable(Splendor main.cpp
         src/pioche.cpp
         include/jeu.h)
 
+
+find_package(Qt6 COMPONENTS
+        Core
+        Gui
+        Widgets
+        REQUIRED)
 
 
 target_link_libraries(Splendor
