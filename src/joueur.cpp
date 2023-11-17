@@ -1,94 +1,92 @@
-//#include "../include/joueur.h"
-//#include "../include/carteJoaillerie.h"
+
 #include <iostream>
 #include "../include/jeu.h"
-//#include "../include/carteJoaillerie.h"
 
-Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0),droitDeRejouer(false),adversaire(nullptr),nb_cartes_reservees(0),nombre_de_privileges(0) {
 
-    for (int i = 0; i < 3; i++) {
-        cartes_reservees[i] = nullptr;
-        privileges[i] = nullptr;
-    }
-    for(int i=0; i<MAX_CARTES;i++){
-        cartes_main[i] = nullptr;
-    }
-    for (int i=0; i<2;i++){
-        cartes_noble[i] = nullptr;
-    }
-    for (int i = 0; i < 5; i++) {
-        gemmes_bonus[i] = 0;
-        points_prestige_couleurs[i] = 0;
-    }
-    for(int i=0; i<7;i++){
-        nb_jeton[i]=0;
-    }
+Joueur::Joueur(const std::string nom)
+        : pseudo(nom), nombre_couronnes(0), points_prestige_total(0), droitDeRejouer(false), adversaire(nullptr){
+
+    // Utilisation de vecteurs au lieu de tableaux statiques
+    cartes_reservees.resize(3, nullptr);
+    cartes_main.resize(MAX_CARTES, nullptr);
+    cartes_noble.resize(2, nullptr);
+    gemmes_bonus.resize(6, 0);
+    nb_jeton.resize(7, 0);
+    privileges.resize(3, nullptr);
 }
 
 // Destructeur
 Joueur::~Joueur() {
-
-    for (int i = 0; i < nb_cartes_reservees; ++i) {
-        delete cartes_reservees[i];
+    // Utilisation de la boucle for each pour parcourir le vecteur
+    for (auto& carte : cartes_reservees) {
+        delete carte;
     }
 
-    for (int i = 0; i < MAX_CARTES; ++i) {
-        delete cartes_main[i];
+    for (auto& carte : cartes_main) {
+        delete carte;
     }
 
-    for (int i = 0; i < 2; ++i) {
-        delete cartes_noble[i];
+    for (auto& carte : cartes_noble) {
+        delete carte;
     }
 
-    for (int i = 0; i < nombre_de_privileges; ++i) {
-        delete privileges[i];
+    for (auto& privilege : privileges) {
+        delete privilege;
     }
 }
 
 // Constructeur de recopie
-Joueur::Joueur(const Joueur& autre) {
-    pseudo = autre.pseudo;
-    nombre_couronnes = autre.nombre_couronnes;
-    points_prestige_total = autre.points_prestige_total;
-    nb_cartes_reservees = autre.nb_cartes_reservees;
-    nombre_de_privileges = autre.nombre_de_privileges;
-    adversaire = autre.adversaire;
-    droitDeRejouer = autre.droitDeRejouer;
+Joueur::Joueur(const Joueur& autre)
+        : pseudo(autre.pseudo), nombre_couronnes(autre.nombre_couronnes), points_prestige_total(autre.points_prestige_total),
+          adversaire(autre.adversaire), droitDeRejouer(autre.droitDeRejouer), points_prestige_couleurs(autre.points_prestige_couleurs),
+          gemmes_bonus(autre.gemmes_bonus), nb_jeton(autre.nb_jeton) {
 
-    for (int i = 0; i < 5; ++i) {
-        points_prestige_couleurs[i] = autre.points_prestige_couleurs[i];
-    }
-    for (int i = 0; i < 6; ++i) {
-        gemmes_bonus[i] = autre.gemmes_bonus[i];
-        nb_jeton[i] = autre.nb_jeton[i];
+    // Utilisation de la boucle for each pour copier les éléments des vecteurs
+    for (const auto& carte : autre.cartes_reservees) {
+        cartes_reservees.push_back(new CarteJoaillerie(*carte));
     }
 
-    for (int i = 0; i < 3; ++i) {
-        cartes_reservees[i] = new CarteJoaillerie(*(autre.cartes_reservees[i]));
-    }
-    for (int i = 0; i < MAX_CARTES; ++i) {
-        cartes_main[i] = new CarteJoaillerie(*(autre.cartes_main[i]));
-    }
-    for (int i = 0; i < 2; ++i) {
-        cartes_noble[i] = new CarteNoble(*(autre.cartes_noble[i]));
+    for (const auto& carte : autre.cartes_main) {
+        cartes_main.push_back(new CarteJoaillerie(*carte));
     }
 
-    for (int i = 0; i < 3; ++i) {
-        privileges[i] = new Privilege(*(autre.privileges[i]));
+    for (const auto& carte : autre.cartes_noble) {
+        cartes_noble.push_back(new CarteNoble(*carte));
+    }
+
+    for (const auto& privilege : autre.privileges) {
+        privileges.push_back(new Privilege(*privilege));
     }
 }
 
 // Opérateur de recopie
 Joueur& Joueur::operator=(const Joueur& autre) {
     if (this != &autre) {
+        // Utilisation de la méthode clear pour libérer la mémoire des vecteurs
+        cartes_reservees.clear();
+        cartes_main.clear();
+        cartes_noble.clear();
+        privileges.clear();
 
-        this->~Joueur();
+        // Copie des éléments du vecteur
+        for (const auto& carte : autre.cartes_reservees) {
+            cartes_reservees.push_back(new CarteJoaillerie(*carte));
+        }
 
-        new (this) Joueur(autre);
+        for (const auto& carte : autre.cartes_main) {
+            cartes_main.push_back(new CarteJoaillerie(*carte));
+        }
+
+        for (const auto& carte : autre.cartes_noble) {
+            cartes_noble.push_back(new CarteNoble(*carte));
+        }
+
+        for (const auto& privilege : autre.privileges) {
+            privileges.push_back(new Privilege(*privilege));
+        }
     }
     return *this;
 }
-
 
 int Joueur::getPointsPrestigeTotal() const{
     return points_prestige_total;
@@ -109,25 +107,25 @@ int Joueur:: getPointsPrestigeCouleurs(int index) const {
     return 0;
 }
 
-CarteJoaillerie Joueur::getCarteReservee(int index) const {
+const CarteJoaillerie * Joueur::getCarteReservee(int index) const {
     if (index >= 0 && index <= 3) {
-        return reinterpret_cast<const CarteJoaillerie &>(cartes_reservees[index]);
+        return (cartes_reservees[index]);
     }
-    return CarteJoaillerie();
+    return nullptr;
 }
 
-CarteJoaillerie Joueur::getCarteMain(int index) const {
+CarteJoaillerie * Joueur::getCarteMain(int index) const {
     if (index >= 0 ) {
-        return reinterpret_cast<const CarteJoaillerie &>(cartes_main[index]);
+        return (cartes_main[index]);
     }
-    return CarteJoaillerie();
+    return nullptr;
 }
 
-CarteNoble Joueur::getCarteNoble(int index) const {
+CarteNoble * Joueur::getCarteNoble(int index) const {
     if (index >= 0 && index < 3) {
-        return reinterpret_cast<const CarteNoble &>(cartes_noble[index]);
+        return (cartes_noble[index]);
     }
-    return CarteNoble();
+    return nullptr;
 }
 
 int Joueur::getGemmesBonus(int index) const {
@@ -193,27 +191,22 @@ void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
         throw ("Le joueur doit avoir 3 ou 6 couronnes pour ajouter une carte noble.");
     }
 }
-
 void Joueur::ajouterCarteReservee(CarteJoaillerie *carte) {
-    if (nb_cartes_reservees < 3) {
-        cartes_reservees[nb_cartes_reservees] = carte;
-        nb_cartes_reservees++;
-    }
-    else {
+    if (cartes_reservees.size() < 3) {
+        cartes_reservees.push_back(carte);
+    } else {
         throw std::runtime_error("Le joueur ne peut pas réserver plus de 3 cartes.");
     }
 }
 
 void Joueur::ajouterPrivilege(Privilege *privilege) {
-    if (nombre_de_privileges < 3) {
-        privileges[nombre_de_privileges]=privilege;
-        nombre_de_privileges++;
+    if (privileges.size() < 3) {
+        privileges.push_back(privilege);
     }
     else {
         throw std::runtime_error("Le joueur ne peut pas avoir plus de 3 privilèges.");
     }
 }
-
 
 // Définir l'adversaire
 void Joueur::setAdversaire(Joueur *adv) {
@@ -228,10 +221,9 @@ Joueur* Joueur::getAdversaire() {
 }
 
 bool Joueur::hasPrivilege() {
-    if (this->privileges != nullptr)
-        return true;
-    return false;
+    return !privileges.empty();
 }
+
 
 Privilege Joueur::removePrivilege() {
     for (int i = 0; i < MAX_PRIVILEGES; ++i) {
