@@ -1,5 +1,8 @@
 //#include "../include/obligatoire.h"
 #include "../include/jeu.h"
+
+
+
 void Obligatoire::prendreJeton(Joueur* joueur, ReponseValidationSelection RVS) {
     // Vérifier qu'il y a au moins un jeton sur le plateau
     if (plateau->hasJeton()) {
@@ -83,3 +86,5 @@ void Obligatoire::acheterCarte(Joueur* joueur, ReponseValidationSelection RVS, C
     if (!achat_possible) throw PlateauException("Achat non possible !");
     joueur->ajouterCarteJoaillerie(*card);
 };
+
+

@@ -1,6 +1,8 @@
 //#include "../include/optionnelle.h"
 #include "../include/jeu.h"
 
+
+
 void Optionnelle::depenserPrivilege(Joueur* joueur, ReponseValidationSelection RVS) {
     // Vérifier si le privilège est disponible et qu'il y a au moins un jeton sur le plateau
     if (joueur->hasPrivilege() && plateau->hasJeton()) {
@@ -48,3 +50,4 @@ void Optionnelle::remplissagePlateau(Joueur* joueur) {
         adversaire->ajouterPrivilege(const_cast<Privilege*>(privilege));
     }
 }
+
