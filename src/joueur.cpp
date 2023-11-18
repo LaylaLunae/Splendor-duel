@@ -142,10 +142,11 @@ Privilege* Joueur::getPrivilege(int index) const {
     return nullptr;
 }
 
+
+
 int Joueur::getNbJeton(int index) const{
     return nb_jeton[index];
 }
-
 void Joueur::setNbJeton(int index, int value){
     nb_jeton[index] = value;
 }
@@ -301,7 +302,6 @@ std::ostream& operator<<(std::ostream& os, const Joueur& joueur) {
         os << joueur.getNbJeton(i) << " ";
     }
     os << "\n";
-
     return os;
 }
 

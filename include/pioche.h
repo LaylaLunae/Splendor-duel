@@ -19,7 +19,7 @@ public:
     CarteJoaillerie() : carte(0) {} // il faut un constructeur par défaut
 
 };
-*/
+
 class Pioche {
 private:
     friend class Jeu;
@@ -48,5 +48,5 @@ public:
     const CarteJoaillerie * joueurPrend(int numero_carte); // à revoir + tirage au sort
     void distribution(); // à revoir
 };
-
+*/
 #endif // PIOCHE_H_INCLUDED

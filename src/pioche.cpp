@@ -1,8 +1,8 @@
 #include <iostream>
 //#include "../include/pioche.h"
 #include "../include/jeu.h"
-/*
 
+/*
 Pioche::Pioche(int np, int mcr, int mcp):numero_pioche(np),
                                          max_cartes_revelees(mcr), max_cartes_pioche(mcp){
     cartes_dans_pioche = new const CarteJoaillerie*[mcp];
