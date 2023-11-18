@@ -226,7 +226,7 @@ bool Joueur::hasPrivilege() {
 
 
 Privilege Joueur::removePrivilege() {
-    for (int i = 0; i < MAX_PRIVILEGES; ++i) {
+    for (int i = 0; i < MAX_PRIVILEGES; i++) {
         if (privileges[i]->getStatus() != PrivilegeStatus::NONE) {
             Privilege* tmp = privileges[i];
             privileges[i]->setStatus(PrivilegeStatus::NONE);
