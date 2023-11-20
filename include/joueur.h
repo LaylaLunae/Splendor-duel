@@ -96,41 +96,32 @@ public:
 #include <QWidget>
 #include <QLabel>
 #include <QLineEdit>
+#include <QVBoxLayout>
 
 class FenetreInformations : public QWidget {
 Q_OBJECT
 public:
     FenetreInformations(QWidget *parent = nullptr) : QWidget(parent), joueur(nullptr) {
-        // Initialisation de la fenêtre
-        setFixedSize(300, 200);
+        setFixedSize(300, 300);
         setWindowTitle("Informations du Joueur");
 
-        // Création de l'étiquette pour afficher le nombre de privilèges
+        QVBoxLayout *layout = new QVBoxLayout(this);
+
         labelPriviliges = new QLabel("Nombre de Privilèges: 0", this);
-        labelPriviliges->setGeometry(10, 10, 200, 30);
+        labelPriviliges->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
+        layout->addWidget(labelPriviliges);
 
-        // Zone de texte pour afficher le nombre de privilèges
-        textePriviliges = new QLineEdit(this);
-        textePriviliges->setReadOnly(true);
-        textePriviliges->setGeometry(10, 40, 100, 30);
-
-        // Étiquette pour le nombre de couronnes
         labelCouronnes = new QLabel("Nombre de Couronnes: 0", this);
-        labelCouronnes->setGeometry(10, 80, 200, 30);
+        labelCouronnes->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
+        layout->addWidget(labelCouronnes);
 
-        // Zone de texte pour afficher le nombre de couronnes
-        texteCouronnes = new QLineEdit(this);
-        texteCouronnes->setReadOnly(true);
-        texteCouronnes->setGeometry(10, 110, 100, 30);
-
-        // Étiquette pour le nombre de cartes nobles
         labelCartesNobles = new QLabel("Nombre de Cartes Nobles: 0", this);
-        labelCartesNobles->setGeometry(10, 150, 200, 30);
+        labelCartesNobles->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
+        layout->addWidget(labelCartesNobles);
 
-        // Zone de texte pour afficher le nombre de cartes nobles
-        texteCartesNobles = new QLineEdit(this);
-        texteCartesNobles->setReadOnly(true);
-        texteCartesNobles->setGeometry(10, 180, 100, 30);
+        labelCartesReservees = new QLabel("Nombre de Cartes Réservées: 0", this);
+        labelCartesReservees->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
+        layout->addWidget(labelCartesReservees);
 
         // Mise en place du joueur initial
         setJoueur(nullptr);
@@ -140,15 +131,10 @@ public slots:
     // Fonction pour mettre à jour les informations du joueur
     void miseAJourInformations() {
         if (joueur) {
-            // Mettez à jour le texte de l'étiquette et de la zone de texte avec les informations du joueur
             labelPriviliges->setText(QString("Nombre de Privilèges: %1").arg(joueur->getNombreDePrivileges()));
-            textePriviliges->setText(QString::number(joueur->getNombreDePrivileges()));
-
             labelCouronnes->setText(QString("Nombre de Couronnes: %1").arg(joueur->getNombreCouronnes()));
-            texteCouronnes->setText(QString::number(joueur->getNombreCouronnes()));
-
             labelCartesNobles->setText(QString("Nombre de Cartes Nobles: %1").arg(joueur->getNombreCartesNobles()));
-            texteCartesNobles->setText(QString::number(joueur->getNombreCartesNobles()));
+            labelCartesReservees->setText(QString("Nombre de Cartes Réservées: %1").arg(joueur->getNbCartesReservees()));
         }
     }
 
@@ -160,16 +146,10 @@ public slots:
 
 private:
     QLabel *labelPriviliges;
-    QLineEdit *textePriviliges;
     QLabel *labelCouronnes;
-    QLineEdit *texteCouronnes;
     QLabel *labelCartesNobles;
-    QLineEdit *texteCartesNobles;
+    QLabel *labelCartesReservees;
     Joueur *joueur;
 };
-
-
-
-
 
 #endif // JOUEUR_H
