@@ -142,6 +142,19 @@ Privilege* Joueur::getPrivilege(int index) const {
     return nullptr;
 }
 
+int Joueur::getNombreDePrivileges() const {
+    return privileges.size();
+}
+
+int Joueur::getNbCartesReservees() const {
+    return cartes_reservees.size();
+}
+
+int Joueur::getNombreCartesNobles() const {
+    return cartes_noble.size();
+}
+
+
 
 
 int Joueur::getNbJeton(int index) const{

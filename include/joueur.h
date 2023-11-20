@@ -72,8 +72,9 @@ public:
     void resetRejouer(bool reset); // Si vous obtenez le pouvoir, vous pouvez passer au tour suivant et appeler cette fonction
 
     // Utile pour Optionnelle et Obligatoire
-    int getNombreDePrivileges() const { return privileges.size(); }
-    int getNbCartesReservees() const { return cartes_reservees.size(); }
+    int getNombreDePrivileges() const;
+    int getNbCartesReservees() const;
+    int getNombreCartesNobles() const;
 };
 
 class IA : public Joueur {
