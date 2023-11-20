@@ -71,9 +71,9 @@ public:
     void resetRejouer(); // Normalement, on passe au tour de l'adversaire
     void resetRejouer(bool reset); // Si vous obtenez le pouvoir, vous pouvez passer au tour suivant et appeler cette fonction
 
-    // Utile pour Optionnelle et Obligatoire
-    int getNombreDePrivileges() const { return privileges.size(); }
-    int getNbCartesReservees() const { return cartes_reservees.size(); }
+    int getNombreDePrivileges() const;
+    int getNbCartesReservees() const;
+    int getNombreCartesNobles() const;
 };
 
 class IA : public Joueur {
@@ -95,8 +95,6 @@ public:
 #include <QApplication>
 #include <QWidget>
 #include <QLabel>
-#include <QLineEdit>  // Ajout de l'en-tête pour QLineEdit
-#include <QLabel>
 #include <QLineEdit>
 
 class FenetreInformations : public QWidget {
@@ -104,7 +102,7 @@ Q_OBJECT
 public:
     FenetreInformations(QWidget *parent = nullptr) : QWidget(parent), joueur(nullptr) {
         // Initialisation de la fenêtre
-        setFixedSize(300, 150);
+        setFixedSize(300, 200);
         setWindowTitle("Informations du Joueur");
 
         // Création de l'étiquette pour afficher le nombre de privilèges
@@ -125,6 +123,15 @@ public:
         texteCouronnes->setReadOnly(true);
         texteCouronnes->setGeometry(10, 110, 100, 30);
 
+        // Étiquette pour le nombre de cartes nobles
+        labelCartesNobles = new QLabel("Nombre de Cartes Nobles: 0", this);
+        labelCartesNobles->setGeometry(10, 150, 200, 30);
+
+        // Zone de texte pour afficher le nombre de cartes nobles
+        texteCartesNobles = new QLineEdit(this);
+        texteCartesNobles->setReadOnly(true);
+        texteCartesNobles->setGeometry(10, 180, 100, 30);
+
         // Mise en place du joueur initial
         setJoueur(nullptr);
     }
@@ -139,6 +146,9 @@ public slots:
 
             labelCouronnes->setText(QString("Nombre de Couronnes: %1").arg(joueur->getNombreCouronnes()));
             texteCouronnes->setText(QString::number(joueur->getNombreCouronnes()));
+
+            labelCartesNobles->setText(QString("Nombre de Cartes Nobles: %1").arg(joueur->getNombreCartesNobles()));
+            texteCartesNobles->setText(QString::number(joueur->getNombreCartesNobles()));
         }
     }
 
@@ -153,6 +163,8 @@ private:
     QLineEdit *textePriviliges;
     QLabel *labelCouronnes;
     QLineEdit *texteCouronnes;
+    QLabel *labelCartesNobles;
+    QLineEdit *texteCartesNobles;
     Joueur *joueur;
 };
 

@@ -128,6 +128,7 @@ CarteNoble * Joueur::getCarteNoble(int index) const {
     return nullptr;
 }
 
+
 int Joueur::getGemmesBonus(int index) const {
     if (index >= 0 && index < 6) {
         return gemmes_bonus[index];
@@ -143,13 +144,25 @@ Privilege* Joueur::getPrivilege(int index) const {
 }
 
 
-
 int Joueur::getNbJeton(int index) const{
     return nb_jeton[index];
 }
 void Joueur::setNbJeton(int index, int value){
     nb_jeton[index] = value;
 }
+
+int Joueur::getNombreDePrivileges() const {
+    return privileges.size();
+}
+
+int Joueur::getNbCartesReservees() const {
+    return cartes_reservees.size();
+}
+
+int Joueur::getNombreCartesNobles() const {
+    return cartes_noble.size();
+}
+
 
 void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {
     int nombrePointsCarte = carte.getPointsPrestige();
