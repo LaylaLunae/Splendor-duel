@@ -33,10 +33,11 @@ add_executable(Splendor main.cpp
         src/pioche.cpp
         include/jeu.h
         include/IA.cpp
-        include/IA.cpp
         include/humain.cpp
-        include/humain.cpp
-        include/test_affichage_joueur.h)
+        src/affichage_joueur.cpp
+        include/affichage_joueur.h
+
+)
 
 find_package(Qt6 COMPONENTS
         Core
