@@ -86,6 +86,12 @@ public:
     unsigned int getNbPrivilegeMAX() const { return nb_privileges_MAX; }
     unsigned int getNbPrivileges() const { return nb_privileges; }
     bool hasJetonOr(); // Vérifier qu'il y a au moins un jeton or sur le plateau
+
+// necessaire pour IA :
+    const int getNombreJetonsParCoteDePlateau() const {return nombre_jetons_par_cote_de_plateau;}
+
+    const Jeton** getJetons() const { return jetons; }
+
 };
 
 std::tuple<int, int> choisir_jeton();
