@@ -59,6 +59,10 @@ public:
     // Timo - Temporaire pour action
     int getNbJeton(int index) const;
     void setNbJeton(int index, int value);
+    int getNbJetonTotal() const;
+
+    int getNbJetonsParCouleur(int couleur) const;
+
 
     // Définir l'adversaire
     Joueur* getAdversaire();

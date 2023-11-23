@@ -32,8 +32,8 @@ add_executable(Splendor main.cpp
         include/pioche.h
         src/pioche.cpp
         include/jeu.h
-        include/IA.cpp
-        include/humain.cpp
+        src/IA.cpp
+        src/humain.cpp
         src/affichage_joueur.cpp
         include/affichage_joueur.h
 

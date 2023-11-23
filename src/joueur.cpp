@@ -163,6 +163,24 @@ int Joueur::getNombreCartesNobles() const {
     return cartes_noble.size();
 }
 
+int Joueur::getNbJetonTotal() const {
+    int totalJetons = 0;
+    for (int i = 0; i < nb_jeton.size(); ++i) {
+        totalJetons += nb_jeton[i];
+    }
+    return totalJetons;
+}
+
+int Joueur::getNbJetonsParCouleur(int couleur) const {
+    int totalJetonsCouleur = 0;
+    for (size_t i = 0; i < nb_jeton.size(); ++i) {
+        if (gemmes_bonus[i] == couleur) {
+            totalJetonsCouleur += nb_jeton[i];
+        }
+    }
+    return totalJetonsCouleur;
+}
+
 
 void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {
     int nombrePointsCarte = carte.getPointsPrestige();
