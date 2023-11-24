@@ -1,24 +1,9 @@
 #ifndef PIOCHE_H_INCLUDED
 #define PIOCHE_H_INCLUDED
 
-#include "carteJoaillerie.h"
+//#include "carteJoaillerie.h"
 
-class Jeu;
-class Pioche;
-/*
-class CarteJoaillerie {
-private:
-    friend class Jeu;
-    friend class Pioche;
-
-    int carte;
-
-public:
-    const int& getCarte() const {return carte;}
-    CarteJoaillerie(const int c):carte(c){};
-    CarteJoaillerie() : carte(0) {} // il faut un constructeur par défaut
-
-};
+class Joaillerie;
 
 class Pioche {
 private:
@@ -48,5 +33,5 @@ public:
     const CarteJoaillerie * joueurPrend(int numero_carte); // à revoir + tirage au sort
     void distribution(); // à revoir
 };
-*/
+
 #endif // PIOCHE_H_INCLUDED
