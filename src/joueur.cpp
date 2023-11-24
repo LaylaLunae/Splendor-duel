@@ -144,6 +144,7 @@ Privilege* Joueur::getPrivilege(int index) const {
 }
 
 
+
 int Joueur::getNbJeton(int index) const{
     return nb_jeton[index];
 }
