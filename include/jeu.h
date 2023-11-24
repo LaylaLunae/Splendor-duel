@@ -1,6 +1,7 @@
 #ifndef JEU_JEU_H
 #define JEU_JEU_H
 #include <string>
+#include <iostream>
 
 #include "carteJoaillerie.h"
 #include "carte.h"
@@ -14,7 +15,7 @@
 #include "joueur.h"
 
 
-class Jeu {
+class Jeu{
 private:
     /*struct Handler {
         Jeu * instance = nullptr;

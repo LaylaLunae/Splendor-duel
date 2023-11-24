@@ -134,8 +134,8 @@ bool Carte::volerJeton(int couleurIndex) {
 
 bool Carte::prendreJeton(unsigned int position_x, unsigned int position_y) {
     if (plateau->hasJeton()) {
-        const Jeton j = plateau->prendreJeton(position_x, position_y);
-        int couleurIndex = static_cast<int>(j.getCouleur());
+        const Jeton* j = plateau->prendreJeton(position_x, position_y);
+        int couleurIndex = static_cast<int>(j->getCouleur());
         joueur->setPointsPrestigeCouleurs(couleurIndex, this->joueur->getPointsPrestigeCouleurs(couleurIndex) + 1); // Add one token of the specified color to the player's inventory
             return true;
     }

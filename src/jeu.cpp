@@ -1,5 +1,7 @@
 #include <iostream>
-#include "jeu.h"
+#include "../include/jeu.h"
+
+class Jeu;
 
 /* Jeu& Jeu::getJeu(){
     if (handler.instance == nullptr)

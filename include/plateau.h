@@ -14,10 +14,7 @@
 
 class CarteNoble;
 
-class Jeu{
-public:
-    Jeu();
-};
+class Jeu;
 
 class PlateauException {
     std::string info;

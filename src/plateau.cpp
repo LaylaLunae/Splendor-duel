@@ -48,10 +48,10 @@ void testes_pour_plateau() {
             valider_selection = std::stoi(reponse);
         }
 
-        ReponseValidationSelection reponse = p->validerSelectionEtPrendreJetons();
+        ReponseValidationSelection *reponse = p->validerSelectionEtPrendreJetons();
         std::cout<<"\nVous avez en main les jetons de valeurs : ";
-        for (unsigned int index_jeton = 0; index_jeton < reponse.nombre; index_jeton++) {
-            std::cout<<reponse.jetons[index_jeton]->getCouleurString()<<", ";
+        for (unsigned int index_jeton = 0; index_jeton < reponse->nombre; index_jeton++) {
+            std::cout<<reponse->jetons[index_jeton]->getCouleurString()<<", ";
         }
 
         const CarteNoble* c = p->prendreCarteNoble(0);
@@ -60,8 +60,8 @@ void testes_pour_plateau() {
         std::cout<<p->etatPlateau();
 
         std::cout<<"\nRemise dans le sac des jetons...";
-        for (unsigned int index_jeton = 0; index_jeton < reponse.nombre; index_jeton++) {
-            p->ajouterSac(reponse.jetons[index_jeton]);
+        for (unsigned int index_jeton = 0; index_jeton < reponse->nombre; index_jeton++) {
+            p->ajouterSac(reponse->jetons[index_jeton]);
         }
         std::cout<<" ...fini.";
 

@@ -134,6 +134,7 @@ int Joueur::getGemmesBonus(int index) const {
     }
     return 0;
 }
+
 /*
 Privilege* Joueur::getPrivilege(int index) const {
     if (index >= 0 && index < 3) {
@@ -142,10 +143,10 @@ Privilege* Joueur::getPrivilege(int index) const {
     return nullptr;
 }
 */
-const std::vector<Privilege*>& Joueur::getPrivileges() const {
+
+const std::vector<Privilege *> Joueur::getPrivileges() const {
     return privileges;
 }
-
 
 int Joueur::getNombreDePrivileges() const {
     return privileges.size();
