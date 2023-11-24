@@ -47,7 +47,7 @@ public:
     CarteJoaillerie * getCarteMain(int index) const;
     CarteNoble * getCarteNoble(int index) const;
     int getGemmesBonus(int index) const;
-    Privilege* getPrivilege(int index) const;
+    //Privilege* getPrivilege(int index) const;
     const std::vector<Privilege*>& getPrivileges() const;
     void ajouterCarteJoaillerie(CarteJoaillerie& carte);
     void ajouterCarteNoble(const CarteNoble& carte);
