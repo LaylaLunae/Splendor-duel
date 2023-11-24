@@ -65,6 +65,7 @@ public:
     int getNbJetonsParCouleur(int couleur) const;
 
 
+
     // Définir l'adversaire
     Joueur* getAdversaire();
     void setAdversaire(Joueur* adv);

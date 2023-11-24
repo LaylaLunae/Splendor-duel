@@ -72,7 +72,6 @@ public slots:
 
     void setJoueur(Joueur* j) {
         joueur = j;
-        j->privileges=j->getPrivileges().pushback(1);
         miseAJourInformations();
     }
 
