@@ -24,7 +24,7 @@ void Obligatoire::prendreJeton(Joueur* joueur) {
     while (cpt != n) {
         do { // A MODIFIER AVEC SELECTIONJETON
             jeton_choisi = choisir_jeton();
-            jeton_pris = plateau->prendreJeton(get<0>(jeton_choisi), get<1>(jeton_choisi));
+            jeton_pris = plateau->prendreJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
             if (jeton_pris->getType() == JetonType::Or) std::cout << "On ne peut pas prendre de jeton or avec cette action !\n";
             // Faudra utiliser la fonction selection modifiée avvec les codes d'erreur
         } while (jeton_pris->getType() == JetonType::Or);

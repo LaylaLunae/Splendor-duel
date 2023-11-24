@@ -21,8 +21,10 @@ void Optionnelle::depenserPrivilege(Joueur* joueur, ReponseValidationSelection R
 
         // On remet le privilège sur le plateau
         Privilege* privilege = nullptr;
+        /*
         privilege = joueur->getPrivilege(0); // Décalage du tableau de privilège à prévoir? Ou suivi de l'index en tant qu'attribut?
         plateau->donnePrivilege(privilege);
+        */
     } else throw PlateauException("Le joueur ne peut depenser de privilege !");
 }
 
@@ -41,8 +43,11 @@ void Optionnelle::remplissagePlateau(Joueur* joueur) {
     const Privilege* privilege;
     if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) throw PlateauException("L'adversaire a deja tous les privileges !");
     if (plateau->getNbPrivileges() == 0) {
+        std::cout << "qqch";
+        /*
         privilege = joueur->getPrivilege(0); // Décalage du tableau de privilège à prévoir? Ou suivi de l'index en tant qu'attribut?
         adversaire->ajouterPrivilege(const_cast<Privilege*>(privilege));
+        */
     } else {
         privilege = plateau->prendrePrivilege();
         adversaire->ajouterPrivilege(const_cast<Privilege*>(privilege));
