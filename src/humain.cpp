@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../include/jeu.h"
 
-int Humain::choisirChoixUtilisateur(int min, int max) {
+int Humain::choisirChoix(int min, int max) {
     int choix;
     //std::cout << "Veuillez entrer un nombre entre " << min << " et " << max << ": ";  à mettre dans Jeu : mécanisme tour par tour
     std::cin >> choix;
