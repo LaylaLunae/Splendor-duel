@@ -1,7 +1,6 @@
-
-
-#ifndef SPLENDOR_JEU_H
-#define SPLENDOR_JEU_H
+#ifndef JEU_JEU_H
+#define JEU_JEU_H
+#include <string>
 
 #include "carteJoaillerie.h"
 #include "carte.h"
@@ -14,7 +13,41 @@
 #include "obligatoire.h"
 #include "joueur.h"
 
-class Jeu;
 
+class Jeu {
+private:
+    /*struct Handler {
+        Jeu * instance = nullptr;
+        ~Handler() { delete instance; instance = nullptr;}
+    };
+    static Handler handler;*/
 
-#endif //SPLENDOR_JEU_H
+    static Jeu* instance;
+
+    Joueur* joueur_actuel;
+
+    Jeu(){};
+    ~Jeu(){};
+    Jeu(const Jeu& j) = delete;
+    Jeu& operator=(const Jeu& j) = delete;
+
+public:
+    static Jeu& getJeu();
+    static void libereJeu();
+
+    Joueur* getJoueurActuel() const {return joueur_actuel;}
+
+    void validationAction();
+
+    //pour l'instant dans public
+    void nouvellePartie();
+    void reprendrePartie(); //faut bdd
+    void verifAnciennePartie(); //faut bdd
+    void verifGagnant();
+    void sauvegarderPartie(); //faut bdd
+    Joueur* vainqueur();
+    void auSuivant();
+    void verifObligationRemplissage();
+};
+
+#endif //JEU_JEU_H
