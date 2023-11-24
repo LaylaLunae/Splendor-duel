@@ -1,54 +1,83 @@
 //#include "../include/obligatoire.h"
 #include "../include/jeu.h"
-void Obligatoire::prendreJeton(Joueur* joueur, ReponseValidationSelection RVS) {
-    // Vérifier qu'il y a au moins un jeton sur le plateau
-    if (plateau->hasJeton()) {
-        // On ajoute les jetons au joueur
-        int nb_couleurs[6] = {0, 0, 0, 0, 0, 0};
-        for (int i=0; i<RVS.nombre; i++) {
-            const Jeton *jeton = RVS.jetons[i];
-            switch (jeton->getCouleur()) {
-                case Couleur::bleu:
-                    nb_couleurs[0] += 1;
-                    joueur->setNbJeton(0, joueur->getNbJeton(0) + 1);
-                case Couleur::vert:
-                    nb_couleurs[1] += 1;
-                    joueur->setNbJeton(1, joueur->getNbJeton(1) + 1);
-                case Couleur::rouge:
-                    nb_couleurs[2] += 1;
-                    joueur->setNbJeton(2, joueur->getNbJeton(2) + 1);
-                case Couleur::blanc:
-                    nb_couleurs[3] += 1;
-                    joueur->setNbJeton(3, joueur->getNbJeton(3) + 1);
-                case Couleur::noir:
-                    nb_couleurs[4] += 1;
-                    joueur->setNbJeton(4, joueur->getNbJeton(4) + 1);
-                case Couleur::rose:
-                    nb_couleurs[5] += 1;
-                    joueur->setNbJeton(5, joueur->getNbJeton(5) + 1);
-                default: throw PlateauException("Impossible de recuperer ce jeton lors de cette action !");
-            }
-        }
 
-        // On donne un privilège à l'adversaire si 2 perles ou 3 identiques
-        bool give_privilege = false;
-        for (int i=0; i<5; i++) {
-            if (nb_couleurs[i] == 3) give_privilege = true;
+void Obligatoire::prendreJeton(Joueur* joueur) {
+    // Vérifier que le plateau n'est point vide
+    if (!plateau->hasJeton()) {
+        std::cout << "Plateau vide\n";
+        return;
+    }
+
+    // Le joueur récupère les jetons
+    std::tuple<int, int> jeton_choisi(0, 0);
+    const Jeton* jeton_pris = nullptr;
+    ReponseValidationSelection *selection = nullptr;
+    int cpt = 0, n = 0;
+    while (n < 1 or n > 3) {
+        std::cout << "Combien de jetons comptez vous prendre ? (MAX 3)   n = ";
+        std::cin >> n;
+        std::cout << "\n";
+        if (n < 0) std::cout << "Vous voulez prendre des jetons, pas en remettre...\n";
+        if (n == 0) std::cout << "Attraper de l'air ne va pas vous aider a gagner...\n";
+        if (n > 3) std::cout << "Il faut jouer en respectant les regles quand meme...\n";
+    }
+    while (cpt != n) {
+        do { // A MODIFIER AVEC SELECTIONJETON
+            jeton_choisi = choisir_jeton();
+            jeton_pris = plateau->prendreJeton(get<0>(jeton_choisi), get<1>(jeton_choisi));
+            if (jeton_pris->getType() == JetonType::Or) std::cout << "On ne peut pas prendre de jeton or avec cette action !\n";
+            // Faudra utiliser la fonction selection modifiée avvec les codes d'erreur
+        } while (jeton_pris->getType() == JetonType::Or);
+        selection = plateau->validerSelectionEtPrendreJetons();
+        cpt++;
+    }
+
+    // On ajoute les jetons au joueur
+    std::vector<int> nb_couleurs(6, 0);
+    // Bleu - Vert - Rouge - Blanc - Noir - Rose(Perle)
+    for (int i=0; i<selection->nombre; i++) {
+        const Jeton *jeton = selection->jetons[i];
+        switch (jeton->getCouleur()) {
+            case Couleur::bleu:
+                nb_couleurs[0] += 1;
+                joueur->setNbJeton(0, joueur->getNbJeton(0) + 1);
+            case Couleur::vert:
+                nb_couleurs[1] += 1;
+                joueur->setNbJeton(1, joueur->getNbJeton(1) + 1);
+            case Couleur::rouge:
+                nb_couleurs[2] += 1;
+                joueur->setNbJeton(2, joueur->getNbJeton(2) + 1);
+            case Couleur::blanc:
+                nb_couleurs[3] += 1;
+                joueur->setNbJeton(3, joueur->getNbJeton(3) + 1);
+            case Couleur::noir:
+                nb_couleurs[4] += 1;
+                joueur->setNbJeton(4, joueur->getNbJeton(4) + 1);
+            case Couleur::rose:
+                nb_couleurs[5] += 1;
+                joueur->setNbJeton(5, joueur->getNbJeton(5) + 1);
+            default: std::cout << "Il y a definitivement un probleme avec la selection...\n";
         }
-        if (nb_couleurs[5] == 2) give_privilege = true;
-        if (give_privilege) {
-            Joueur* adversaire = joueur->getAdversaire();
-            Privilege* privilege;
-            if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) throw PlateauException("L'adversaire a deja tous les privileges !");
-            if (plateau->getNbPrivileges() == 0) {
-                privilege = joueur->getPrivilege(0); // Décalage du tableau de privilège à prévoir? Ou suivi de l'index en tant qu'attribut?
-                adversaire->ajouterPrivilege(privilege);
-            } else {
-                privilege = const_cast<Privilege*>(plateau->prendrePrivilege());
-                adversaire->ajouterPrivilege(privilege);
-            }
+    }
+
+    // On donne un privilège à l'adversaire si 2 perles ou 3 identiques
+    bool give_privilege = false;
+    for (int i=0; i<5; i++) {
+        if (nb_couleurs[i] == 3) give_privilege = true;
+    }
+    if (nb_couleurs[5] == 2) give_privilege = true;
+    if (give_privilege) {
+        Joueur* adversaire = joueur->getAdversaire();
+        std::vector<Privilege*> privileges;
+        if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) std::cout << "L'adversaire a deja tous les privileges.\n";
+        if (plateau->getNbPrivileges() == 0) {
+            privileges = joueur->getPrivilege(); // A CHANGER AVEC LE VECTOR DE PRIVILEGE ENTIER
+            adversaire->ajouterPrivilege(privileges);
+        } else {
+            privileges = const_cast<Privilege*>(plateau->prendrePrivilege());
+            adversaire->ajouterPrivilege(privileges);
         }
-    } else throw PlateauException("Le plateau est vide !");
+    }
 };
 
 void Obligatoire::reserverCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card) {
