@@ -10,9 +10,6 @@
 
 
 int main(int argc, char *argv[]) {
-    std::cout << "Hello, World!" << std::endl;
-    testes_pour_plateau();
-
 
     QApplication app(argc, argv);
 
@@ -20,6 +17,9 @@ int main(int argc, char *argv[]) {
     fenetre.show();
 
     return app.exec();
+
+    std::cout << "Hello, World!" << std::endl;
+    testes_pour_plateau();
 
 }
 
