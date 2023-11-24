@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
+//#include <vector>
 
 class Joueur;
 
@@ -71,6 +72,7 @@ public slots:
 
     void setJoueur(Joueur* j) {
         joueur = j;
+        //j->privileges=privileges({1,2,3});
         miseAJourInformations();
     }
 

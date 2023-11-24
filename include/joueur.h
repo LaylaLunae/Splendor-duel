@@ -16,6 +16,7 @@ enum Difficulte { facile, moyen, difficile };
 
 class Joueur {
 protected:
+    friend class FenetreInformations;
     std::string pseudo;
     int nombre_couronnes;
     int points_prestige_total;
