@@ -134,14 +134,14 @@ int Joueur::getGemmesBonus(int index) const {
     }
     return 0;
 }
-
+/*
 Privilege* Joueur::getPrivilege(int index) const {
     if (index >= 0 && index < 3) {
         return privileges[index];
     }
     return nullptr;
 }
-
+*/
 const std::vector<Privilege*>& Joueur::getPrivileges() const {
     return privileges;
 }
