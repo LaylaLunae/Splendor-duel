@@ -135,6 +135,15 @@ int Joueur::getGemmesBonus(int index) const {
     return 0;
 }
 
+
+int Joueur::getNbJetonTotal() const {
+    int totalJetons = 0;
+    for (int i = 0; i < nb_jeton.size(); ++i) {
+        totalJetons += nb_jeton[i];
+    }
+    return totalJetons;
+}
+
 /*
 Privilege* Joueur::getPrivilege(int index) const {
     if (index >= 0 && index < 3) {

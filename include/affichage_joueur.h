@@ -1,7 +1,7 @@
 
+
+
 /*
-
-
 #ifndef SPLENDOR_AFFICHAGE_JOUEUR_H
 #define SPLENDOR_AFFICHAGE_JOUEUR_H
 

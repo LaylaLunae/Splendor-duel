@@ -78,6 +78,8 @@ public:
     int getNbCartesReservees() const;
     int getNombreCartesNobles() const;
 
+    int getNbJetonTotal() const;
+
     virtual int choisirChoix(int min, int max) = 0;
 };
 
