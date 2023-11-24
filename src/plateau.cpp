@@ -470,7 +470,7 @@ void Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
 }
 
 
-ReponseValidationSelection Plateau::validerSelectionEtPrendreJetons() {
+ReponseValidationSelection* Plateau::validerSelectionEtPrendreJetons() {
     if (nombre_jetons_dans_selection == 0)
         throw PlateauException("Aucun jeton dans la selection <('o'<)");
 
@@ -504,7 +504,7 @@ ReponseValidationSelection Plateau::validerSelectionEtPrendreJetons() {
 
     // Envoi du résultat
     ReponseValidationSelection reponse = {liste, nb_jetons_dans_liste};
-    return reponse;
+    return &reponse;
 }
 
 
@@ -563,7 +563,7 @@ Plateau::~Plateau() {
     delete[] selection_courante;
 }
 
-const Jeton Plateau::prendreJeton(unsigned int position_x, unsigned int position_y) {
+const Jeton* Plateau::prendreJeton(unsigned int position_x, unsigned int position_y) {
     if (nb_jetons_plateau == 0) throw PlateauException("Aucun jeton dans la selection <('o'<)");
     unsigned int position_dans_plateau = nombre_jetons_par_cote_de_plateau  *  (position_y-1) + position_x-1;
 
@@ -580,7 +580,7 @@ const Jeton Plateau::prendreJeton(unsigned int position_x, unsigned int position
     jetons[position_dans_plateau] = nullptr;
     nb_jetons_plateau--;
 
-    return *resultat;
+    return resultat;
 }
 
 bool Plateau::hasJetonOr() {

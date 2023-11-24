@@ -68,8 +68,8 @@ public:
     void ajouterSac(const Jeton *j);
 
     void selectionJeton(unsigned int position_x, unsigned int position_y);
-    ReponseValidationSelection validerSelectionEtPrendreJetons();
-    const Jeton prendreJeton(unsigned int position_x, unsigned int position_y);
+    ReponseValidationSelection* validerSelectionEtPrendreJetons();
+    const Jeton* prendreJeton(unsigned int position_x, unsigned int position_y);
 
     const Privilege* prendrePrivilege();
     void donnePrivilege(const Privilege* p);

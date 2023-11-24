@@ -71,12 +71,12 @@ void Obligatoire::prendreJeton(Joueur* joueur) {
         std::vector<Privilege*> privileges;
         if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) std::cout << "L'adversaire a deja tous les privileges.\n";
         if (plateau->getNbPrivileges() == 0) {
-            privileges = joueur->getPrivilege(); // A CHANGER AVEC LE VECTOR DE PRIVILEGE ENTIER
-            adversaire->ajouterPrivilege(privileges);
-        } else {
+            privileges = joueur->getPrivileges(); // A CHANGER AVEC LE VECTOR DE PRIVILEGE ENTIER
+            adversaire->ajouterPrivilege(privileges.back()); // push back ?
+        } /*else {
             privileges = const_cast<Privilege*>(plateau->prendrePrivilege());
-            adversaire->ajouterPrivilege(privileges);
-        }
+            adversaire->ajouterPrivilege(privileges.back());
+        }*/
     }
 };
 
