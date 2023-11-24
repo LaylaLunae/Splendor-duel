@@ -142,6 +142,11 @@ Privilege* Joueur::getPrivilege(int index) const {
     return nullptr;
 }
 
+const std::vector<Privilege*>& Joueur::getPrivileges() const {
+    return privileges;
+}
+
+
 int Joueur::getNombreDePrivileges() const {
     return privileges.size();
 }
