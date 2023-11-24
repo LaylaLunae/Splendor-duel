@@ -89,7 +89,7 @@ protected:
 public:
     IA(const std::string& pseudo, Difficulte diff) : Joueur(pseudo), difficulte(diff) {}
     //int choisirChoix(int min, int max);
-    int choisirChoix(int min, int max) override;
+    virtual int choisirChoix(int min, int max) override;
 
 };
 
@@ -99,7 +99,7 @@ protected:
 public:
     Humain(const std::string& pseudo) : Joueur(pseudo) {}
     //int choisirChoixUtilisateur(int min, int max);
-    int choisirChoix(int min, int max) override;
+    virtual int choisirChoix(int min, int max) override;
 };
 
 #endif // JOUEUR_H
