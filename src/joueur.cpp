@@ -144,6 +144,19 @@ int Joueur::getNbJetonTotal() const {
     return totalJetons;
 }
 
+
+int Joueur::getNbJetonsParCouleur(int couleur) const {
+    int totalJetonsCouleur = 0;
+    for (size_t i = 0; i < nb_jeton.size(); ++i) {
+        if (gemmes_bonus[i] == couleur) {
+            totalJetonsCouleur += nb_jeton[i];
+        }
+    }
+    return totalJetonsCouleur;
+}
+
+
+
 /*
 Privilege* Joueur::getPrivilege(int index) const {
     if (index >= 0 && index < 3) {
