@@ -13,6 +13,7 @@
 #include "pioche.h"
 #include "obligatoire.h"
 #include "joueur.h"
+#include "affichage_joueur.h"
 
 
 class Jeu{
