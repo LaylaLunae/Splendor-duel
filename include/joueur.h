@@ -37,6 +37,8 @@ protected:
     Joueur(const Joueur& autre);
     Joueur& operator=(const Joueur& autre);
 
+    virtual int choisirChoix(int min, int max) = 0;
+
 public:
 
     int getPointsPrestigeTotal() const;
@@ -79,18 +81,22 @@ public:
 };
 
 class IA : public Joueur {
-private:
+protected:
     Difficulte difficulte;
+    int choisirChoix(int min, int max) override;
 
 public:
     IA(const std::string& pseudo, Difficulte diff) : Joueur(pseudo), difficulte(diff) {}
-    int choisirChoix(int min, int max);
+    //int choisirChoix(int min, int max);
+
 };
 
 class Humain : public Joueur {
+protected:
+    int choisirChoix(int min, int max) override;
 public:
     Humain(const std::string& pseudo) : Joueur(pseudo) {}
-    int choisirChoixUtilisateur(int min, int max);
+    //int choisirChoixUtilisateur(int min, int max);
 };
 
 #endif // JOUEUR_H
