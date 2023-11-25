@@ -42,7 +42,7 @@ public:
 
         // Labels pour le nombre de jetons par couleur
         for (int couleur = 0; couleur < 7; ++couleur) {
-            labelJetonsParCouleur[couleur] = new QLabel(QString("Nombre de Jetons (%1): 0").arg(getNomCouleur(couleur)), this);
+            labelJetonsParCouleur[couleur] = new QLabel(QString("Nombre de Jetons %1: 0").arg(getNomCouleur(couleur)), this);
             labelJetonsParCouleur[couleur]->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
             layout->addWidget(labelJetonsParCouleur[couleur]);
         }
