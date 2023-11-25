@@ -11,6 +11,15 @@
 
 int main(int argc, char *argv[]) {
 
+/*
+
+    Humain joueur("NomDuJoueur");
+
+    joueur.ajouterPrivilege(new Privilege());
+    int nombreDePrivileges = joueur.getNombreDePrivileges();
+
+
+*/
 
     QApplication app(argc, argv);
 
