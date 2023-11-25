@@ -31,6 +31,7 @@ public:
     ~Pioche(); //à revoir
 
     const CarteJoaillerie * joueurPrend(int numero_carte); // à revoir + tirage au sort
+    const CarteJoaillerie * joueurPioche() ; // Added by Timo
     void distribution(); // à revoir
 };
 
