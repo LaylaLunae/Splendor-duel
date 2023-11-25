@@ -98,6 +98,7 @@ public:
     void prendreJetonsAleatoires(Plateau* plateau);
     std::vector<CarteJoaillerie*> getCartesAchetable(const Plateau& plateau) const;
     bool peutAcheterCarte(const CarteJoaillerie& carte) const;
+    CarteJoaillerie* melangerEtObtenirDerniereCarte(std::vector<CarteJoaillerie*>& cartesAchetable, Joueur& joueur);
 };
 
 

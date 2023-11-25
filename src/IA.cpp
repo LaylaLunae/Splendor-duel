@@ -4,6 +4,10 @@
 
 #include <cstdlib>  // Pour rand() et srand()
 #include <ctime>    // Pour time()
+#include <vector>
+#include <algorithm>
+#include <random>
+
 
 int IA::choisirChoix(int min, int max) {
 
@@ -17,7 +21,7 @@ int IA::choisirChoix(int min, int max) {
     return choix;
 }
 
-
+/*
 void IA::prendreJetonsAleatoires(Plateau* plateau) {
     int nombreJetonsAChoisir = rand() % 3 + 1;
 
@@ -34,7 +38,7 @@ void IA::prendreJetonsAleatoires(Plateau* plateau) {
     }
 }
 
-/*
+
 
 std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Plateau& plateau) const {
 
@@ -56,7 +60,26 @@ std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Plateau& plateau) con
     return cartesAchetable;
 }
 
-// faire une fonction qui prendre aléatoirement dans ce vector
+
+// Fonction pour mélanger le vecteur et retourner la dernière carte
+
+CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(std::vector<CarteJoaillerie*>& cartesAchetable, Joueur& joueur) {
+    // Vérifier si le vecteur n'est pas vide
+    if (cartesAchetable.empty()) {
+        return nullptr;
+    }
+
+// Mélanger le vecteur avec le générateur par défaut
+    std::default_random_engine generator;
+    std::shuffle(cartesAchetable.begin(), cartesAchetable.end(), generator);
+
+    CarteJoaillerie* derniereCarte = cartesAchetable.back();
+
+    joueur.ajouterCarteJoaillerie(*derniereCarte);
+
+    return derniereCarte;
+}
+
 
 
 bool IA::peutAcheterCarte(const CarteJoaillerie& carte) const {
