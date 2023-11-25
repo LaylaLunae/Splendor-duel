@@ -34,7 +34,7 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
                     std::cout << "Vous ne pouvez selectionner de jeton or lors de cette action !\n";
                     // Désélection
                     plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
-                // case 3 théoriquement impossible
+                    // case 3 théoriquement impossible
                 case 4: std::cout << "Ce jeton ne peut etre selectionne !\n";
                 default: std::cout << "Pour une raison ou une autre, il y a eu un probleme...\n";
             }
@@ -117,7 +117,7 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* pioche
             case 1: std::cout << "Case vide\n";
             case 2:
                 std::cout << "Selection autorise\n";
-            // case 3 théoriquement impossible
+                // case 3 théoriquement impossible
             case 4: std::cout << "Ce jeton ne peut etre selectionne !\n";
             default: std::cout << "Pour une raison ou une autre, il y a eu un probleme...\n";
         }
