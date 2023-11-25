@@ -8,6 +8,7 @@
 class CarteNoble;
 class CarteJoaillerie;
 class Privilege;
+class Plateau;
 
 const int MAX_CARTES = 500;
 const int MAX_PRIVILEGES = 3;
@@ -103,6 +104,8 @@ public:
     Humain(const std::string& pseudo) : Joueur(pseudo) {}
     //int choisirChoixUtilisateur(int min, int max);
     virtual int choisirChoix(int min, int max) override;
+    void prendreJetonsAleatoires(Plateau* plateau);
+
 };
 
 #endif // JOUEUR_H
