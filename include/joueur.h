@@ -95,7 +95,11 @@ public:
     //int choisirChoix(int min, int max);
     virtual int choisirChoix(int min, int max) override;
 
+    void prendreJetonsAleatoires(Plateau* plateau);
+    std::vector<CarteJoaillerie*> getCartesAchetable(const Plateau& plateau) const;
+    bool peutAcheterCarte(const CarteJoaillerie& carte) const;
 };
+
 
 class Humain : public Joueur {
 protected:
@@ -104,7 +108,8 @@ public:
     Humain(const std::string& pseudo) : Joueur(pseudo) {}
     //int choisirChoixUtilisateur(int min, int max);
     virtual int choisirChoix(int min, int max) override;
-    void prendreJetonsAleatoires(Plateau* plateau);
+
+
 
 };
 
