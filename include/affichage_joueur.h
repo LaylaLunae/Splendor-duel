@@ -1,7 +1,3 @@
-
-
-
-
 #ifndef SPLENDOR_AFFICHAGE_JOUEUR_H
 #define SPLENDOR_AFFICHAGE_JOUEUR_H
 
@@ -11,7 +7,6 @@
 #include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
-//#include <vector>
 
 class Joueur;
 
@@ -46,8 +41,8 @@ public:
         layout->addWidget(labelJetons);
 
         // Labels pour le nombre de jetons par couleur
-        for (int couleur = 0; couleur < 5; ++couleur) {
-            labelJetonsParCouleur[couleur] = new QLabel(QString("Nombre de Jetons (Couleur %1): 0").arg(couleur + 1), this);
+        for (int couleur = 0; couleur < 7; ++couleur) {
+            labelJetonsParCouleur[couleur] = new QLabel(QString("Nombre de Jetons (%1): 0").arg(getNomCouleur(couleur)), this);
             labelJetonsParCouleur[couleur]->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
             layout->addWidget(labelJetonsParCouleur[couleur]);
         }
@@ -66,13 +61,14 @@ public slots:
             labelJetons->setText(QString("Nombre de Jetons: %1").arg(joueur->getNbJetonTotal()));
 
             // Mettez à jour le nombre de jetons par couleur
-            for (int couleur = 0; couleur < 5; ++couleur) {
+            for (int couleur = 0; couleur < 7; ++couleur) {
                 labelJetonsParCouleur[couleur]->setText(
-                        QString("Nombre de Jetons (Couleur %1): %2").arg(couleur + 1).arg(joueur->getNbJetonsParCouleur(couleur))
+                        QString("Nombre de %1: %2").arg(getNomCouleur(couleur)).arg(joueur->getNbJetonsParCouleur(couleur))
                 );
             }
         }
     }
+
 
     void setJoueur(Joueur* j) {
         joueur = j;
@@ -85,8 +81,21 @@ private:
     QLabel *labelCartesNobles;
     QLabel *labelCartesReservees;
     QLabel *labelJetons;
-    QLabel *labelJetonsParCouleur[5]; // Labels pour le nombre de jetons par couleur
+    QLabel *labelJetonsParCouleur[7]; // Labels pour le nombre de jetons par couleur
     Joueur *joueur;
+
+    QString getNomCouleur(int couleur) const {
+        switch (couleur) {
+            case 0: return "Saphir";
+            case 1: return "Emeraude";
+            case 2: return "Ruby";
+            case 3: return "Diamant";
+            case 4: return "Onix";
+            case 5: return "Perle";
+            case 6: return "Or";
+            default: return "Inconnue";
+        }
+    }
 };
 
 #endif //SPLENDOR_AFFICHAGE_JOUEUR_H
