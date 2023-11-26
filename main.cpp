@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QLabel>
-#include <QPushButton>
+#include <vector>
 
 #include "./include/jeu.h"
 
@@ -28,8 +28,18 @@ int main(int argc, char *argv[]) {
 
     return app.exec();
 
-    std::cout << "Hello, World!" << std::endl;
-    testes_pour_plateau();
+    /* Création Jeton : */
 
+
+
+    /* Affichage plateau v0.1*/
+     /*
+    QApplication app (argc, argv);
+    VuePlateau plateau;
+    plateau.show();
+    return app.exec();
+    */
 }
+
+
 

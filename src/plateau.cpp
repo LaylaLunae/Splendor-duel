@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+
 #include "../include/jeu.h"
 //#include "./../include/plateau.h"
 //#include "./../include/jeton.h"
@@ -588,4 +589,33 @@ bool Plateau::hasJetonOr() {
         if ((*jetons)->getType() == JetonType::Or) return true;
     }
     return false;
+}
+
+void test() {
+    std::cout<<"Jeton cliqué";
+}
+void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
+    std::cout<<"Clicked received!";
+}
+
+VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent), vuesJetons(25, nullptr)
+{
+    plateau = new Plateau();
+    std::cout<<plateau->etatPlateau();
+
+    layoutBouton = new QGridLayout;
+
+    for(unsigned int i=0; i < 25;i++) {
+        vuesJetons[i] = new VueJeton;
+        layoutBouton->addWidget(vuesJetons[i], i / 5, i % 5);
+        connect(
+                vuesJetons[i],
+                SIGNAL(jetonClick(VueJeton*)),
+                this,
+                SLOT(jetonClick_Plateau(VueJeton*))
+        );
+
+    }
+
+    setLayout(layoutBouton);
 }

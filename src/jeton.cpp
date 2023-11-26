@@ -2,6 +2,13 @@
 #include <iostream>
 #include <string>
 #include "../include/jeu.h"
+
+void VueJeton::paintEvent(QPaintEvent* ) {
+
+}
+
+
+
 void Jeton::afficher() const {
     std::string type_str;
     switch (type) {
