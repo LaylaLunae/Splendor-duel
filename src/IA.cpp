@@ -36,6 +36,9 @@ void IA::prendreJetonsAleatoires(Plateau* plateau) {
     }
 }
 
+// probleme : les jetons ne sont pas retrouner on est d'accord ? et aussi faut ajouter a la main du joueur ? dans action ?
+
+// pas sûre de faire la différence entre cartemaxrevelee et cartedehors
 std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const {
     std::vector<CarteJoaillerie*> cartesAchetable;
 
@@ -73,8 +76,10 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
 
     return derniereCarte;
 }
+// ici il faut ajouter la carte à la main du joueur on est d'accord ?
 
-// a changer avec la fonction dans action obligatoire
+
+// a changer avec la fonction dans action obligatoire car prendre pas enc ompte que l'or est un joker
 bool IA::peutAcheterCarte(const CarteJoaillerie& carte) const {
 
     std::map<Couleur, int> prixCarte = carte.getPrix();

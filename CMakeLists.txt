@@ -37,7 +37,10 @@ add_executable(Splendor main.cpp
         src/humain.cpp
         src/humain.cpp
         src/jeu.cpp
-        include/affichage_joueur.h)
+        include/affichage_joueur.h
+        include/plateau.h
+        include/jeton.h
+)
 
 find_package(Qt6 COMPONENTS
         Core
