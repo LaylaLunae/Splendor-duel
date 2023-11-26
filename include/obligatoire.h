@@ -8,7 +8,7 @@
 // Faire des fonctions de vérifications ?
 
 class Obligatoire {
-    friend Jeu;
+    friend class Jeu;
 
 public:
     Obligatoire() = default;

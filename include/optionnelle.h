@@ -6,7 +6,7 @@
 
 
 class Optionnelle {
-    friend Jeu;
+    friend class Jeu;
 
     private:
         Optionnelle(Plateau* plateau) : plateau(plateau) {};
