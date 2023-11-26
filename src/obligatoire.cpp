@@ -1,7 +1,7 @@
 //#include "../include/obligatoire.h"
 #include "../include/jeu.h"
 
-// L28 + L110
+// L28 + L110  //  L152->154 +
 
 void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
     // Vérifier que le plateau n'est point vide
@@ -93,7 +93,7 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
     }
 };
 
-void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* pioche) {
+void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau) {
     // Vérifier que le plateau a au moins 1 jeton or et que le joueur n'a pas 3 cartes réservées déjà
     if (!plateau->hasJetonOr()) {
         std::cout << "Aucun jeton or de disponible sur le plateau !\n";
@@ -131,15 +131,16 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* pioche
     int choix;
     do {
         std::cout << "Que voulez vous faire ?\n";
-        std::cout << "Prendre 1 carte Joaillerie de votre choix dans la pyramide ? (1)\n";
-        std::cout << "Piocher la premiere carte de l’un des 3 paquets ? (2)";
+        std::cout << "Reserver 1 carte Joaillerie de votre choix dans la pyramide ? (1)\n";
+        std::cout << "Reserver la premiere carte de l’un des 3 paquets ? (2)";
         std::cout << "Choix (1 ou 2) : ";
         std::cin >> choix;
         std::cout << "\n";
     } while (choix != 1 and choix != 2);
 
     // Il choisi alors une carte en fonction de son choix
-    int n_carte, n_pioche, n;
+    int n_carte, n_pioche;
+    Pioche* pioche;
     CarteJoaillerie* card;
     do {
         std::cout << "Dans quelle pioche souhaitez vous piocher - (1, 2, 3) ? Pioche = ";
@@ -147,30 +148,30 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* pioche
         std::cout << "\n";
         if (n_pioche < 1 or n_pioche > 3) std::cout << "Numero de pioche invalide !\n";
     } while (n_pioche < 1 or n_pioche > 3);
+    switch (n_pioche) {
+        //case 1: pioche = Jeu::getPioche1();
+        //case 2: pioche = Jeu::getPioche2();
+        //case 3: pioche = Jeu::getPioche3();
+        default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
+    }
     if (choix == 1) {
         do {
-            std::cout << "Quelle carte de cette pioche voulez vous prendre - (La plus a gauche etant la premiere, soit 1) ? Carte = ";
+            std::cout << "Quelle carte revelee voulez vous prendre - (La plus a gauche etant la premiere, soit 1) ? Carte = ";
             std::cin >> n_carte;
             std::cout << "\n";
-            if (n_carte < 1 or n_carte > 12) std::cout << "Numero de carte invalide !\n";
-        } while (n_carte < 1 or n_carte > 12);
-        switch (n_pioche) {
-            case 0: n = -1;
-            case 1: n = 3;
-            case 2: n = 7;
-            default: std::cout << "Numero de pioche invalide !\n";
-        }
-        n += n_carte;
-        card = const_cast<CarteJoaillerie*>(pioche->joueurPrend(n));
+            if (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees()) std::cout << "Numero de carte invalide !\n";
+        } while (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees());
+        card = const_cast<CarteJoaillerie*>(pioche->joueurPrend(n_carte));
     } else {
-        return; // Pas de fonctions pour piocher direct ?
+        std::cout << "Vous reservez la premiere carte de cette pioche.\n";
+        card = const_cast<CarteJoaillerie*>(pioche->joueurPioche()));
     }
 
     // On ajoute la carte réservée
     joueur->ajouterCarteReservee(card);
 };
 
-void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* pioche) {
+void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
     CarteJoaillerie* card;
 
     // Vérifier achat possible

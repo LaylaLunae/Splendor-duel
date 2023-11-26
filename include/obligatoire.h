@@ -6,6 +6,8 @@
 
 // Comment vérifier l'obligation de remplir le plateau ?
 // Faire des fonctions de vérifications ?
+// Vérification anti str
+// Vérifier la récupération des pioches quand ce sera implémenté dans Jeu
 
 class Obligatoire {
     friend class Jeu;
@@ -17,8 +19,8 @@ public:
     Obligatoire& operator=(const Obligatoire& obligatoire) = delete;
 
     void prendreJeton(Joueur* joueur, Plateau* plateau);
-    void reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* pioche);
-    void acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* pioche);
+    void reserverCarte(Joueur* joueur, Plateau* plateau);
+    void acheterCarte(Joueur* joueur, Plateau* plateau);
 };
 
 #endif //SPLENDOR_OBLIGATOIRE_H
