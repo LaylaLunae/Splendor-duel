@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-#set(CMAKE_PREFIX_PATH "C:/Qt/6.6.0/mingw_64/lib/cmake")
-set(CMAKE_PREFIX_PATH "/usr/local/Cellar/qt/6.5.2/lib")
+set(CMAKE_PREFIX_PATH "C:/Qt/6.6.0/mingw_64/lib/cmake")
+#set(CMAKE_PREFIX_PATH "/usr/local/Cellar/qt/6.5.2/lib")
 
 
 
