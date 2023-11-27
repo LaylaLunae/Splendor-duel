@@ -164,7 +164,7 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau) {
         card = const_cast<CarteJoaillerie*>(pioche->joueurPrend(n_carte));
     } else {
         std::cout << "Vous reservez la premiere carte de cette pioche.\n";
-        card = const_cast<CarteJoaillerie*>(pioche->joueurPioche()));
+        card = const_cast<CarteJoaillerie*>(pioche->joueurPioche());
     }
 
     // On ajoute la carte réservée
