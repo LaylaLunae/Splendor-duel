@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-set(CMAKE_PREFIX_PATH "C:/Qt/6.6.0/mingw_64/lib/cmake")
+#set(CMAKE_PREFIX_PATH "C:/Qt/6.6.0/mingw_64/lib/cmake")
+set(CMAKE_PREFIX_PATH "/usr/local/Cellar/qt/6.5.2/lib")
 
 
 
@@ -40,6 +41,8 @@ add_executable(Splendor main.cpp
         include/affichage_joueur.h
         include/plateau.h
         include/jeton.h
+        affichage/affichage_carte.h
+        affichage/affichage_carte.cpp
 )
 
 find_package(Qt6 COMPONENTS
