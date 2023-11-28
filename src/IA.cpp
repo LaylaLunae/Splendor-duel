@@ -93,7 +93,7 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
 bool IA::peutAcheterCarte(const IA *joueur, const CarteJoaillerie& carte) const {
 
     std::map<Couleur, int> prix = carte.getPrix();
-    bool achat_possible = false;
+    bool achat_possible = true;
     for (auto elem = prix.begin(); elem != prix.end(); elem++) {
         int price = elem->second;
         switch (elem->first) {
@@ -104,7 +104,6 @@ bool IA::peutAcheterCarte(const IA *joueur, const CarteJoaillerie& carte) const 
             case Couleur::noir: if (price - joueur->getGemmesBonus(4) > joueur->getNbJeton(4)) achat_possible = false;
             case Couleur::rose: if (price - joueur->getGemmesBonus(5) > joueur->getNbJeton(5)) achat_possible = false;
         }
-        achat_possible=true;
     }
     return achat_possible;
 }
