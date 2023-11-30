@@ -49,7 +49,7 @@ void testes_pour_plateau() {
             valider_selection = std::stoi(reponse);
         }
 
-        ReponseValidationSelection *reponse = p->validerSelectionEtPrendreJetons();
+        ReponseValidationSelection* reponse = p->validerSelectionEtPrendreJetons();
         std::cout<<"\nVous avez en main les jetons de valeurs : ";
         for (unsigned int index_jeton = 0; index_jeton < reponse->nombre; index_jeton++) {
             std::cout<<reponse->jetons[index_jeton]->getCouleurString()<<", ";
@@ -78,18 +78,16 @@ void testes_pour_plateau() {
     catch (PlateauException exc) {std::cout<<exc.get_info();}
 }
 
-class Jetontmp {
-    unsigned int a;
-public:
-    Jetontmp(unsigned int b):a(b) {}
-    unsigned int geta() {return a;}
-};
 
+Plateau::Plateau():jetons(nullptr),sac(nullptr),privileges(nullptr),
+cartes_nobles(nullptr),nb_jetons_plateau(0),
+nb_jetons_sac(0), selection_courante(nullptr),
+selection_courante_positions(nullptr),
+nombre_jetons_dans_selection(0){
 
-Plateau::Plateau():jetons(nullptr),sac(nullptr),privileges(nullptr),cartes_nobles(nullptr),nb_jetons_plateau(0),
-                   selection_courante(nullptr), selection_courante_positions(nullptr) {
     jetons = new const Jeton*[nb_jetons_plateau_MAX];
     sac = new const Jeton*[nb_jetons_sac_MAX];
+
 
     for (unsigned int i = 0; i < 25 ; i++) {
         jetons[i] = nullptr;
@@ -111,7 +109,8 @@ Plateau::Plateau():jetons(nullptr),sac(nullptr),privileges(nullptr),cartes_noble
         } else if (i < 25) {
             jt = JetonType::Gemme; couleur=Couleur::noir;
         }
-        ajouterSac(new const Jeton(jt, couleur));
+
+        ajouterSac(new const Jeton(jt, couleur, i%5+1, i/5+1));
     }
     nb_jetons_sac = nb_jetons_sac_MAX;
 
@@ -207,7 +206,9 @@ void Plateau::remplissagePlateau(bool avecAffichage) {
     while (pointeur_case_libre < nb_jetons_plateau_MAX && jetons[pointeur_case_libre] != nullptr) {
         pointeur_case_libre++;
     }
-    if (pointeur_case_libre == nb_jetons_plateau_MAX) throw PlateauException("Tous les jetons sont déjà sur le plateau ! ¯\\_(^^')_/¯");
+    if (pointeur_case_libre == nb_jetons_plateau_MAX)
+        // throwPlateauException("Tous les jetons sont déjà sur le plateau ! ¯\\_(^^')_/¯");
+        std::cout<<"Tous les jetons sont déjà sur le plateau ! ¯\\_(^^')_/¯";
 
 
     // Tant qu'il reste des jetons dans le sac : on pioche et on dépose sur le plateau
@@ -273,7 +274,7 @@ bool Plateau::verificationSelectionPositions() {
     // Ou de celui le plus en bas à gauche (pour diagonale de bas gauche à haut droit)
     if (nombre_jetons_dans_selection == 0) return true;
 
-    bool affichage = true;
+    bool affichage = false;
 
     if (affichage) std::cout<<"\nVERIFICATION position...";
 
@@ -384,17 +385,21 @@ bool Plateau::verificationSelectionPositions() {
 }
 
 
-void Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
+int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
 
     // L'attribut "jetons" est une liste simple et non un tableau.
     // Il faut donc convertir les coordonnees en index de liste.
     unsigned int position_dans_plateau = nombre_jetons_par_cote_de_plateau  *  (position_y-1) + position_x-1;
+    bool a_selectionne_un_jeton_or;
 
     // Erreur si la case est vide.
-    if (jetons[position_dans_plateau] == nullptr)
-        throw PlateauException("Aucun jeton à cet emplacement");
+    if (jetons[position_dans_plateau] == nullptr) {
+        //throw PlateauException("Aucun jeton à cet emplacement");
+        std::cout << "Aucun jeton à cet emplacement"<<"\n";
+        return 1;
+    }
 
-    std::cout<<"\nLe joueur a indique le jeton de valeur : "<<jetons[position_dans_plateau]->getCouleurString();
+    std::cout<<"\nLe joueur a indique le jeton de valeur : "<<jetons[position_dans_plateau]->getCouleurString()<<"\n";
 
     // Déselectionner le jeton s'il existe déjà
     bool deselection = false;
@@ -419,7 +424,7 @@ void Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
             selection_courante_positions[nombre_jetons_dans_selection*2-1] = 0;
 
             nombre_jetons_dans_selection--;
-            std::cout<<"\nCe jeton a ete enleve de la selection.";
+            std::cout<<"\nCe jeton a ete enleve de la selection."<<"\n";
             break;
         }
     }
@@ -427,15 +432,20 @@ void Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
     // Sinon, on vérifie la légalité de l'opération et si c'est ok on l'ajoute
     if (!deselection) {
 
-        if (nombre_jetons_dans_selection >=3)
-            throw PlateauException("\nImpossible de choisir plus de jetons!  <('o'<)");
+        if (nombre_jetons_dans_selection >=3) {
+            //throw PlateauException("\nImpossible de choisir plus de jetons!  <('o'<)");
+            std::cout << "\nImpossible de choisir plus de jetons!  <('o'<)"<<"\n";
+            return 5;
+        }
 
         // Vérification sur l'or: ne peut être un jeton or que si un seul jeton est prix.
         if (nombre_jetons_dans_selection >= 1 &&
             (selection_courante[0]->getCouleurString() == "Or" ||
-            jetons[position_dans_plateau]->getCouleurString() == "Or"))
-            throw PlateauException("\nQue un seul jeton or possible!  <('o'<)");
-
+            jetons[position_dans_plateau]->getCouleurString() == "Or")) {
+            //throw PlateauException("\nQue un seul jeton or possible!  <('o'<)");
+            std::cout<<"\nQue un seul jeton or possible!  <('o'<)"<<"\n";
+            return 3;
+        }
 
 
         // On ajoute avant la vérification pour la méthode de verification des positions appelée tout de suite après
@@ -444,11 +454,14 @@ void Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
 
         if (verificationSelectionPositions()) {
             selection_courante[nombre_jetons_dans_selection++] = jetons[position_dans_plateau];
+            a_selectionne_un_jeton_or = jetons[position_dans_plateau]->getCouleurString() == "Or";
             std::cout<<"\nCe jeton a ete ajoute a la selection.";
         } else {
             selection_courante_positions[nombre_jetons_dans_selection*2] = 0;
             selection_courante_positions[nombre_jetons_dans_selection*2+1] = 0;
-            throw PlateauException("\n\nVous ne pouvez pas prendre ce jeton, tricheur! \\('O')/ ");
+            //throw PlateauException("\n\nVous ne pouvez pas prendre ce jeton, tricheur! \\('O')/ ");
+            std::cout<<"\n\nVous ne pouvez pas prendre ce jeton, tricheur! Mauvaise position ! \\('O')/ "<<"\n";
+            return 4;
         }
     }
 
@@ -468,12 +481,19 @@ void Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
         std::cout<<selection_courante_positions[i+1]<<" - ";
     }
     */
+
+    if (a_selectionne_un_jeton_or)
+        return 2;
+
+    return 0;
 }
 
 
 ReponseValidationSelection* Plateau::validerSelectionEtPrendreJetons() {
-    if (nombre_jetons_dans_selection == 0)
-        throw PlateauException("Aucun jeton dans la selection <('o'<)");
+    if (nombre_jetons_dans_selection == 0) {
+        //throw PlateauException("Aucun jeton dans la selection <('o'<)");
+        std::cout<<"Aucun jeton dans la selection <('o'<)"<<"\n";
+    }
 
     // Création de la liste et du nombre à retourner :
     const Jeton** liste = new const Jeton * [nombre_jetons_dans_selection];
@@ -504,8 +524,10 @@ ReponseValidationSelection* Plateau::validerSelectionEtPrendreJetons() {
     selection_courante = new const Jeton*[nombre_jetons_dans_selection_MAX];
 
     // Envoi du résultat
-    ReponseValidationSelection reponse = {liste, nb_jetons_dans_liste};
-    return &reponse;
+    ReponseValidationSelection* reponse = new ReponseValidationSelection(
+            liste, nb_jetons_dans_liste
+            );
+    return reponse;
 }
 
 
@@ -516,8 +538,8 @@ const Privilege* Plateau::prendrePrivilege() {
      */
 
     if (nb_privileges == 0)
-        throw PlateauException("Il n'y a plus de Privilege sur le plateau... ¯\\_(^^')_/¯");
-
+        //throw PlateauException("Il n'y a plus de Privilege sur le plateau... ¯\\_(^^')_/¯");
+        std::cout<<"Il n'y a plus de Privilege sur le plateau... ¯\\_(^^')_/¯"<<"\n";
     const Privilege* resultat = privileges[nb_privileges-1];
 
     privileges[nb_privileges-1] = nullptr;
@@ -533,7 +555,8 @@ void Plateau::donnePrivilege(const Privilege* p) {
      */
 
     if (nb_privileges == nb_privileges_MAX)
-        throw PlateauException("Il y a déjà assez de privilège sur le plateau... ¯\\_(^^')_/¯");
+        //throw PlateauException("Il y a déjà assez de privilège sur le plateau... ¯\\_(^^')_/¯");
+        std::cout<<"Il y a déjà assez de privilège sur le plateau... ¯\\_(^^')_/¯"<<"\n";
 
     privileges[nb_privileges++] = p;
 }
@@ -541,7 +564,8 @@ void Plateau::donnePrivilege(const Privilege* p) {
 
 const CarteNoble* Plateau::prendreCarteNoble(unsigned int numero) {
     if (cartes_nobles[numero] == nullptr)
-        throw PlateauException("Cette carte n'est plus sur le plateau... ¯\\_(^^')_/¯");
+        //throw PlateauException("Cette carte n'est plus sur le plateau... ¯\\_(^^')_/¯");
+        std::cout<<"Cette carte n'est plus sur le plateau... ¯\\_(^^')_/¯"<<"\n";
 
     const CarteNoble* resultat = cartes_nobles[numero];
     cartes_nobles[numero] = nullptr;
@@ -556,24 +580,46 @@ bool Plateau::hasJeton() {
 }
 
 Plateau::~Plateau() {
+    for (size_t i = 0; i < nb_jetons_plateau; i++) {
+        delete jetons[i];
+    }
     delete[] jetons;
+
+    for(size_t i = 0; i < nb_privileges; i ++) {
+        delete privileges[i];
+    }
     delete[] privileges;
+
     delete[] cartes_nobles;
+
+    for (size_t i = 0; i < nb_jetons_sac; i ++) {
+        delete sac[i];
+    }
     delete[] sac;
+
+    for (size_t i = 0; i < nombre_jetons_dans_selection; i ++) {
+        delete selection_courante[i];
+    }
     delete[] selection_courante_positions;
     delete[] selection_courante;
 }
 
 const Jeton* Plateau::prendreJeton(unsigned int position_x, unsigned int position_y) {
-    if (nb_jetons_plateau == 0) throw PlateauException("Aucun jeton dans la selection <('o'<)");
+    if (nb_jetons_plateau == 0) {
+       //throw PlateauException("Aucun jeton dans la selection <('o'<)");
+       std::cout<<"Aucun jeton dans la selection <('o'<)"<<"\n";
+    }
     unsigned int position_dans_plateau = nombre_jetons_par_cote_de_plateau  *  (position_y-1) + position_x-1;
 
 
-    if (jetons[position_dans_plateau] == nullptr) throw PlateauException("Aucun jeton ici... <(-_-)>");
+    if (jetons[position_dans_plateau] == nullptr) {
+            //throw PlateauException("Aucun jeton ici... <(-_-)>");
+            std::cout<<"Aucun jeton ici... <(-_-)>"<<"\n";
+    }
 
     // Tester ici que ce ne soit pas un or
     //if (position_dans_plateau == -1) {
-    //    throw PlateauException("Impossible de prendre un or <('o'<)");
+    //    throw PlateauException("Impossible de prendre un or <('o'<)")
     //}
 
     const Jeton* resultat = jetons[position_dans_plateau];
@@ -591,11 +637,12 @@ bool Plateau::hasJetonOr() {
     return false;
 }
 
-void test() {
-    std::cout<<"Jeton cliqué";
-}
 void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
-    std::cout<<"Clicked received!";
+    std::cout<<"Le jeton clicke a la position : "<<vj->getJeton()->getX()<<","<< vj->getJeton()->getY()<<"\n";
+    plateau->selectionJeton(
+            vj->getJeton()->getX(),
+            vj->getJeton()->getY()
+            );
 }
 
 VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent), vuesJetons(25, nullptr)
@@ -607,13 +654,17 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent), vuesJetons(25, nullpt
 
     for(unsigned int i=0; i < 25;i++) {
         vuesJetons[i] = new VueJeton;
-        layoutBouton->addWidget(vuesJetons[i], i / 5, i % 5);
+        layoutBouton->addWidget(vuesJetons[i],
+                                plateau->jetons[i]->getX(),
+                                plateau->jetons[i]->getY()
+                                );
         connect(
                 vuesJetons[i],
                 SIGNAL(jetonClick(VueJeton*)),
                 this,
                 SLOT(jetonClick_Plateau(VueJeton*))
         );
+        vuesJetons[i]->setJeton(plateau->jetons[i]);
 
     }
 

@@ -26,6 +26,8 @@ public:
 struct ReponseValidationSelection {
     const Jeton** jetons;
     unsigned int nombre;
+    ReponseValidationSelection(const Jeton** j, unsigned int n):
+    jetons(j), nombre(n) {}
 };
 
 class Plateau {
@@ -65,7 +67,7 @@ public:
     std::string etatPlateau();
     void ajouterSac(const Jeton *j);
 
-    void selectionJeton(unsigned int position_x, unsigned int position_y);
+    int selectionJeton(unsigned int position_x, unsigned int position_y);
     ReponseValidationSelection* validerSelectionEtPrendreJetons();
     const Jeton* prendreJeton(unsigned int position_x, unsigned int position_y);
 

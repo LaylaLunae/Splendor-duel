@@ -36,12 +36,11 @@ int main(int argc, char *argv[]) {
 
 
     /* Affichage plateau v0.1*/
-     /*
     QApplication app (argc, argv);
     VuePlateau plateau;
     plateau.show();
     return app.exec();
-    */
+
 
      /* Affichage cartes v0.1 */
 //     QApplication app(argc, argv);
@@ -58,10 +57,12 @@ int main(int argc, char *argv[]) {
 //    return app.exec();
 
     /* Affichage piles de carte */
+    /*
     QApplication app(argc, argv);
     AffichageCarte affichageCarte;
     affichageCarte.show();
     return app.exec();
+     */
 }
 
 /*
