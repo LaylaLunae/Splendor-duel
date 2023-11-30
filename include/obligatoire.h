@@ -21,6 +21,8 @@ public:
     void prendreJeton(Joueur* joueur, Plateau* plateau);
     void reserverCarte(Joueur* joueur, Plateau* plateau);
     void acheterCarte(Joueur* joueur, Plateau* plateau);
+
+    void remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, int difference, int prix_elem, int index);
 };
 
 #endif //SPLENDOR_OBLIGATOIRE_H
