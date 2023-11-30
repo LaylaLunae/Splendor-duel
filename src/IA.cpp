@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "../include/jeu.h"
 #include <cstdlib>  // Pour rand() et srand()
@@ -10,7 +9,7 @@
 
 int IA::choisirChoix(int min, int max) {
 
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    //std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     int choix = rand() % max + 1;
 
