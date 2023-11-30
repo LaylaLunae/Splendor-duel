@@ -1,7 +1,6 @@
 #ifndef JEU_JEU_H
 #define JEU_JEU_H
 #include <string>
-#include <iostream>
 
 #include "carteJoaillerie.h"
 #include "carte.h"
@@ -13,10 +12,9 @@
 #include "pioche.h"
 #include "obligatoire.h"
 #include "joueur.h"
-#include "affichage_joueur.h"
 
 
-class Jeu{
+class Jeu {
 private:
     /*struct Handler {
         Jeu * instance = nullptr;
@@ -27,8 +25,9 @@ private:
     static Jeu* instance;
 
     Joueur* joueur_actuel;
+    Joueur* joueur_gagnant;
 
-    Jeu(){};
+    Jeu():joueur_actuel(nullptr),joueur_gagnant(nullptr){};
     ~Jeu(){};
     Jeu(const Jeu& j) = delete;
     Jeu& operator=(const Jeu& j) = delete;
@@ -38,6 +37,7 @@ public:
     static void libereJeu();
 
     Joueur* getJoueurActuel() const {return joueur_actuel;}
+    Joueur* getJoueurGagnant() const {return joueur_gagnant;}
 
     void validationAction();
 
@@ -45,11 +45,13 @@ public:
     void nouvellePartie();
     void reprendrePartie(); //faut bdd
     void verifAnciennePartie(); //faut bdd
-    void verifGagnant();
+    void verifGagnant(Joueur * j1, Joueur * j2);
     void sauvegarderPartie(); //faut bdd
-    Joueur* vainqueur();
-    void auSuivant();
-    void verifObligationRemplissage();
+    void vainqueur(Joueur * j);
+    void auSuivant(Joueur * j1, Joueur * j2);
+
+    void manche(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j1, Joueur * j2, Obligatoire * obl, Optionnelle * opt);
+    void tour(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j, Obligatoire * obl, Optionnelle * opt);
 };
 
 #endif //JEU_JEU_H
