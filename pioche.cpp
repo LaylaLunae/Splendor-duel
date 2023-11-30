@@ -10,7 +10,7 @@ Pioche::Pioche(int np, int mcr, int mcp):numero_pioche(np),
     cartes_dehors = new const CarteJoaillerie*[mcr];
 
     for (int i = 0; i < mcp; ++i) {
-        cartes_dans_pioche[i] = new CarteJoaillerie(i);
+        cartes_dans_pioche[i] = nullptr;
     }
     for (int i = 0; i < mcr; ++i) {
         cartes_dehors[i] = nullptr;
