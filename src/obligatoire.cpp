@@ -164,7 +164,7 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau) {
         card = const_cast<CarteJoaillerie*>(pioche->joueurPrend(n_carte));
     } else {
         std::cout << "Vous reservez la premiere carte de cette pioche.\n";
-        card = const_cast<CarteJoaillerie*>(pioche->joueurPrendPioche());
+        card = const_cast<CarteJoaillerie*>(pioche->joueurPioche());
     }
 
     // On ajoute la carte réservée
@@ -539,39 +539,5 @@ void Obligatoire::remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, 
             plateau->ajouterSac(j);
         }
         joueur->setNbJeton(index, joueur->getNbJeton(index) - prix_elem);
-    }
-}
-
-void Obligatoire::ajouterJetonsJoueur(Joueur* joueur, ReponseValidationSelection* selection) {
-    // On ajoute les jetons au joueur
-    //std::vector<int> nb_couleurs(7, 0);
-    // Bleu - Vert - Rouge - Blanc - Noir - Rose(Perle) - Or
-    for (int i = 0; i < selection->nombre; i++) {
-        const Jeton *jeton = selection->jetons[i];
-        if (jeton->getType() == JetonType::Or) {
-            joueur->setNbJeton(7, joueur->getNbJeton(7) + 1);
-        } else {
-            switch (jeton->getCouleur()) {
-                case Couleur::bleu:
-                    //nb_couleurs[0] += 1;
-                    joueur->setNbJeton(0, joueur->getNbJeton(0) + 1);
-                case Couleur::vert:
-                    //nb_couleurs[1] += 1;
-                    joueur->setNbJeton(1, joueur->getNbJeton(1) + 1);
-                case Couleur::rouge:
-                    //nb_couleurs[2] += 1;
-                    joueur->setNbJeton(2, joueur->getNbJeton(2) + 1);
-                case Couleur::blanc:
-                    //nb_couleurs[3] += 1;
-                    joueur->setNbJeton(3, joueur->getNbJeton(3) + 1);
-                case Couleur::noir:
-                    //nb_couleurs[4] += 1;
-                    joueur->setNbJeton(4, joueur->getNbJeton(4) + 1);
-                case Couleur::rose:
-                    //nb_couleurs[5] += 1;
-                    joueur->setNbJeton(5, joueur->getNbJeton(5) + 1);
-                default: std::cout << "Il y a definitivement un probleme avec la selection...\n";
-            }
-        }
     }
 }

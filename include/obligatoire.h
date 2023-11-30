@@ -23,7 +23,6 @@ public:
     void acheterCarte(Joueur* joueur, Plateau* plateau);
 
     void remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, int difference, int prix_elem, int index);
-    void ajouterJetonsJoueur(Joueur* joueur, ReponseValidationSelection* selection);
 };
 
 #endif //SPLENDOR_OBLIGATOIRE_H

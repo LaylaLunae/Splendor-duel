@@ -3,19 +3,19 @@
 
 //#include "plateau.h"
 //#include "joueur.h"
-#include <vector>
+
 
 class Optionnelle {
     friend class Jeu;
 
-public:
-    Optionnelle() = default;
-    ~Optionnelle() = default;
-    Optionnelle(const Optionnelle& optionnelle) = delete;
-    Optionnelle& operator=(const Optionnelle& optionnelle) = delete;
+    private:
+        Optionnelle(Plateau* plateau) : plateau(plateau) {};
 
-    void depenserPrivilege(Joueur* joueur, Plateau* plateau);
-    void remplissagePlateau(Joueur* joueur, Plateau* plateau);
+        void depenserPrivilege(Joueur* joueur, ReponseValidationSelection RVS);
+        void remplissagePlateau(Joueur* joueur);
+
+    private:
+        Plateau* plateau;
 };
 
 #endif //SPLENDOR_OPTIONNELLE_H

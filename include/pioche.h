@@ -3,7 +3,7 @@
 
 //#include "carteJoaillerie.h"
 
-class CarteJoaillerie;
+class Joaillerie;
 
 class Pioche {
 private:
@@ -27,15 +27,12 @@ public:
     const int getMaxCartesRevelees() const {return max_cartes_revelees;}
     int getMaxCartesPioche() const {return max_cartes_pioche;}
 
-    Pioche(const int np, const int mcr, int mcp);
+    Pioche(const int np, const int mcr, int mcp); //à revoir
     ~Pioche(); //à revoir
 
-    const CarteJoaillerie * joueurPrend(int numero_carte);
-    void distribution();
-    const CarteJoaillerie * joueurPrendPioche();
-    void afficherPioche(std::ostream& f = std::cout);
-    void afficherCartesRevelees(std::ostream& f = std::cout);
-
+    const CarteJoaillerie * joueurPrend(int numero_carte); // à revoir + tirage au sort
+    const CarteJoaillerie * joueurPioche() ; // Added by Timo
+    void distribution(); // à revoir
 };
 
 #endif // PIOCHE_H_INCLUDED

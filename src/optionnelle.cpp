@@ -1,66 +1,39 @@
 //#include "../include/optionnelle.h"
 #include "../include/jeu.h"
 
-void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau) {
+void Optionnelle::depenserPrivilege(Joueur* joueur, ReponseValidationSelection RVS) {
     // Vérifier si le privilège est disponible et qu'il y a au moins un jeton sur le plateau
-    if (!joueur->hasPrivilege() or !plateau->hasJeton()) {
-        std::cout << "Le joueur ne peut pas depenser de privileges !\n";
-        return;
-    }
+    if (joueur->hasPrivilege() && plateau->hasJeton()) {
+        // On vérifie qu'il n'y a qu'un seul jeton
+        if (RVS.nombre > 1) throw PlateauException("On ne peut recuperer qu'un seul jeton en depensant un privilege !");
 
-    // Le joueur choisit un jeton non or
-    std::tuple<int, int> jeton_choisi(0, 0);
-    ReponseValidationSelection *selection = nullptr;
-    int jeton_selec;
-    do {
-        jeton_choisi = choisir_jeton();
-        //jeton_selec = plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
-        // Renvoie un int "code d'erreur" - 0 OK - 1 CASE VIDE - 2 JETON OR - 3 2 OR SELEC - 4 MAUVAISES POSITIONS
-        switch (jeton_selec) {
-            case 0: std::cout << "Selection autorise\n";
-            case 1: std::cout << "Case vide\n";
-            case 2:
-                std::cout << "Vous ne pouvez selectionner de jeton or lors de cette action !\n";
-                // Désélection
-                plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
-            // case 3 théoriquement impossible
-            case 4: std::cout << "Ce jeton ne peut etre selectionne !\n";
-            default: std::cout << "Pour une raison ou une autre, il y a eu un probleme...\n";
+        // On ajoute le jeton au joueur
+        const Jeton* jeton = RVS.jetons[0];
+        switch (jeton->getCouleur()) {
+            case Couleur::bleu: joueur->setNbJeton(0, joueur->getNbJeton(0)+1);
+            case Couleur::vert: joueur->setNbJeton(1, joueur->getNbJeton(1)+1);
+            case Couleur::rouge: joueur->setNbJeton(2, joueur->getNbJeton(2)+1);
+            case Couleur::blanc: joueur->setNbJeton(3, joueur->getNbJeton(3)+1);
+            case Couleur::noir: joueur->setNbJeton(4, joueur->getNbJeton(4)+1);
+            case Couleur::rose: joueur->setNbJeton(5, joueur->getNbJeton(5)+1);
+            default: throw PlateauException("Impossible de recuperer ce jeton avec un privilege !");
         }
-    } while (jeton_selec != 0);
-    selection = plateau->validerSelectionEtPrendreJetons();
 
-    // On ajoute le jeton au joueur
-    const Jeton *jeton = selection->jetons[1];
-    switch (jeton->getCouleur()) {
-        case Couleur::bleu: joueur->setNbJeton(0, joueur->getNbJeton(0) + 1);
-        case Couleur::vert: joueur->setNbJeton(1, joueur->getNbJeton(1) + 1);
-        case Couleur::rouge: joueur->setNbJeton(2, joueur->getNbJeton(2) + 1);
-        case Couleur::blanc: joueur->setNbJeton(3, joueur->getNbJeton(3) + 1);
-        case Couleur::noir: joueur->setNbJeton(4, joueur->getNbJeton(4) + 1);
-        case Couleur::rose: joueur->setNbJeton(5, joueur->getNbJeton(5) + 1);
-        default: std::cout << "Il y a definitivement un probleme avec la selection...\n";
-    }
-
-    // On remet le privilège sur le plateau
-    std::vector<Privilege*> privileges;
-    privileges = joueur->getPrivileges();
-    plateau->donnePrivilege(privileges.back());
-    privileges.pop_back();
+        // On remet le privilège sur le plateau
+        Privilege* privilege = nullptr;
+        /*
+        privilege = joueur->getPrivileges(); // Décalage du tableau de privilège à prévoir? Ou suivi de l'index en tant qu'attribut?
+        plateau->donnePrivilege(privilege);
+        */
+    } else throw PlateauException("Le joueur ne peut depenser de privilege !");
 }
 
-void Optionnelle::remplissagePlateau(Joueur* joueur, Plateau* plateau) {
+void Optionnelle::remplissagePlateau(Joueur* joueur) {
     // Remplir les cases vides du plateau avec des jetons aléatoires tirés du sac
 
     // Vérifier qu'au moins une case est vide et qu'il y a au moins un jeton dans le sac
-    if (plateau->getNbJetonsPlateau() == plateau->getNbJetonsPlateauMAX()) {
-        std::cout << "Plateau deja rempli !\n";
-        return;
-    }
-    if (plateau->getNbJetonsSac() == 0) {
-        std::cout << "Sac vide !\n";
-        return;
-    }
+    if (plateau->getNbJetonsPlateau() == plateau->getNbJetonsPlateauMAX()) throw PlateauException("Plateau deja rempli !");
+    if (plateau->getNbJetonsSac() == 0) throw PlateauException("Sac vide !");
 
     // On remplit alors le plateau
     plateau->remplissagePlateau(false);
@@ -68,15 +41,13 @@ void Optionnelle::remplissagePlateau(Joueur* joueur, Plateau* plateau) {
     // Et on donne un privilège à l'adversaire
     Joueur* adversaire = joueur->getAdversaire();
     const Privilege* privilege;
-    std::vector<Privilege*> privileges;
-    if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) {
-        std::cout << "L'adversaire a deja tous les privileges !\n";
-        return;
-    }
+    if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) throw PlateauException("L'adversaire a deja tous les privileges !");
     if (plateau->getNbPrivileges() == 0) {
-        privileges = joueur->getPrivileges();
-        adversaire->ajouterPrivilege(privileges.back());
-        privileges.pop_back();
+        std::cout << "qqch";
+        /*
+        privilege = joueur->getPrivileges(); // Décalage du tableau de privilège à prévoir? Ou suivi de l'index en tant qu'attribut?
+        adversaire->ajouterPrivilege(const_cast<Privilege*>(privilege));
+        */
     } else {
         privilege = plateau->prendrePrivilege();
         adversaire->ajouterPrivilege(const_cast<Privilege*>(privilege));

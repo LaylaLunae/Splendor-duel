@@ -1,12 +1,12 @@
 #include "../include/carteJoaillerie.h"
 
-CarteJoaillerie::CarteJoaillerie(Plateau* p, Joueur* j, int niv, int cour, const std::array<Couleur, 2>& pierres, std::map<Couleur, int> prx, const std::string& chemin, int prestige, const Pouvoir& pvr1, const Pouvoir& pvr2, const int id)
-        : Carte(chemin, prestige, cour, pvr1, pvr2, p, j), niveau(niv), couronne(cour), pierres(pierres), prix(prx), id(id) {
+CarteJoaillerie::CarteJoaillerie(Plateau* p, Joueur* j, int niv, int cour, const std::array<Couleur, 2>& pierres, std::map<Couleur, int> prx, const std::string& chemin, int prestige, const Pouvoir& pvr1, const Pouvoir& pvr2)
+        : Carte(chemin, prestige, cour, pvr1, pvr2, p, j), niveau(niv), couronne(cour), pierres(pierres), prix(prx) {
     // Constructor implementation
 }
 
 CarteJoaillerie::CarteJoaillerie()
-        : Carte(), niveau(0), couronne(0), pierres({Couleur::rien, Couleur::rien}), prix(), id(0) {}
+        : Carte(), niveau(0), couronne(0), pierres({Couleur::rien, Couleur::rien}), prix() {}
 
 
 CarteJoaillerie::~CarteJoaillerie() {
@@ -23,10 +23,6 @@ int CarteJoaillerie::getNiveau() const {
 
 int CarteJoaillerie::getCouronne() const {
     return couronne;
-}
-
-const int CarteJoaillerie::getID() const {
-    return id;
 }
 
 bool CarteJoaillerie::hasPierre() const {
