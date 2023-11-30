@@ -28,10 +28,12 @@ void IA::prendreJetonsAleatoires(Plateau* plateau) {
         int positionX = rand() % 5 + 1;
         int positionY = rand() % 5 + 1;
 
-        if (plateau->selectionJeton(positionX, positionY)==1) {  // selection valide
+        if (plateau->selectionJeton(positionX, positionY)==0) {  // selection valide
             ajouterJetons();
         }
     }
+    // ATTENTION : VA SE TRANSFORMER EN vector<const Jeton*>
+    ReponseValidationSelection* rvs = plateau->validerSelectionEtPrendreJetons();
 }
 
 std::vector<jetonsChoisi*> IA::ajouterJetons(std::vector<jetonsChoisi*> jetonsChoisi, int positionX, int positionY){
@@ -40,13 +42,14 @@ std::vector<jetonsChoisi*> IA::ajouterJetons(std::vector<jetonsChoisi*> jetonsCh
     AjouterMainJoueur(jeton);
     return jetonsChoisi;
 }
+ */
 
 void IA::AjouterMainJoueur(Joueur* joueur, Plateau* plateau, int positionX, int positionY){
 
     // faire une fonction qui ajoute les jetons dans la main du joueur
 }
 
-*/
+
 
 
 // pas sûre de faire la différence entre cartemaxrevelee et cartedehors
