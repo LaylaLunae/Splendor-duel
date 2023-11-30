@@ -42,12 +42,14 @@ std::vector<jetonsChoisi*> IA::ajouterJetons(std::vector<jetonsChoisi*> jetonsCh
     AjouterMainJoueur(jeton);
     return jetonsChoisi;
 }
- */
+
 
 void IA::AjouterMainJoueur(Joueur* joueur, Plateau* plateau, int positionX, int positionY){
 
     // faire une fonction qui ajoute les jetons dans la main du joueur
 }
+
+ */
 
 
 
