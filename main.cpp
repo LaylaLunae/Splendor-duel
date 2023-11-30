@@ -64,5 +64,21 @@ int main(int argc, char *argv[]) {
     return app.exec();
 }
 
-
-
+/*
+void menu(Jeu& j) {
+    int choix;
+    std::cout << "##### MENU #####\n";
+    do {
+        std::cout << "Nouvelle partie (1)\nReprendre partie (2)\nChoix = ";
+        std::cin >> choix;
+        std::cout << "\n";
+        if (choix != 1 and choix != 2) std::cout << "Choix incorrect !\n";
+    } while (choix != 1 and choix != 2);
+    system("cls");
+    switch (choix) {
+        case 1: j.nouvellePartie();
+        case 2: j.reprendrePartie();
+        default: std::cout << "Probleme au niveau du menu !\n";
+    }
+}
+ */
