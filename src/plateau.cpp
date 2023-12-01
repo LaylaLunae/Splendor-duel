@@ -495,6 +495,7 @@ int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
             std::cout<<selection_courante[i]->getCouleurString()<<" - ";
         }
     }
+    std::cout<<"\n";
 
     /* DEBUG : affichage des positions.
     std::cout<<"\nPositions courantes associees : ";
@@ -684,7 +685,6 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent), vuesJetons(25, nullpt
 
     for(unsigned int i=0; i < 5;i++) {
         for (unsigned int j = 0;j < 5;j++) {
-            std::cout<< 5*i+j<<" <-> " << plateau->matrix[i][j]-1<<" =>" <<plateau->jetons[plateau->matrix[i][j]-1]->getCouleurString() << "\n";
             vuesJetons[5*i +j] = new VueJeton(
                     plateau->jetons[ plateau->matrix[i][j]-1 ],
                     j, i ,
