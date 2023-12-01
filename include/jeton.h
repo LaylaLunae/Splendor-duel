@@ -7,6 +7,8 @@
 #include <QBrush>
 #include <QPushButton>
 #include <iostream>
+#include <QLabel>
+#include <QString>
 #include "couleur.h"
 
 enum class JetonType {
@@ -39,14 +41,27 @@ public:
 class VueJeton :public QPushButton {
 Q_OBJECT
 public:
-    VueJeton(const Jeton* j, QWidget *parent = nullptr):jeton(j),QPushButton(parent) {
-        setBackgroundRole(QPalette::Base);
+    VueJeton(const QString& text, const Jeton* j, QWidget *parent = nullptr):
+    jeton(j),
+    QPushButton(text, parent), parent(parent) {
+        //setBackgroundRole(QPalette::Base);
         setAutoFillBackground(true);
         setFixedSize(50,50);
         connect(this,SIGNAL(clicked()),this,SLOT(clickedEvent()));
-        setCheckable(false);
+        setButtonColor(QColor(173, 216, 230));
+
+        //std::string texte = std::to_string(j->getX());
+        //texte.append(std::to_string(j->getY()));
+        //std::cout<<texte<<"\n";
+        //QString buttonText = QString::fromStdString(texte);
+        //this->setText(buttonText);
+        //update();
+        //show();
+
+        //setCheckable(false);
     };
     explicit VueJeton(QWidget *parent = nullptr):QPushButton(parent) {
+        std::cout<<"Explicit\n";
         setBackgroundRole(QPalette::Base);
         setAutoFillBackground(true);
         setFixedSize(50, 50);
@@ -62,14 +77,30 @@ public:
         setCheckable(true);
         setChecked(false);
         jeton=j;
+        std::string texte = std::to_string(j->getX());
+        texte.append(std::to_string(j->getY()));
+        //setText(QString::fromStdString( texte));
+        //show();
         update();
     }
 protected:
     void paintEvent(QPaintEvent *event) override;
 private:
     const Jeton* jeton = nullptr;
+    QWidget* parent;
+    QLabel* label = nullptr;
     QPen pen;
     QBrush brush;
+    void setButtonColor(const QColor &color) {
+        // Get the default palette
+        QPalette palette = this->palette();
+
+        // Set the background color for buttons to the specified color
+        palette.setColor(QPalette::Button, color);
+
+        // Apply the modified palette to the button
+        setPalette(palette);
+    }
 signals:
     // quand la vude de carte est cliquée, elle émet un signal en transmettant son adresse
     void jetonClick(VueJeton*);
