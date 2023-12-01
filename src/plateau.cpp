@@ -9,6 +9,8 @@
 #include "../include/jeu.h"
 //#include "./../include/plateau.h"
 //#include "./../include/jeton.h"
+//#include "./../include/carte.h"
+//#include "./../include/carteNoble.h"
 
 
 std::tuple<int, int> choisir_jeton() {
@@ -49,10 +51,11 @@ void testes_pour_plateau() {
             valider_selection = std::stoi(reponse);
         }
 
-        ReponseValidationSelection* reponse = p->validerSelectionEtPrendreJetons();
+        std::vector<const Jeton*> reponse = p->validerSelectionEtPrendreJetons();
+
         std::cout<<"\nVous avez en main les jetons de valeurs : ";
-        for (unsigned int index_jeton = 0; index_jeton < reponse->nombre; index_jeton++) {
-            std::cout<<reponse->jetons[index_jeton]->getCouleurString()<<", ";
+        for (const Jeton* j : reponse) {
+            std::cout<<j->getCouleurString()<<",";
         }
 
         const CarteNoble* c = p->prendreCarteNoble(0);
@@ -61,8 +64,8 @@ void testes_pour_plateau() {
         std::cout<<p->etatPlateau();
 
         std::cout<<"\nRemise dans le sac des jetons...";
-        for (unsigned int index_jeton = 0; index_jeton < reponse->nombre; index_jeton++) {
-            p->ajouterSac(reponse->jetons[index_jeton]);
+        for (const Jeton* j : reponse) {
+            p->ajouterSac(j);
         }
         std::cout<<" ...fini.";
 
@@ -489,19 +492,20 @@ int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
 }
 
 
-ReponseValidationSelection* Plateau::validerSelectionEtPrendreJetons() {
+std::vector<const Jeton*> Plateau::validerSelectionEtPrendreJetons() {
     if (nombre_jetons_dans_selection == 0) {
         //throw PlateauException("Aucun jeton dans la selection <('o'<)");
         std::cout<<"Aucun jeton dans la selection <('o'<)"<<"\n";
     }
 
-    // Création de la liste et du nombre à retourner :
-    const Jeton** liste = new const Jeton * [nombre_jetons_dans_selection];
-    unsigned int nb_jetons_dans_liste = nombre_jetons_dans_selection;
+    // Création du vecteur à retourner:
+    std::vector<const Jeton*> reponse = std::vector<const Jeton*>(
+            nombre_jetons_dans_selection, nullptr
+            );
 
     // Ajoute les jetons à la liste à retourner :
     for (unsigned int i = 0 ; i < nombre_jetons_dans_selection; i++) {
-        liste[i] = selection_courante[i];
+        reponse.push_back(selection_courante[i]);
     }
 
     // Supprime les jetons du plateau :
@@ -524,9 +528,6 @@ ReponseValidationSelection* Plateau::validerSelectionEtPrendreJetons() {
     selection_courante = new const Jeton*[nombre_jetons_dans_selection_MAX];
 
     // Envoi du résultat
-    ReponseValidationSelection* reponse = new ReponseValidationSelection(
-            liste, nb_jetons_dans_liste
-            );
     return reponse;
 }
 
@@ -650,21 +651,28 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent), vuesJetons(25, nullpt
     plateau = new Plateau();
     std::cout<<plateau->etatPlateau();
 
-    layoutBouton = new QGridLayout;
+    layoutBouton = new QGridLayout(this);
 
     for(unsigned int i=0; i < 25;i++) {
-        vuesJetons[i] = new VueJeton;
+        vuesJetons[i] = new VueJeton(
+                QString("%1,%2")
+                    .arg(plateau->jetons[i]->getX())
+                    .arg(plateau->jetons[i]->getY()),
+                plateau->jetons[i],
+                this
+        );
         layoutBouton->addWidget(vuesJetons[i],
                                 plateau->jetons[i]->getX(),
                                 plateau->jetons[i]->getY()
                                 );
+        vuesJetons[i]->show();
         connect(
                 vuesJetons[i],
                 SIGNAL(jetonClick(VueJeton*)),
                 this,
                 SLOT(jetonClick_Plateau(VueJeton*))
         );
-        vuesJetons[i]->setJeton(plateau->jetons[i]);
+        //vuesJetons[i]->setJeton(plateau->jetons[i]);
 
     }
 

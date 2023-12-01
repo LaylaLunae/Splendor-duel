@@ -68,7 +68,7 @@ public:
     void ajouterSac(const Jeton *j);
 
     int selectionJeton(unsigned int position_x, unsigned int position_y);
-    ReponseValidationSelection* validerSelectionEtPrendreJetons();
+    std::vector<const Jeton*> validerSelectionEtPrendreJetons();
     const Jeton* prendreJeton(unsigned int position_x, unsigned int position_y);
 
     const Privilege* prendrePrivilege();
