@@ -173,7 +173,7 @@ std::string Plateau::etatPlateau() {
         sortie.append("  ");
     }
 
-    sortie.append("\n\n     Plateau :");
+    sortie.append("\n\n     Plateau dans memoire:");
     for (unsigned int j = 0; j <nb_jetons_plateau_MAX;j++) {
         if (j%5==0) sortie.append("\n          ");
         if (jetons[j] == nullptr) {
@@ -183,8 +183,19 @@ std::string Plateau::etatPlateau() {
         }
         sortie.append("  ");
     }
+    sortie.append("\n\n     Plateau affichage respecte:");
+    for (unsigned int j = 0; j <nb_jetons_plateau_MAX;j++) {
+        std::cout<<j/5<<","<<j%5<<"->"<<matrix[j/5][j%5]-1<<"\n";
+        if (j%5==0) sortie.append("\n          ");
+        if (jetons[j] == nullptr) {
+            sortie.append("null");
+        } else {
+            sortie.append(jetons[matrix[j/5][j%5]-1]->getCouleurString());
+        }
+        sortie.append("  ");
+    }
 
-    sortie.append("\n     Cartes nobles : ");
+    sortie.append("\n\n     Cartes nobles : ");
     for (unsigned int i = 0; i < 4; i++) {
         if (cartes_nobles[i] == nullptr) {
             sortie.append("null,");
@@ -256,6 +267,12 @@ void Plateau::remplissagePlateau(bool avecAffichage) {
 
         i++;
     }
+
+    //for (unsigned int index = 0; index < 5; i++) {
+     //   for (unsigned int index_j = 0; index_j < 5; index_j++) {
+            //jetons[index][index_j]
+     //   }
+    //}
 }
 
 
@@ -392,7 +409,9 @@ int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
 
     // L'attribut "jetons" est une liste simple et non un tableau.
     // Il faut donc convertir les coordonnees en index de liste.
-    unsigned int position_dans_plateau = nombre_jetons_par_cote_de_plateau  *  (position_y-1) + position_x-1;
+    // avant matrix:
+    // unsigned int position_dans_plateau = nombre_jetons_par_cote_de_plateau  *  (position_y-1) + position_x-1;
+    unsigned  int position_dans_plateau = matrix[position_y][position_x]-1;
     bool a_selectionne_un_jeton_or;
 
     // Erreur si la case est vide.
@@ -411,13 +430,13 @@ int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
             deselection = true;
 
             // Décalage des JETONS à gauche pour écraser la valeur déselectionnée
-            for (int j = i ; j < nombre_jetons_dans_selection-1; j++) {
+            for (unsigned int j = i ; j < nombre_jetons_dans_selection-1; j++) {
                 selection_courante[j] = selection_courante[j + 1];
             }
             selection_courante[nombre_jetons_dans_selection-1] = nullptr;
 
             // Décalage des POSITIONS à gauche pour écraser la valeur déselectionnée
-            for (int j = i*2 ; j < nombre_jetons_dans_selection*2-2; j+=2) {
+            for (unsigned int j = i*2 ; j < nombre_jetons_dans_selection*2-2; j+=2) {
                 selection_courante_positions[j] = selection_courante_positions[j + 2];
                 selection_courante_positions[j+1] = selection_courante_positions[j + 3];
             }
@@ -487,6 +506,9 @@ int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
 
     if (a_selectionne_un_jeton_or)
         return 2;
+
+    if (deselection)
+        return 6;
 
     return 0;
 }
@@ -639,42 +661,68 @@ bool Plateau::hasJetonOr() {
 }
 
 void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
-    std::cout<<"Le jeton clicke a la position : "<<vj->getJeton()->getX()<<","<< vj->getJeton()->getY()<<"\n";
-    plateau->selectionJeton(
-            vj->getJeton()->getX(),
-            vj->getJeton()->getY()
+    std::cout<<"Le jeton clicke a la position : "<<vj->getX()<<","<< vj->getY()<<"\n";
+    int res = plateau->selectionJeton(
+            vj->getX(),
+            vj->getY()
             );
+    if (res == 0 || res == 2) {
+        vj->setSelected(true);
+    } else {
+        vj->setSelected(false);
+    }
 }
 
 VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent), vuesJetons(25, nullptr)
 {
     plateau = new Plateau();
-    std::cout<<plateau->etatPlateau();
+    //std::cout<<plateau->etatPlateau();
 
-    layoutBouton = new QGridLayout(this);
+    main_layout = new QVBoxLayout(this);
+    layout_info = new QHBoxLayout();
+    layout_bouton = new QGridLayout();
 
-    for(unsigned int i=0; i < 25;i++) {
-        vuesJetons[i] = new VueJeton(
-                QString("%1,%2")
-                    .arg(plateau->jetons[i]->getX())
-                    .arg(plateau->jetons[i]->getY()),
-                plateau->jetons[i],
-                this
-        );
-        layoutBouton->addWidget(vuesJetons[i],
-                                plateau->jetons[i]->getX(),
-                                plateau->jetons[i]->getY()
-                                );
-        vuesJetons[i]->show();
-        connect(
-                vuesJetons[i],
-                SIGNAL(jetonClick(VueJeton*)),
-                this,
-                SLOT(jetonClick_Plateau(VueJeton*))
-        );
-        //vuesJetons[i]->setJeton(plateau->jetons[i]);
+    for(unsigned int i=0; i < 5;i++) {
+        for (unsigned int j = 0;j < 5;j++) {
+            std::cout<< 5*i+j<<" <-> " << plateau->matrix[i][j]-1<<" =>" <<plateau->jetons[plateau->matrix[i][j]-1]->getCouleurString() << "\n";
+            vuesJetons[5*i +j] = new VueJeton(
+                    plateau->jetons[ plateau->matrix[i][j]-1 ],
+                    j, i ,
+                    this
+            );
+            layout_bouton->addWidget(vuesJetons[5*i+j],i, j);
+            connect(
+                    vuesJetons[5*i+j],
+                    SIGNAL(jetonClick(VueJeton * )),
+                    this,
+                    SLOT(jetonClick_Plateau(VueJeton * ))
+            );
+        }
+    } // Fin boucle for
 
+    boutonValider = new QPushButton("Valider", this);
+    // Set the background color to light green
+    QString styleSheet = "background-color: lightgreen; color: black;";
+    boutonValider->setStyleSheet(styleSheet);
+    QObject::connect(
+            boutonValider,
+            &QPushButton::clicked,
+            this,
+            &VuePlateau::validerPlateau
+    );
+
+    boutonValider->show();
+    layout_info->addWidget(boutonValider);
+
+    main_layout->addLayout(layout_bouton);
+    main_layout->addLayout(layout_info);
+    setLayout(main_layout);
+}
+
+void VuePlateau::miseAJourJetons() {
+    for (unsigned int i = 0; i < 5; i ++) {
+        for (unsigned int j = 0; j < 5; j++) {
+            vuesJetons[5*i+j] ->setJeton(plateau->jetons[plateau->matrix[i][j]-1]);
+        }
     }
-
-    setLayout(layoutBouton);
 }

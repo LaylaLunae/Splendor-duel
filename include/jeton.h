@@ -35,33 +35,24 @@ public:
     JetonType getType() const { return type; }
     unsigned int getX() const {return positionX;}
     unsigned int getY() const {return positionY;}
+
+    void setX (unsigned int x) {positionX=x;}
+    void setY (unsigned int y) {positionY=y;}
+
 };
 
 
-class VueJeton :public QPushButton {
+class VueJeton : public QPushButton {
 Q_OBJECT
 public:
-    VueJeton(const QString& text, const Jeton* j, QWidget *parent = nullptr):
-    jeton(j),
-    QPushButton(text, parent), parent(parent) {
-        //setBackgroundRole(QPalette::Base);
-        setAutoFillBackground(true);
+    VueJeton(const Jeton* j, unsigned int x, unsigned int y, QWidget *parent = nullptr):
+    jeton(j),pos_x(x),pos_y(y),is_selected(false),
+    QPushButton(parent), parent(parent) {
         setFixedSize(50,50);
         connect(this,SIGNAL(clicked()),this,SLOT(clickedEvent()));
-        setButtonColor(QColor(173, 216, 230));
-
-        //std::string texte = std::to_string(j->getX());
-        //texte.append(std::to_string(j->getY()));
-        //std::cout<<texte<<"\n";
-        //QString buttonText = QString::fromStdString(texte);
-        //this->setText(buttonText);
-        //update();
-        //show();
-
         //setCheckable(false);
     };
-    explicit VueJeton(QWidget *parent = nullptr):QPushButton(parent) {
-        std::cout<<"Explicit\n";
+    explicit VueJeton(QWidget *parent = nullptr):QPushButton(parent){
         setBackgroundRole(QPalette::Base);
         setAutoFillBackground(true);
         setFixedSize(50, 50);
@@ -74,33 +65,24 @@ public:
     }
 
     void setJeton(const Jeton* j) {
-        setCheckable(true);
-        setChecked(false);
-        jeton=j;
-        std::string texte = std::to_string(j->getX());
-        texte.append(std::to_string(j->getY()));
-        //setText(QString::fromStdString( texte));
-        //show();
-        update();
+        jeton = j;
     }
+
+    unsigned int getX() {return pos_x;}
+    unsigned int getY() {return pos_y;}
+    void setSelected(bool s);
+
 protected:
     void paintEvent(QPaintEvent *event) override;
 private:
     const Jeton* jeton = nullptr;
     QWidget* parent;
-    QLabel* label = nullptr;
     QPen pen;
     QBrush brush;
-    void setButtonColor(const QColor &color) {
-        // Get the default palette
-        QPalette palette = this->palette();
-
-        // Set the background color for buttons to the specified color
-        palette.setColor(QPalette::Button, color);
-
-        // Apply the modified palette to the button
-        setPalette(palette);
-    }
+    unsigned  int pos_x;
+    unsigned int pos_y;
+    bool is_selected;
+    void setButtonColors(const QColor &backgroundColor, const QColor &textColor);
 signals:
     // quand la vude de carte est cliquée, elle émet un signal en transmettant son adresse
     void jetonClick(VueJeton*);

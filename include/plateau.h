@@ -53,6 +53,13 @@ class Plateau {
     unsigned int nb_privileges_MAX = 3;
     unsigned int nb_jetons_plateau_MAX = 25;
 
+    int matrix[5][5] = {25, 10, 11, 12, 13,
+                        24, 9, 2, 3, 14,
+                        23, 8, 1, 4, 15,
+                        22, 7, 6, 5, 16,
+                        21, 20, 19, 18, 17};
+
+
     bool verificationSelectionPositions();
 
     friend class VuePlateau;
@@ -98,11 +105,19 @@ public:
     explicit VuePlateau(QWidget *parent = nullptr);
 private:
     Plateau* plateau = nullptr;
-    QGridLayout* layoutBouton;
+    QGridLayout* layout_bouton;
+    QHBoxLayout* layout_info;
+    QVBoxLayout* main_layout;
     std::vector<VueJeton*> vuesJetons;
+    QPushButton* boutonValider;
+
+    void miseAJourJetons();
 
 private slots:
     void jetonClick_Plateau(VueJeton*) ;//{ std::cout<<"Clicked!\n"; }
+    void validerPlateau() {
+        std::cout << "\n ==> Button clicked - validerPlateau() method called!\n";
+    }
 
 };
 

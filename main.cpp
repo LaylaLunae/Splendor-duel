@@ -8,7 +8,8 @@
 #include <QDir>
 #include <vector>
 
-#include "./include/jeu.h"
+//#include "./include/jeu.h"
+#include "./include/plateau.h"
 #include "affichage/affichage_carte.h"
 
 
@@ -32,7 +33,6 @@ int main(int argc, char *argv[]) {
 //    return app.exec();
 
     /* Création Jeton : */
-
 
 
     /* Affichage plateau v0.1*/

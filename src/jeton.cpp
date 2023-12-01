@@ -1,13 +1,91 @@
 //#include "../include/jeton.h"
 #include <iostream>
 #include <string>
+#include <QPainter>
 #include "../include/jeu.h"
 
-void VueJeton::paintEvent(QPaintEvent* ) {
+void VueJeton::paintEvent(QPaintEvent*  event) {
+    QPainter painter(this);
 
+    // On choisit la couleur de fond à afficher
+    Qt::GlobalColor bg_color_tmp;
+    Couleur couleur = jeton->getCouleur();
+    switch (jeton->getType()) {
+        case JetonType::Or: {
+            bg_color_tmp = Qt::yellow;
+            break;
+        }
+        case JetonType::Gemme: {
+            switch (couleur) {
+                case Couleur::rouge:
+                    bg_color_tmp = Qt::red;
+                    break;
+                case Couleur::vert:
+                    bg_color_tmp = Qt::green;
+                    break;
+                case Couleur::bleu:
+                    bg_color_tmp = Qt::blue;
+                    break;
+                case Couleur::noir:
+                    bg_color_tmp = Qt::gray;
+                    break;
+                case Couleur::blanc:
+                    bg_color_tmp = Qt::white;
+                    break;
+                case Couleur::rose:
+                    bg_color_tmp = Qt::magenta;
+                    break;
+                case Couleur::rien:
+                    bg_color_tmp = Qt::gray;
+                    break;
+            }
+            break;
+        }
+    }
+    QColor bg_color(bg_color_tmp);
+    if (!is_selected) {
+        bg_color.setAlpha(128);
+    }
+    // Texte contenant la position du bouton à afficher
+    std::string texte = std::to_string(pos_x);
+    texte.append(",");
+    texte.append(std::to_string(pos_y));
+    QString buttonText = QString::fromStdString(texte);
+    this->setText(buttonText);
+    painter.drawText(0, 0, buttonText);
+    QPushButton::paintEvent(event);
+
+    setButtonColors(bg_color,Qt::black);
 }
 
+void VueJeton::setSelected(bool s) {
+    is_selected=s;
+    QPalette p = this->palette();
+    QColor current = p.color(QPalette::Button);
+    if (!s)
+        current.setAlpha(128);
+    p.setColor(QPalette::Button, current);
+    setPalette(p);
+    update();
+}
 
+void VueJeton::setButtonColors(const QColor &backgroundColor, const QColor &textColor) {
+    // Get the default palette
+    QPalette palette = this->palette();
+
+    // Set the background color for buttons to the specified color
+    palette.setColor(QPalette::Button, backgroundColor);
+
+    // Set the text color for buttons to the specified color
+    palette.setColor(QPalette::ButtonText, textColor);
+
+    // Apply the modified palette to the button
+    setPalette(palette);
+
+    QFont font = this->font();
+    font.setPointSize(12);
+    setFont(font);
+}
 
 void Jeton::afficher() const {
     std::string type_str;
