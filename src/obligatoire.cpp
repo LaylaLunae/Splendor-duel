@@ -42,32 +42,8 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
     selection = plateau->validerSelectionEtPrendreJetons();
 
     // On ajoute les jetons au joueur
-    std::vector<int> nb_couleurs(6, 0);
-    // Bleu - Vert - Rouge - Blanc - Noir - Rose(Perle)
-    for (int i = 0; i < selection.size(); i++) {
-        const Jeton *jeton = selection[i];
-        switch (jeton->getCouleur()) {
-            case Couleur::bleu:
-                nb_couleurs[0] += 1;
-                joueur->setNbJeton(0, joueur->getNbJeton(0) + 1);
-            case Couleur::vert:
-                nb_couleurs[1] += 1;
-                joueur->setNbJeton(1, joueur->getNbJeton(1) + 1);
-            case Couleur::rouge:
-                nb_couleurs[2] += 1;
-                joueur->setNbJeton(2, joueur->getNbJeton(2) + 1);
-            case Couleur::blanc:
-                nb_couleurs[3] += 1;
-                joueur->setNbJeton(3, joueur->getNbJeton(3) + 1);
-            case Couleur::noir:
-                nb_couleurs[4] += 1;
-                joueur->setNbJeton(4, joueur->getNbJeton(4) + 1);
-            case Couleur::rose:
-                nb_couleurs[5] += 1;
-                joueur->setNbJeton(5, joueur->getNbJeton(5) + 1);
-            default: std::cout << "Il y a definitivement un probleme avec la selection...\n";
-        }
-    }
+    std::vector<int> nb_couleurs;
+    nb_couleurs = ajouterJetonsJoueur(joueur, selection);
 
     // On donne un privilège à l'adversaire si 2 perles ou 3 identiques
     bool give_privilege = false;
@@ -76,20 +52,9 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
     }
     if (nb_couleurs[5] == 2) give_privilege = true;
     if (give_privilege) {
-        Joueur* adversaire = joueur->getAdversaire();
-        std::vector<Privilege*> privileges;
-        Privilege* privilege;
-        if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) std::cout << "L'adversaire a deja tous les privileges.\n";
-        if (plateau->getNbPrivileges() == 0) {
-            privileges = joueur->getPrivileges();
-            adversaire->ajouterPrivilege(privileges.back());
-            privileges.pop_back();
-        } else {
-            privilege = const_cast<Privilege*>(plateau->prendrePrivilege());
-            adversaire->ajouterPrivilege(privilege);
-        }
+        donnerPrivilegeAdversaire(joueur, plateau);
     }
-};
+}
 
 void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
     // Vérifier que le plateau a au moins 1 jeton or et que le joueur n'a pas 3 cartes réservées déjà
@@ -123,7 +88,8 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
     selection = plateau->validerSelectionEtPrendreJetons();
 
     // On ajoute le jeton or au joueur
-    joueur->setNbJeton(6, joueur->getNbJeton(6) + 1);
+    //joueur->setNbJeton(6, joueur->getNbJeton(6) + 1);
+    ajouterJetonsJoueur(joueur, selection);
 
     // Le joueur choisi quoi faire exactement
     int choix;
@@ -167,19 +133,30 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
 
     // On ajoute la carte réservée
     joueur->ajouterCarteReservee(card);
-};
+}
 
 void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
     // Vérifier où le joueur peut acheter une carte
-    std::vector<bool> achats_possibles = achatCartesPossible(joueur, p1, p2, p3);
-    bool achat_pioche1_possible = achats_possibles[0];
-    bool achat_pioche2_possible = achats_possibles[1];
-    bool achat_pioche3_possible = achats_possibles[2];
-    bool achat_carte_reservees_possible = achats_possibles[3];
-
-    // Le joueur choisit ce qu'il veut faire en fonction de ce qu'il peut faire
+    // Pioche1?
+    bool achat_pioche1_possible = achatPiochePossible(joueur, p1);
+    // Pioche2?
+    bool achat_pioche2_possible = achatPiochePossible(joueur, p2);
+    // Pioche3?
+    bool achat_pioche3_possible = achatPiochePossible(joueur, p3);
+    // Cartes réservées?
+    bool achat_carte_reservees_possible = false;
     const CarteJoaillerie* carte;
     std::map<Couleur, int> prix;
+    for (int i = 0; i < joueur->getNbCartesReservees(); i++) {
+        carte = joueur->getCarteReservee(i);
+        if (carte != nullptr) {
+            prix = carte->getPrix();
+            std::vector<int> difference = calculDifference(joueur, prix);
+            if (achatCartePossible(joueur, difference)) achat_carte_reservees_possible = true;
+        }
+    }
+
+    // Le joueur choisit ce qu'il veut faire en fonction de ce qu'il peut faire
     int n_carte, n_pioche, choix;
     Pioche* pioche;
     prix = carte->getPrix();
@@ -362,9 +339,10 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
             case Couleur::blanc: remettreJetonSac(joueur, plateau, Couleur::blanc, difference[3], prix_elem, 3);
             case Couleur::noir: remettreJetonSac(joueur, plateau, Couleur::noir, difference[4], prix_elem, 4);
             case Couleur::rose: remettreJetonSac(joueur, plateau, Couleur::rose, difference[5], prix_elem, 5);
+            default: std::cout << "Il y a un probleme avec le jeton pris au joueur !\n";
         }
     }
-};
+}
 
 void Obligatoire::remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, int difference, int prix_elem, int index) {
     if (difference > 0) {
@@ -389,38 +367,39 @@ void Obligatoire::remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, 
     }
 }
 
-void Obligatoire::ajouterJetonsJoueur(Joueur* joueur, std::vector<const Jeton*> selection) {
+std::vector<int> Obligatoire::ajouterJetonsJoueur(Joueur* joueur, std::vector<const Jeton*> selection) {
     // On ajoute les jetons au joueur
-    //std::vector<int> nb_couleurs(7, 0);
+    std::vector<int> nb_couleurs(7, 0);
     // Bleu - Vert - Rouge - Blanc - Noir - Rose(Perle) - Or
     for (int i = 0; i < selection.size(); i++) {
         const Jeton *jeton = selection[i];
         if (jeton->getType() == JetonType::Or) {
-            joueur->setNbJeton(7, joueur->getNbJeton(7) + 1);
+            joueur->setNbJeton(6, joueur->getNbJeton(6) + 1);
         } else {
             switch (jeton->getCouleur()) {
                 case Couleur::bleu:
-                    //nb_couleurs[0] += 1;
+                    nb_couleurs[0]++;
                     joueur->setNbJeton(0, joueur->getNbJeton(0) + 1);
                 case Couleur::vert:
-                    //nb_couleurs[1] += 1;
+                    nb_couleurs[1]++;
                     joueur->setNbJeton(1, joueur->getNbJeton(1) + 1);
                 case Couleur::rouge:
-                    //nb_couleurs[2] += 1;
+                    nb_couleurs[2]++;
                     joueur->setNbJeton(2, joueur->getNbJeton(2) + 1);
                 case Couleur::blanc:
-                    //nb_couleurs[3] += 1;
+                    nb_couleurs[3]++;
                     joueur->setNbJeton(3, joueur->getNbJeton(3) + 1);
                 case Couleur::noir:
-                    //nb_couleurs[4] += 1;
+                    nb_couleurs[4]++;
                     joueur->setNbJeton(4, joueur->getNbJeton(4) + 1);
                 case Couleur::rose:
-                    //nb_couleurs[5] += 1;
+                    nb_couleurs[5]++;
                     joueur->setNbJeton(5, joueur->getNbJeton(5) + 1);
                 default: std::cout << "Il y a definitivement un probleme avec la selection...\n";
             }
         }
     }
+    return nb_couleurs;
 }
 
 bool Obligatoire::achatPiochePossible(Joueur* joueur, Pioche* p) {
@@ -454,29 +433,6 @@ bool Obligatoire::achatCartePossible(Joueur *joueur, std::vector<int> difference
     return achat_possible;
 }
 
-std::vector<bool> Obligatoire::achatCartesPossible(Joueur* joueur, Pioche* p1, Pioche* p2, Pioche* p3) {
-    // Pioche1?
-    bool achat_pioche1_possible = achatPiochePossible(joueur, p1);
-    // Pioche2?
-    bool achat_pioche2_possible = achatPiochePossible(joueur, p2);
-    // Pioche3?
-    bool achat_pioche3_possible = achatPiochePossible(joueur, p3);
-    // Cartes réservées?
-    bool achat_carte_reservees_possible = false;
-    const CarteJoaillerie* carte;
-    std::map<Couleur, int> prix;
-    for (int i = 0; i < joueur->getNbCartesReservees(); i++) {
-        carte = joueur->getCarteReservee(i);
-        if (carte != nullptr) {
-            prix = carte->getPrix();
-            std::vector<int> difference = calculDifference(joueur, prix);
-            if (achatCartePossible(joueur, difference)) achat_carte_reservees_possible = true;
-        }
-    }
-    std::vector<bool> achats_possibles{achat_pioche1_possible, achat_pioche2_possible, achat_pioche3_possible, achat_carte_reservees_possible};
-    return achats_possibles;
-}
-
 std::vector<int> Obligatoire::calculDifference(Joueur* joueur, std::map<Couleur, int> prix) {
     std::vector<int> difference;
     for (auto elem = prix.begin(); elem != prix.end(); elem++) {
@@ -488,7 +444,26 @@ std::vector<int> Obligatoire::calculDifference(Joueur* joueur, std::map<Couleur,
             case Couleur::blanc: difference[3] = prix_elem - joueur->getGemmesBonus(3) - joueur->getNbJeton(3);
             case Couleur::noir: difference[4] = prix_elem - joueur->getGemmesBonus(4) - joueur->getNbJeton(4);
             case Couleur::rose: difference[5] = prix_elem - joueur->getGemmesBonus(5) - joueur->getNbJeton(5);
+            default: std::cout << "Il y a un probleme avec le prix de la carte !\n";
         }
     }
     return difference;
+}
+
+void Obligatoire::donnerPrivilegeAdversaire(Joueur* joueur, Plateau* plateau) {
+    Joueur* adversaire = joueur->getAdversaire();
+    std::vector<Privilege*> privileges;
+    Privilege* privilege;
+    if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) {
+        std::cout << "L'adversaire a deja tous les privileges.\n";
+        return;
+    }
+    if (plateau->getNbPrivileges() == 0) {
+        privileges = joueur->getPrivileges();
+        adversaire->ajouterPrivilege(privileges.back());
+        privileges.pop_back();
+    } else {
+        privilege = const_cast<Privilege*>(plateau->prendrePrivilege());
+        adversaire->ajouterPrivilege(privilege);
+    }
 }

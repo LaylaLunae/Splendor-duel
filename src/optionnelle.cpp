@@ -1,7 +1,7 @@
 //#include "../include/optionnelle.h"
 #include "../include/jeu.h"
 
-void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
+void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau) {
     // Vérifier si le privilège est disponible et qu'il y a au moins un jeton sur le plateau
     if (!joueur->hasPrivilege() or !plateau->hasJeton()) {
         std::cout << "Le joueur ne peut pas depenser de privileges !\n";
@@ -31,7 +31,8 @@ void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau, Pioche* p1
     selection = plateau->validerSelectionEtPrendreJetons();
 
     // On ajoute le jeton au joueur
-    const Jeton *jeton = selection[1];
+    Obligatoire::ajouterJetonsJoueur(joueur, selection);
+    /*const Jeton *jeton = selection[1];
     switch (jeton->getCouleur()) {
         case Couleur::bleu: joueur->setNbJeton(0, joueur->getNbJeton(0) + 1);
         case Couleur::vert: joueur->setNbJeton(1, joueur->getNbJeton(1) + 1);
@@ -40,7 +41,7 @@ void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau, Pioche* p1
         case Couleur::noir: joueur->setNbJeton(4, joueur->getNbJeton(4) + 1);
         case Couleur::rose: joueur->setNbJeton(5, joueur->getNbJeton(5) + 1);
         default: std::cout << "Il y a definitivement un probleme avec la selection...\n";
-    }
+    }*/
 
     // On remet le privilège sur le plateau
     std::vector<Privilege*> privileges;
@@ -49,7 +50,7 @@ void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau, Pioche* p1
     privileges.pop_back();
 }
 
-void Optionnelle::remplissagePlateau(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
+void Optionnelle::remplissagePlateau(Joueur* joueur, Plateau* plateau) {
     // Remplir les cases vides du plateau avec des jetons aléatoires tirés du sac
 
     // Vérifier qu'au moins une case est vide et qu'il y a au moins un jeton dans le sac
@@ -66,7 +67,8 @@ void Optionnelle::remplissagePlateau(Joueur* joueur, Plateau* plateau, Pioche* p
     plateau->remplissagePlateau(false);
 
     // Et on donne un privilège à l'adversaire
-    Joueur* adversaire = joueur->getAdversaire();
+    Obligatoire::donnerPrivilegeAdversaire(joueur, plateau);
+    /*Joueur* adversaire = joueur->getAdversaire();
     const Privilege* privilege;
     std::vector<Privilege*> privileges;
     if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) {
@@ -80,5 +82,5 @@ void Optionnelle::remplissagePlateau(Joueur* joueur, Plateau* plateau, Pioche* p
     } else {
         privilege = plateau->prendrePrivilege();
         adversaire->ajouterPrivilege(const_cast<Privilege*>(privilege));
-    }
+    }*/
 }
