@@ -4,12 +4,6 @@
 #include <iostream>
 #include <vector>
 
-// Comment vérifier l'obligation de remplir le plateau ?
-// Faire des fonctions de vérifications ?
-// Vérification anti str
-
-// Il reste à vérifier le blabla dans acheterCarte et reserverCarte
-
 class Obligatoire {
     friend class Jeu;
 
