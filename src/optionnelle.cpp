@@ -10,7 +10,7 @@ void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau) {
 
     // Le joueur choisit un jeton non or
     std::tuple<int, int> jeton_choisi(0, 0);
-    ReponseValidationSelection *selection = nullptr;
+    std::vector<const Jeton*> selection;
     int jeton_selec;
     do {
         jeton_choisi = choisir_jeton();
@@ -31,7 +31,7 @@ void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau) {
     selection = plateau->validerSelectionEtPrendreJetons();
 
     // On ajoute le jeton au joueur
-    const Jeton *jeton = selection->jetons[1];
+    const Jeton *jeton = selection[1];
     switch (jeton->getCouleur()) {
         case Couleur::bleu: joueur->setNbJeton(0, joueur->getNbJeton(0) + 1);
         case Couleur::vert: joueur->setNbJeton(1, joueur->getNbJeton(1) + 1);

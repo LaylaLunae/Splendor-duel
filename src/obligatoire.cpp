@@ -12,7 +12,7 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
 
     // Le joueur récupère les jetons
     std::tuple<int, int> jeton_choisi(0, 0);
-    ReponseValidationSelection *selection = nullptr;
+    std::vector<const Jeton*> selection;
     int cpt = 0, n = 0, jeton_selec;
     while (n < 1 or n > 3) {
         std::cout << "Combien de jetons comptez vous prendre ? (MAX 3)   n = ";
@@ -46,8 +46,8 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
     // On ajoute les jetons au joueur
     std::vector<int> nb_couleurs(6, 0);
     // Bleu - Vert - Rouge - Blanc - Noir - Rose(Perle)
-    for (int i = 0; i < selection->nombre; i++) {
-        const Jeton *jeton = selection->jetons[i];
+    for (int i = 0; i < selection.size(); i++) {
+        const Jeton *jeton = selection[i];
         switch (jeton->getCouleur()) {
             case Couleur::bleu:
                 nb_couleurs[0] += 1;
@@ -103,7 +103,7 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau) {
 
     // On récupère un jeton or
     std::tuple<int, int> jeton_choisi(0, 0);
-    ReponseValidationSelection *selection = nullptr;
+    std::vector<const Jeton*> selection;
     int jeton_selec;
     do {
         jeton_choisi = choisir_jeton();

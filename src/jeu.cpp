@@ -39,7 +39,7 @@ void Jeu::nouvellePartie() {
     pioche2->distribution();
     pioche3->distribution();*/
 
-    Optionnelle * act_opt = new Optionnelle(plateau_jeu);
+    Optionnelle * act_opt = new Optionnelle();
     Obligatoire * act_obl = new Obligatoire();
 
     std::cout << "Choix des joueurs :\n" << "0 - Joueur vs joueur\n";
@@ -125,7 +125,7 @@ void Jeu::tour(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j, O
     while (choix_opt != 0 && stop != 10){
         if (!(p->hasJeton())){
             std::cout << "Vous devez remplir le plateau.\n";
-            opt->remplissagePlateau(j);
+            opt->remplissagePlateau(j, p);
         }
         else {
             std::cout << "Actions optionnelles :\n" << "0 - Aucune action\n";
