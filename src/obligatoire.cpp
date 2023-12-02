@@ -1,9 +1,7 @@
 //#include "../include/obligatoire.h"
 #include "../include/jeu.h"
 
-// L28 + L110  //  L152->154 +
-
-void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
+void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
     // Vérifier que le plateau n'est point vide
     if (!plateau->hasJeton()) {
         std::cout << "Plateau vide\n";
@@ -25,7 +23,7 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
     while (cpt != n) {
         do {
             jeton_choisi = choisir_jeton();
-            //jeton_selec = plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
+            jeton_selec = plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
             // Renvoie un int "code d'erreur" - 0 OK - 1 CASE VIDE - 2 JETON OR - 3 2 OR SELEC - 4 MAUVAISES POSITIONS
             switch (jeton_selec) {
                 case 0: std::cout << "Selection autorise\n";
@@ -93,7 +91,7 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
     }
 };
 
-void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau) {
+void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
     // Vérifier que le plateau a au moins 1 jeton or et que le joueur n'a pas 3 cartes réservées déjà
     if (!plateau->hasJetonOr()) {
         std::cout << "Aucun jeton or de disponible sur le plateau !\n";
@@ -107,7 +105,7 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau) {
     int jeton_selec;
     do {
         jeton_choisi = choisir_jeton();
-        //jeton_selec = plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
+        jeton_selec = plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
         // Renvoie un int "code d'erreur" - 0 OK - 1 CASE VIDE - 2 JETON OR - 3 2 OR SELEC - 4 MAUVAISES POSITIONS
         switch (jeton_selec) {
             case 0:
@@ -149,9 +147,9 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau) {
         if (n_pioche < 1 or n_pioche > 3) std::cout << "Numero de pioche invalide !\n";
     } while (n_pioche < 1 or n_pioche > 3);
     switch (n_pioche) {
-        //case 1: pioche = Jeu::getPioche1();
-        //case 2: pioche = Jeu::getPioche2();
-        //case 3: pioche = Jeu::getPioche3();
+        case 1: pioche = p1;
+        case 2: pioche = p2;
+        case 3: pioche = p3;
         default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
     }
     if (choix == 1) {
@@ -171,24 +169,17 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau) {
     joueur->ajouterCarteReservee(card);
 };
 
-void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
+void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
     // Vérifier où le joueur peut acheter une carte
     bool achat_pioche1_possible = false;
     bool achat_pioche2_possible = false;
     bool achat_pioche3_possible = false;
     bool achat_carte_reservees_possible = false;
-    // TEMPORAIRE
-    Pioche* pioche1;
-    Pioche* pioche2;
-    Pioche* pioche3;
-    //pioche1 = Jeu::getPioche1();
-    //pioche2 = Jeu::getPioche2();
-    //pioche3 = Jeu::getPioche3();
     const CarteJoaillerie* carte;
     std::map<Couleur, int> prix;
     // Pioche1?
-    for (int i = 0; i < pioche1->getMaxCartesRevelees(); i++) {
-        carte = pioche1->getCartesDehors(i);
+    for (int i = 0; i < p1->getMaxCartesRevelees(); i++) {
+        carte = p1->getCartesDehors(i);
         if (carte != nullptr) {
             prix = carte->getPrix();
             std::vector<int> difference(6);
@@ -218,8 +209,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
         }
     }
     // Pioche2?
-    for (int i = 0; i < pioche2->getMaxCartesRevelees(); i++) {
-        carte = pioche2->getCartesDehors(i);
+    for (int i = 0; i < p2->getMaxCartesRevelees(); i++) {
+        carte = p2->getCartesDehors(i);
         if (carte != nullptr) {
             prix = carte->getPrix();
             std::vector<int> difference(6);
@@ -249,8 +240,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
         }
     }
     // Pioche3?
-    for (int i = 0; i < pioche3->getMaxCartesRevelees(); i++) {
-        carte = pioche3->getCartesDehors(i);
+    for (int i = 0; i < p3->getMaxCartesRevelees(); i++) {
+        carte = p3->getCartesDehors(i);
         if (carte != nullptr) {
             prix = carte->getPrix();
             std::vector<int> difference(6);
@@ -339,9 +330,9 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
                         if (n_pioche < 1 or n_pioche > 3) std::cout << "Numero de pioche invalide !\n";
                     } while (n_pioche < 1 or n_pioche > 3);
                     switch (n_pioche) {
-                        case 1: pioche = pioche1;
-                        case 2: pioche = pioche2;
-                        case 3: pioche = pioche3;
+                        case 1: pioche = p1;
+                        case 2: pioche = p2;
+                        case 3: pioche = p3;
                         default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                     }
                 } else if (achat_pioche1_possible and achat_pioche2_possible) {
@@ -352,8 +343,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
                         if (n_pioche != 1 and n_pioche != 2) std::cout << "Numero de pioche invalide !\n";
                     } while (n_pioche != 1 and n_pioche != 2);
                     switch (n_pioche) {
-                        case 1: pioche = pioche1;
-                        case 2: pioche = pioche2;
+                        case 1: pioche = p1;
+                        case 2: pioche = p2;
                         default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                     }
                 } else if (achat_pioche1_possible and achat_pioche3_possible) {
@@ -364,8 +355,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
                         if (n_pioche != 1 and n_pioche != 3) std::cout << "Numero de pioche invalide !\n";
                     } while (n_pioche != 1 and n_pioche != 3);
                     switch (n_pioche) {
-                        case 1: pioche = pioche1;
-                        case 3: pioche = pioche2;
+                        case 1: pioche = p1;
+                        case 3: pioche = p2;
                         default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                     }
                 } else if (achat_pioche2_possible and achat_pioche3_possible) {
@@ -376,19 +367,19 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
                         if (n_pioche != 2 and n_pioche != 3) std::cout << "Numero de pioche invalide !\n";
                     } while (n_pioche != 2 and n_pioche != 3);
                     switch (n_pioche) {
-                        case 2: pioche = pioche1;
-                        case 3: pioche = pioche2;
+                        case 2: pioche = p1;
+                        case 3: pioche = p2;
                         default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                     }
                 } else if (achat_pioche1_possible) {
                     std::cout << "Vous devez acheter votre carte dans la pioche 1 obligatoirement.\n";
-                    pioche = pioche1;
+                    pioche = p1;
                 } else if (achat_pioche2_possible) {
                     std::cout << "Vous devez acheter votre carte dans la pioche 2 obligatoirement.\n";
-                    pioche = pioche2;
+                    pioche = p2;
                 } else if (achat_pioche3_possible) {
                     std::cout << "Vous devez acheter votre carte dans la pioche 3 obligatoirement.\n";
-                    pioche = pioche3;
+                    pioche = p3;
                 }
                 do {
                     std::cout << "Quelle carte revelee voulez vous prendre - (La plus a gauche etant la premiere, soit 1) ? Carte = ";
@@ -415,9 +406,9 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
                     if (n_pioche < 1 or n_pioche > 3) std::cout << "Numero de pioche invalide !\n";
                 } while (n_pioche < 1 or n_pioche > 3);
                 switch (n_pioche) {
-                    case 1: pioche = pioche1;
-                    case 2: pioche = pioche2;
-                    case 3: pioche = pioche3;
+                    case 1: pioche = p1;
+                    case 2: pioche = p2;
+                    case 3: pioche = p3;
                     default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                 }
             } else if (achat_pioche1_possible and achat_pioche2_possible) {
@@ -428,8 +419,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
                     if (n_pioche != 1 and n_pioche != 2) std::cout << "Numero de pioche invalide !\n";
                 } while (n_pioche != 1 and n_pioche != 2);
                 switch (n_pioche) {
-                    case 1: pioche = pioche1;
-                    case 2: pioche = pioche2;
+                    case 1: pioche = p1;
+                    case 2: pioche = p2;
                     default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                 }
             } else if (achat_pioche1_possible and achat_pioche3_possible) {
@@ -440,8 +431,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
                     if (n_pioche != 1 and n_pioche != 3) std::cout << "Numero de pioche invalide !\n";
                 } while (n_pioche != 1 and n_pioche != 3);
                 switch (n_pioche) {
-                    case 1: pioche = pioche1;
-                    case 3: pioche = pioche2;
+                    case 1: pioche = p1;
+                    case 3: pioche = p2;
                     default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                 }
             } else if (achat_pioche2_possible and achat_pioche3_possible) {
@@ -452,19 +443,19 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau) {
                     if (n_pioche != 2 and n_pioche != 3) std::cout << "Numero de pioche invalide !\n";
                 } while (n_pioche != 2 and n_pioche != 3);
                 switch (n_pioche) {
-                    case 2: pioche = pioche1;
-                    case 3: pioche = pioche2;
+                    case 2: pioche = p1;
+                    case 3: pioche = p2;
                     default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                 }
             } else if (achat_pioche1_possible) {
                 std::cout << "Vous devez acheter votre carte dans la pioche 1 obligatoirement.\n";
-                pioche = pioche1;
+                pioche = p1;
             } else if (achat_pioche2_possible) {
                 std::cout << "Vous devez acheter votre carte dans la pioche 2 obligatoirement.\n";
-                pioche = pioche2;
+                pioche = p2;
             } else if (achat_pioche3_possible) {
                 std::cout << "Vous devez acheter votre carte dans la pioche 3 obligatoirement.\n";
-                pioche = pioche3;
+                pioche = p3;
             }
             do {
                 std::cout << "Quelle carte revelee voulez vous prendre - (La plus a gauche etant la premiere, soit 1) ? Carte = ";

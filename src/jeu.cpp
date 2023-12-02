@@ -125,7 +125,7 @@ void Jeu::tour(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j, O
     while (choix_opt != 0 && stop != 10){
         if (!(p->hasJeton())){
             std::cout << "Vous devez remplir le plateau.\n";
-            opt->remplissagePlateau(j, p);
+            opt->remplissagePlateau(j, p, p1, p2, p3);
         }
         else {
             std::cout << "Actions optionnelles :\n" << "0 - Aucune action\n";
