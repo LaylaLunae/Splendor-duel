@@ -171,141 +171,17 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
 
 void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
     // Vérifier où le joueur peut acheter une carte
-    bool achat_pioche1_possible = false;
-    bool achat_pioche2_possible = false;
-    bool achat_pioche3_possible = false;
-    bool achat_carte_reservees_possible = false;
-    const CarteJoaillerie* carte;
-    std::map<Couleur, int> prix;
-    // Pioche1?
-    for (int i = 0; i < p1->getMaxCartesRevelees(); i++) {
-        carte = p1->getCartesDehors(i);
-        if (carte != nullptr) {
-            prix = carte->getPrix();
-            std::vector<int> difference(6);
-            for (auto elem = prix.begin(); elem != prix.end(); elem++) {
-                int prix_elem = elem->second;
-                switch (elem->first) {
-                    case Couleur::bleu: difference[0] = prix_elem - joueur->getGemmesBonus(0) - joueur->getNbJeton(0);
-                    case Couleur::vert: difference[1] = prix_elem - joueur->getGemmesBonus(1) - joueur->getNbJeton(1);
-                    case Couleur::rouge: difference[2] = prix_elem - joueur->getGemmesBonus(2) - joueur->getNbJeton(2);
-                    case Couleur::blanc: difference[3] = prix_elem - joueur->getGemmesBonus(3) - joueur->getNbJeton(3);
-                    case Couleur::noir: difference[4] = prix_elem - joueur->getGemmesBonus(4) - joueur->getNbJeton(4);
-                    case Couleur::rose: difference[5] = prix_elem - joueur->getGemmesBonus(5) - joueur->getNbJeton(5);
-                }
-            }
-            bool achat_possible = true;
-            for (int j = 0; j < difference.size(); j++) {
-                if (difference[i] > 0) achat_possible = false;
-            }
-            if (!achat_possible) {
-                int somme = 0;
-                for (int j = 0; j < difference.size(); j++) {
-                    if (difference[i] > 0) somme += difference[i];
-                }
-                if (somme < joueur->getNbJeton(6)) achat_possible = true;
-            }
-            if (achat_possible) achat_pioche1_possible = true;
-        }
-    }
-    // Pioche2?
-    for (int i = 0; i < p2->getMaxCartesRevelees(); i++) {
-        carte = p2->getCartesDehors(i);
-        if (carte != nullptr) {
-            prix = carte->getPrix();
-            std::vector<int> difference(6);
-            for (auto elem = prix.begin(); elem != prix.end(); elem++) {
-                int prix_elem = elem->second;
-                switch (elem->first) {
-                    case Couleur::bleu: difference[0] = prix_elem - joueur->getGemmesBonus(0) - joueur->getNbJeton(0);
-                    case Couleur::vert: difference[1] = prix_elem - joueur->getGemmesBonus(1) - joueur->getNbJeton(1);
-                    case Couleur::rouge: difference[2] = prix_elem - joueur->getGemmesBonus(2) - joueur->getNbJeton(2);
-                    case Couleur::blanc: difference[3] = prix_elem - joueur->getGemmesBonus(3) - joueur->getNbJeton(3);
-                    case Couleur::noir: difference[4] = prix_elem - joueur->getGemmesBonus(4) - joueur->getNbJeton(4);
-                    case Couleur::rose: difference[5] = prix_elem - joueur->getGemmesBonus(5) - joueur->getNbJeton(5);
-                }
-            }
-            bool achat_possible = true;
-            for (int j = 0; j < difference.size(); j++) {
-                if (difference[i] > 0) achat_possible = false;
-            }
-            if (!achat_possible) {
-                int somme = 0;
-                for (int j = 0; j < difference.size(); j++) {
-                    if (difference[i] > 0) somme += difference[i];
-                }
-                if (somme < joueur->getNbJeton(6)) achat_possible = true;
-            }
-            if (achat_possible) achat_pioche2_possible = true;
-        }
-    }
-    // Pioche3?
-    for (int i = 0; i < p3->getMaxCartesRevelees(); i++) {
-        carte = p3->getCartesDehors(i);
-        if (carte != nullptr) {
-            prix = carte->getPrix();
-            std::vector<int> difference(6);
-            for (auto elem = prix.begin(); elem != prix.end(); elem++) {
-                int prix_elem = elem->second;
-                switch (elem->first) {
-                    case Couleur::bleu: difference[0] = prix_elem - joueur->getGemmesBonus(0) - joueur->getNbJeton(0);
-                    case Couleur::vert: difference[1] = prix_elem - joueur->getGemmesBonus(1) - joueur->getNbJeton(1);
-                    case Couleur::rouge: difference[2] = prix_elem - joueur->getGemmesBonus(2) - joueur->getNbJeton(2);
-                    case Couleur::blanc: difference[3] = prix_elem - joueur->getGemmesBonus(3) - joueur->getNbJeton(3);
-                    case Couleur::noir: difference[4] = prix_elem - joueur->getGemmesBonus(4) - joueur->getNbJeton(4);
-                    case Couleur::rose: difference[5] = prix_elem - joueur->getGemmesBonus(5) - joueur->getNbJeton(5);
-                }
-            }
-            bool achat_possible = true;
-            for (int j = 0; j < difference.size(); j++) {
-                if (difference[i] > 0) achat_possible = false;
-            }
-            if (!achat_possible) {
-                int somme = 0;
-                for (int j = 0; j < difference.size(); j++) {
-                    if (difference[i] > 0) somme += difference[i];
-                }
-                if (somme < joueur->getNbJeton(6)) achat_possible = true;
-            }
-            if (achat_possible) achat_pioche3_possible = true;
-        }
-    }
-    // Cartes réservées?
-    for (int i = 0; i < joueur->getNbCartesReservees(); i++) {
-        carte = joueur->getCarteReservee(i);
-        if (carte != nullptr) {
-            prix = carte->getPrix();
-            std::vector<int> difference(6);
-            for (auto elem = prix.begin(); elem != prix.end(); elem++) {
-                int prix_elem = elem->second;
-                switch (elem->first) {
-                    case Couleur::bleu: difference[0] = prix_elem - joueur->getGemmesBonus(0) - joueur->getNbJeton(0);
-                    case Couleur::vert: difference[1] = prix_elem - joueur->getGemmesBonus(1) - joueur->getNbJeton(1);
-                    case Couleur::rouge: difference[2] = prix_elem - joueur->getGemmesBonus(2) - joueur->getNbJeton(2);
-                    case Couleur::blanc: difference[3] = prix_elem - joueur->getGemmesBonus(3) - joueur->getNbJeton(3);
-                    case Couleur::noir: difference[4] = prix_elem - joueur->getGemmesBonus(4) - joueur->getNbJeton(4);
-                    case Couleur::rose: difference[5] = prix_elem - joueur->getGemmesBonus(5) - joueur->getNbJeton(5);
-                }
-            }
-            bool achat_possible = true;
-            for (int j = 0; j < difference.size(); j++) {
-                if (difference[j] > 0) achat_possible = false;
-            }
-            if (!achat_possible) {
-                int somme = 0;
-                for (int j = 0; j < difference.size(); j++) {
-                    if (difference[j] > 0) somme += difference[j];
-                }
-                if (somme < joueur->getNbJeton(6)) achat_possible = true;
-            }
-            if (achat_possible) achat_carte_reservees_possible = true;
-        }
-    }
+    std::vector<bool> achats_possibles = achatCartesPossible(joueur, p1, p2, p3);
+    bool achat_pioche1_possible = achats_possibles[0];
+    bool achat_pioche2_possible = achats_possibles[1];
+    bool achat_pioche3_possible = achats_possibles[2];
+    bool achat_carte_reservees_possible = achats_possibles[3];
 
     // Le joueur choisit ce qu'il veut faire en fonction de ce qu'il peut faire
+    const CarteJoaillerie* carte;
+    std::map<Couleur, int> prix;
     int n_carte, n_pioche, choix;
     Pioche* pioche;
-    bool achat_possible = true;
     prix = carte->getPrix();
     std::vector<int> difference(6);
     do {
@@ -469,31 +345,9 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
             return;
         }
         // Vérifier achat possible de la carte
-        for (auto elem = prix.begin(); elem != prix.end(); elem++) {
-            int prix_elem = elem->second;
-            switch (elem->first) {
-                case Couleur::bleu: difference[0] = prix_elem - joueur->getGemmesBonus(0) - joueur->getNbJeton(0);
-                case Couleur::vert: difference[1] = prix_elem - joueur->getGemmesBonus(1) - joueur->getNbJeton(1);
-                case Couleur::rouge: difference[2] = prix_elem - joueur->getGemmesBonus(2) - joueur->getNbJeton(2);
-                case Couleur::blanc: difference[3] = prix_elem - joueur->getGemmesBonus(3) - joueur->getNbJeton(3);
-                case Couleur::noir: difference[4] = prix_elem - joueur->getGemmesBonus(4) - joueur->getNbJeton(4);
-                case Couleur::rose: difference[5] = prix_elem - joueur->getGemmesBonus(5) - joueur->getNbJeton(5);
-            }
-        }
-        bool achat_possible = true;
-        for (int j = 0; j < difference.size(); j++) {
-            if (difference[j] > 0) achat_possible = false;
-        }
-        if (!achat_possible) {
-            int somme = 0;
-            for (int j = 0; j < difference.size(); j++) {
-                if (difference[j] > 0) somme += difference[j];
-            }
-            if (somme < joueur->getNbJeton(6)) achat_possible = true;
-        }
-        if (achat_possible) achat_carte_reservees_possible = true;
-        if (!achat_possible) std::cout << "Vous ne pouvez pas acheter cette carte !\n";
-    } while (!achat_possible);
+        difference = calculDifference(joueur, prix);
+        if (!achatCartePossible(joueur, difference)) std::cout << "Vous ne pouvez pas acheter cette carte !\n";
+    } while (!achatCartePossible(joueur, difference));
 
     // On ajoute la carte au joueur
     joueur->ajouterCarteJoaillerie(*(const_cast<CarteJoaillerie*>(carte)));
@@ -503,19 +357,20 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
         int prix_elem = elem->second;
         switch (elem->first) {
             case Couleur::bleu: remettreJetonSac(joueur, plateau, Couleur::bleu, difference[0], prix_elem, 0);
-            case Couleur::vert: remettreJetonSac(joueur, plateau, Couleur::bleu, difference[1], prix_elem, 1);
-            case Couleur::rouge: remettreJetonSac(joueur, plateau, Couleur::bleu, difference[2], prix_elem, 2);
-            case Couleur::blanc: remettreJetonSac(joueur, plateau, Couleur::bleu, difference[3], prix_elem, 3);
-            case Couleur::noir: remettreJetonSac(joueur, plateau, Couleur::bleu, difference[4], prix_elem, 4);
-            case Couleur::rose: remettreJetonSac(joueur, plateau, Couleur::bleu, difference[5], prix_elem, 5);
+            case Couleur::vert: remettreJetonSac(joueur, plateau, Couleur::vert, difference[1], prix_elem, 1);
+            case Couleur::rouge: remettreJetonSac(joueur, plateau, Couleur::rouge, difference[2], prix_elem, 2);
+            case Couleur::blanc: remettreJetonSac(joueur, plateau, Couleur::blanc, difference[3], prix_elem, 3);
+            case Couleur::noir: remettreJetonSac(joueur, plateau, Couleur::noir, difference[4], prix_elem, 4);
+            case Couleur::rose: remettreJetonSac(joueur, plateau, Couleur::rose, difference[5], prix_elem, 5);
         }
     }
 };
 
 void Obligatoire::remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, int difference, int prix_elem, int index) {
     if (difference > 0) {
+        // Le joueur n'a pas assez, il comble avec de l'or
         for (int i = 0; i < joueur->getNbJeton(index); i++) {
-            const Jeton* j = new Jeton(JetonType::Gemme, Couleur::bleu);
+            const Jeton* j = new Jeton(JetonType::Gemme, c);
             plateau->ajouterSac(j);
         }
         for (int i = 0; i < difference; i++) {
@@ -525,20 +380,21 @@ void Obligatoire::remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, 
         joueur->setNbJeton(index, 0);
         joueur->setNbJeton(6, joueur->getNbJeton(6) - difference);
     } else {
+        // Le joueur a assez
         for (int i = 0; i < prix_elem; i++) {
-            const Jeton* j = new Jeton(JetonType::Gemme, Couleur::bleu);
+            const Jeton* j = new Jeton(JetonType::Gemme, c);
             plateau->ajouterSac(j);
         }
         joueur->setNbJeton(index, joueur->getNbJeton(index) - prix_elem);
     }
 }
 
-void Obligatoire::ajouterJetonsJoueur(Joueur* joueur, ReponseValidationSelection* selection) {
+void Obligatoire::ajouterJetonsJoueur(Joueur* joueur, std::vector<const Jeton*> selection) {
     // On ajoute les jetons au joueur
     //std::vector<int> nb_couleurs(7, 0);
     // Bleu - Vert - Rouge - Blanc - Noir - Rose(Perle) - Or
-    for (int i = 0; i < selection->nombre; i++) {
-        const Jeton *jeton = selection->jetons[i];
+    for (int i = 0; i < selection.size(); i++) {
+        const Jeton *jeton = selection[i];
         if (jeton->getType() == JetonType::Or) {
             joueur->setNbJeton(7, joueur->getNbJeton(7) + 1);
         } else {
@@ -565,4 +421,74 @@ void Obligatoire::ajouterJetonsJoueur(Joueur* joueur, ReponseValidationSelection
             }
         }
     }
+}
+
+bool Obligatoire::achatPiochePossible(Joueur* joueur, Pioche* p) {
+    const CarteJoaillerie* carte;
+    std::map<Couleur, int> prix;
+    for (int i = 0; i < p->getMaxCartesRevelees(); i++) {
+        carte = p->getCartesDehors(i);
+        if (carte != nullptr) {
+            prix = carte->getPrix();
+            std::vector<int> difference = calculDifference(joueur, prix);
+            if (achatCartePossible(joueur, difference)) return true;
+        }
+    }
+    return false;
+}
+
+bool Obligatoire::achatCartePossible(Joueur *joueur, std::vector<int> difference) {
+    // On teste si le joueur peut acheter sans or
+    bool achat_possible = true;
+    for (int j = 0; j < difference.size(); j++) {
+        if (difference[j] > 0) achat_possible = false;
+    }
+    // On teste si le joueur peut acheter avec or
+    if (!achat_possible) {
+        int somme = 0;
+        for (int j = 0; j < difference.size(); j++) {
+            if (difference[j] > 0) somme += difference[j];
+        }
+        if (somme <= joueur->getNbJeton(6)) achat_possible = true;
+    }
+    return achat_possible;
+}
+
+std::vector<bool> Obligatoire::achatCartesPossible(Joueur* joueur, Pioche* p1, Pioche* p2, Pioche* p3) {
+    // Pioche1?
+    bool achat_pioche1_possible = achatPiochePossible(joueur, p1);
+    // Pioche2?
+    bool achat_pioche2_possible = achatPiochePossible(joueur, p2);
+    // Pioche3?
+    bool achat_pioche3_possible = achatPiochePossible(joueur, p3);
+    // Cartes réservées?
+    bool achat_carte_reservees_possible = false;
+    const CarteJoaillerie* carte;
+    std::map<Couleur, int> prix;
+    for (int i = 0; i < joueur->getNbCartesReservees(); i++) {
+        carte = joueur->getCarteReservee(i);
+        if (carte != nullptr) {
+            prix = carte->getPrix();
+            std::vector<int> difference = calculDifference(joueur, prix);
+            if (achatCartePossible(joueur, difference)) achat_carte_reservees_possible = true;
+        }
+    }
+    std::vector<bool> achats_possibles{achat_pioche1_possible, achat_pioche2_possible, achat_pioche3_possible, achat_carte_reservees_possible};
+    return achats_possibles;
+}
+
+std::vector<int> Obligatoire::calculDifference(Joueur* joueur, std::map<Couleur, int> prix) {
+    std::vector<int> difference;
+    for (auto elem = prix.begin(); elem != prix.end(); elem++) {
+        int prix_elem = elem->second;
+        switch (elem->first) {
+            case Couleur::bleu: difference[0] = prix_elem - joueur->getGemmesBonus(0) - joueur->getNbJeton(0);
+            case Couleur::vert: difference[1] = prix_elem - joueur->getGemmesBonus(1) - joueur->getNbJeton(1);
+            case Couleur::rouge: difference[2] = prix_elem - joueur->getGemmesBonus(2) - joueur->getNbJeton(2);
+            case Couleur::blanc: difference[3] = prix_elem - joueur->getGemmesBonus(3) - joueur->getNbJeton(3);
+            case Couleur::noir: difference[4] = prix_elem - joueur->getGemmesBonus(4) - joueur->getNbJeton(4);
+            case Couleur::rose: difference[5] = prix_elem - joueur->getGemmesBonus(5) - joueur->getNbJeton(5);
+        }
+    }
+    return difference;
 }
