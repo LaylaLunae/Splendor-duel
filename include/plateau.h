@@ -110,14 +110,15 @@ private:
     QVBoxLayout* main_layout;
     std::vector<VueJeton*> vuesJetons;
     QPushButton* boutonValider;
+    QPushButton* boutonRemplissage;
 
     void miseAJourJetons();
+    void affichageJetons();
 
 private slots:
     void jetonClick_Plateau(VueJeton*) ;//{ std::cout<<"Clicked!\n"; }
-    void validerPlateau() {
-        std::cout << "\n ==> Button clicked - validerPlateau() method called!\n";
-    }
+    void validerPlateau();
+    void remplirPlateau();
 
 };
 
