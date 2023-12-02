@@ -223,7 +223,7 @@ void Plateau::remplissagePlateau(bool avecAffichage) {
     }
     if (pointeur_case_libre == nb_jetons_plateau_MAX)
         // throwPlateauException("Tous les jetons sont déjà sur le plateau ! ¯\\_(^^')_/¯");
-        std::cout<<"Tous les jetons sont déjà sur le plateau ! ¯\\_(^^')_/¯";
+        std::cout<<"Tous les jetons sont deja sur le plateau !  \"\\_(^^')_/\"\n";
 
 
     // Tant qu'il reste des jetons dans le sac : on pioche et on dépose sur le plateau
