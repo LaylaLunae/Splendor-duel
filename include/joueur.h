@@ -10,6 +10,7 @@ class CarteJoaillerie;
 class Privilege;
 class Plateau;
 class Pioche;
+class Jeton;
 
 const int MAX_CARTES = 500;
 const int MAX_PRIVILEGES = 3;
@@ -96,10 +97,16 @@ public:
     //int choisirChoix(int min, int max);
     virtual int choisirChoix(int min, int max) override;
 
-    void prendreJetonsAleatoires(Plateau* plateau);
+    //void prendreJetonsAleatoires(Plateau* plateau);
     std::vector<CarteJoaillerie*> getCartesAchetable(const Pioche& pioche) const ;
     bool peutAcheterCarte(const CarteJoaillerie& carte) const;
     CarteJoaillerie* melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur);
+
+    std::vector<std::pair<const Jeton*, const Jeton*>> genererCombinaisonsDeuxJetons(const Plateau& plateau) const;
+    std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> genererCombinaisonsTroisJetons(const Plateau& plateau) const;
+    bool verificationCombinaisonDeuxJetons(const Jeton* jeton1, const Jeton* jeton2, const Plateau& plateau) const;
+    bool verificationCombinaisonTroisJetons(const Jeton* jeton1, const Jeton* jeton2, const Jeton* jeton3, const Plateau& plateau) const;
+
 };
 
 

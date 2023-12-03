@@ -60,12 +60,13 @@ class Plateau {
                         21, 20, 19, 18, 17};
 
 
-    bool verificationSelectionPositions();
+    //bool verificationSelectionPositions();
 
     friend class VuePlateau;
-    const Jeton* getJeton(unsigned int i) const  {return jetons[i];}
+    //const Jeton* getJeton(unsigned int i) const  {return jetons[i];}
 public:
-
+    bool verificationSelectionPositions();
+    const Jeton* getJeton(unsigned int i) const  {return jetons[i];}
     // A mettre en privé plus tard :
     Plateau();
     //friend class Jeu;
