@@ -109,7 +109,7 @@ std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCom
 
 bool IA::verificationCombinaisonDeuxJetons(const Jeton* jeton1, const Jeton* jeton2, const Plateau& plateau) const {
     // Création d'un tableau temporaire pour stocker les positions des deux jetons
-    int positions_temp[4] = {
+    int temp[4] = {
             0, 0, // Position du jeton 1
             0, 0  // Position du jeton 2
     };
@@ -124,21 +124,22 @@ bool IA::verificationCombinaisonDeuxJetons(const Jeton* jeton1, const Jeton* jet
         for (unsigned int j = 0; j < 5; ++j) {
             const Jeton* jeton = plateau.getJeton(i * 5 + j);
             if (jeton == jeton1) {
-                positions_temp[0] = i + 1;  // position x
-                positions_temp[1] = j + 1;  // position y
-            } else if (jeton == jeton2) {
-                positions_temp[2] = i + 1;  // position x
-                positions_temp[3] = j + 1;  // position y
+                temp[0] = i + 1;  // position x
+                temp[1] = j + 1;  // position y
+            }
+            else if (jeton == jeton2) {
+                temp[2] = i + 1;  // position x
+                temp[3] = j + 1;  // position y
             }
         }
     }
 
-    //return plateau.verificationSelectionPositions(positions_temp, 2);
+    return plateau.verificationSelectionPositions();
 }
 
 bool IA::verificationCombinaisonTroisJetons(const Jeton* jeton1, const Jeton* jeton2, const Jeton* jeton3, const Plateau& plateau) const {
     // Création d'un tableau temporaire pour stocker les positions des trois jetons
-    int positions_temp[6] = {
+    int temp[6] = {
             0, 0, // Position du jeton 1
             0, 0, // Position du jeton 2
             0, 0  // Position du jeton 3
@@ -154,18 +155,20 @@ bool IA::verificationCombinaisonTroisJetons(const Jeton* jeton1, const Jeton* je
         for (unsigned int j = 0; j < 5; ++j) {
             const Jeton* jeton = plateau.getJeton(i * 5 + j);
             if (jeton == jeton1) {
-                positions_temp[0] = i + 1;  // position x
-                positions_temp[1] = j + 1;  // position y
-            } else if (jeton == jeton2) {
-                positions_temp[2] = i + 1;  // position x
-                positions_temp[3] = j + 1;  // position y
-            } else if (jeton == jeton3) {
-                positions_temp[4] = i + 1;  // position x
-                positions_temp[5] = j + 1;  // position y
+                temp[0] = i + 1;  // position x
+                temp[1] = j + 1;  // position y
+            }
+            else if (jeton == jeton2) {
+                temp[2] = i + 1;  // position x
+                temp[3] = j + 1;  // position y
+            }
+            else if (jeton == jeton3) {
+                temp[4] = i + 1;  // position x
+                temp[5] = j + 1;  // position y
             }
         }
     }
-    //return plateau.verificationSelectionPositions(positions_temp, 3);
+    return plateau.verificationSelectionPositions();
 }
 
 void IA::prendreJetons(Plateau* plateau) {

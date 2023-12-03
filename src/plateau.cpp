@@ -282,7 +282,7 @@ void Plateau::ajouterSac(const Jeton *j) {
 }
 
 
-bool Plateau::verificationSelectionPositions() {
+bool Plateau::verificationSelectionPositions() const{
     /**
      * Retourne vraie si la sélection est valide, faux sinon.
      *
