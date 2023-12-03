@@ -98,7 +98,7 @@ public:
 
     void prendreJetonsAleatoires(Plateau* plateau);
     std::vector<CarteJoaillerie*> getCartesAchetable(const Pioche& pioche) const ;
-    bool peutAcheterCarte(const IA *joueur, const CarteJoaillerie& carte) const;
+    bool peutAcheterCarte(const CarteJoaillerie& carte) const;
     CarteJoaillerie* melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur);
 };
 
