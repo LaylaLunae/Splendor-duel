@@ -43,6 +43,7 @@ add_executable(Splendor main.cpp
         include/jeton.h
         affichage/affichage_carte.h
         affichage/affichage_carte.cpp
+        include/affichage_joueur.h
 )
 
 find_package(Qt6 COMPONENTS

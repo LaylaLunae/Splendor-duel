@@ -11,12 +11,13 @@
 //#include "./include/jeu.h"
 #include "./include/plateau.h"
 #include "affichage/affichage_carte.h"
+#include "./include/affichage_joueur.h"
 
 
 int main(int argc, char *argv[]) {
 
-/*
 
+/*
     Humain joueur("NomDuJoueur");
 
     joueur.ajouterPrivilege(new Privilege());
@@ -25,21 +26,21 @@ int main(int argc, char *argv[]) {
 
 */
 
-//    QApplication app(argc, argv);
+    QApplication app(argc, argv);
+
+    FenetreInformations fenetre;
+    fenetre.show();
 //
-//    FenetreInformations fenetre;
-//    fenetre.show();
-//
-//    return app.exec();
+    return app.exec();
 
     /* Création Jeton : */
 
 
     /* Affichage plateau v0.1*/
-    QApplication app (argc, argv);
-    VuePlateau plateau;
-    plateau.show();
-    return app.exec();
+    //QApplication app (argc, argv);
+    //VuePlateau plateau;
+    //plateau.show();
+    //return app.exec();
 
 
      /* Affichage cartes v0.1 */
