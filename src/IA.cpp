@@ -56,7 +56,7 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
 }
 */
 
-/*
+
 std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJetons(const Plateau& plateau) const {
     std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons;
 
@@ -171,7 +171,7 @@ bool IA::verificationCombinaisonTroisJetons(const Jeton* jeton1, const Jeton* je
 
 
 
-*/
+
 
 
 /*
