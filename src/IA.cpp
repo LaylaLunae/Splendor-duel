@@ -166,14 +166,11 @@ bool IA::verificationCombinaisonTroisJetons(const Jeton* jeton1, const Jeton* je
     //return plateau.verificationSelectionPositions(positions_temp, 3);
 }
 
-
-
 void IA::prendreJetons(Plateau* plateau) {
     // Vérifier si le plateau est vide, le remplir si nécessaire
     if (!plateau->hasJeton()) {
         Optionnelle::remplissagePlateau(this, plateau);
     }
-
     int choix = choisirChoix(1, 3);
 
     if (choix == 1) {
@@ -188,17 +185,18 @@ void IA::prendreJetons(Plateau* plateau) {
         auto derniereCombinaisonDeux = combinaisonsDeux.back();
         std::vector<int> resultatsAjout = Obligatoire::ajouterJetonsJoueur(this, {derniereCombinaisonDeux.first, derniereCombinaisonDeux.second});
         combinaisonsDeux.pop_back();
+
+        std::vector<const Jeton*> jetonsSelectionnes = plateau->validerSelectionEtPrendreJetons();
     }
     else if (choix == 3) {
         std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisonsTrois = genererCombinaisonsTroisJetons(*plateau);
-
         std::random_shuffle(combinaisonsTrois.begin(), combinaisonsTrois.end());
-
         auto derniereCombinaisonTrois = combinaisonsTrois.back();
-
-         std::vector<int> resultatsAjout = Obligatoire::ajouterJetonsJoueur(this, {std::get<0>(derniereCombinaisonTrois), std::get<1>(derniereCombinaisonTrois), std::get<2>(derniereCombinaisonTrois)});
+        std::vector<int> resultatsAjout = Obligatoire::ajouterJetonsJoueur(this, {std::get<0>(derniereCombinaisonTrois), std::get<1>(derniereCombinaisonTrois), std::get<2>(derniereCombinaisonTrois)});
 
         combinaisonsTrois.pop_back();
+
+        std::vector<const Jeton*> jetonsSelectionnes = plateau->validerSelectionEtPrendreJetons();
     }
     else {
         // Autre choix, rappeler la fonction
