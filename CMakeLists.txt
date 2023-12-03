@@ -44,6 +44,7 @@ add_executable(Splendor main.cpp
         affichage/affichage_carte.h
         affichage/affichage_carte.cpp
         include/affichage_joueur.h
+        src/database_manager.cpp
 )
 
 find_package(Qt6 COMPONENTS
