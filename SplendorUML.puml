@@ -40,10 +40,10 @@ class Plateau {
 - selection_courante : const Jeton[]
 - selection_courante_positions : int[]
 - nombre_jetons_dans_selection : unsigned int
-- nombre_jetons_par_cote_de_plateau unsigned
-- nombre_jetons_dans_selection_MAX unsigned
-- nb_jetons_sac_MAX  unsigned
-- nb_privileges_MAX  unsigned
+- nombre_jetons_par_cote_de_plateau unsigned int
+- nombre_jetons_dans_selection_MAX unsigned int
+- nb_jetons_sac_MAX  unsigned int
+- nb_privileges_MAX  unsigned int
 - nb_jetons_plateau_MAX unsigned int
 -- methods --
 - verificationSelectionPositions() : bool
