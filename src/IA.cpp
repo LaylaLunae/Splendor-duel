@@ -20,9 +20,7 @@ int IA::choisirChoix(int min, int max) {
     return choix;
 }
 
-/*
 
-//acheter une carte : probleme le type de retour dans obligatoire
 std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const {
     std::vector<CarteJoaillerie*> cartesAchetable;
 
@@ -31,7 +29,8 @@ std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const
 
         if (carte) {
             std::vector<int> difference = Obligatoire::calculDifference((Joueur *) this, carte->getPrix());
-            if (Obligatoire::achatPiochePossible((Joueur *) this, difference)) {
+
+            if (Obligatoire::achatPiochePossible((Joueur *) this, const_cast<Pioche*>(&pioche))) {
                 cartesAchetable.push_back(const_cast<CarteJoaillerie*>(carte));
             }
         }
@@ -56,7 +55,7 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
 
     return derniereCarte;
 }
-*/
+
 
 
 std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJetons(const Plateau& plateau) const {
