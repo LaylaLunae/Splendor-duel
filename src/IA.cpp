@@ -20,7 +20,9 @@ int IA::choisirChoix(int min, int max) {
     return choix;
 }
 
-/* acheter une carte : probleme le type de retour dans obligatoire
+/*
+
+//acheter une carte : probleme le type de retour dans obligatoire
 std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const {
     std::vector<CarteJoaillerie*> cartesAchetable;
 
@@ -60,13 +62,13 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
 std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJetons(const Plateau& plateau) const {
     std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons;
 
-    for (unsigned int i = 0; i < 5; i++) {
-        for (unsigned int j = 0; j < 5; j++) {
-            const Jeton* jeton1 = plateau.getJeton(i * 5 + j);
+    for (unsigned int i = 0; i < 5; i++) {  // parcourt les lignes du plateau
+        for (unsigned int j = 0; j < 5; j++) {  // parcourt les colonnes du plateau
+            const Jeton* jeton1 = plateau.getJeton(i * 5 + j);  // récupère le premier jeton
 
-            for (unsigned int k = i; k < 5; k++) {
-                for (unsigned int l = (k == i) ? j + 1 : 0; l < 5; l++) {
-                    const Jeton* jeton2 = plateau.getJeton(k * 5 + l);
+            for (unsigned int k = i; k < 5; k++) {  // parcourt les lignes à partir du jeton seclectioné
+                for (unsigned int l = (k == i) ? j + 1 : 0; l < 5; l++) {   // vérifie que l'on reprend pas le même jeton
+                    const Jeton* jeton2 = plateau.getJeton(k * 5 + l);  // récupère le deuxième jeton
                     if (verificationCombinaisonDeuxJetons(jeton1, jeton2, const_cast<Plateau &>(plateau))) {
                         combinaisons.push_back(std::make_pair(jeton1, jeton2));
                     }
@@ -204,7 +206,6 @@ void IA::prendreJetons(Plateau* plateau) {
     }
 }
 
-
 void IA::choisirJetonSurPlateau(Plateau* plateau) {
 
     int positionX = rand() % 5 + 1;
@@ -218,5 +219,4 @@ void IA::choisirJetonSurPlateau(Plateau* plateau) {
     }
     std::vector<const Jeton*> jetonsSelectionnes = plateau->validerSelectionEtPrendreJetons();
 }
-
 
