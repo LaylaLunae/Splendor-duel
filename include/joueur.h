@@ -106,6 +106,10 @@ public:
     std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> genererCombinaisonsTroisJetons(const Plateau& plateau) const;
     bool verificationCombinaisonDeuxJetons(const Jeton* jeton1, const Jeton* jeton2, const Plateau& plateau) const;
     bool verificationCombinaisonTroisJetons(const Jeton* jeton1, const Jeton* jeton2, const Jeton* jeton3, const Plateau& plateau) const;
+    void choisirJetonSurPlateau(Plateau* plateau);
+
+    void prendreJetons(Plateau* plateau);
+
 
 };
 
