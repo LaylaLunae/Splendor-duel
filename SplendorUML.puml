@@ -139,6 +139,8 @@ class Jeton {
 -type: JetonType
 -couleur: Couleur
 -chemin_vers_image: string
+-positionX: int
+-positionY: int
 +afficher() const;
 +getCouleurString() const: string;
 +getCouleur() const: Couleur;
