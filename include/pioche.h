@@ -1,5 +1,6 @@
 #ifndef PIOCHE_H_INCLUDED
 #define PIOCHE_H_INCLUDED
+#include <iostream>
 
 //#include "carteJoaillerie.h"
 
