@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "../include/jeu.h"
 
@@ -7,12 +6,12 @@ Joueur::Joueur(const std::string nom)
         : pseudo(nom), nombre_couronnes(0), points_prestige_total(0), droitDeRejouer(false), adversaire(nullptr){
 
     // Utilisation de vecteurs au lieu de tableaux statiques
-    cartes_reservees.resize(3, nullptr);
+    cartes_reservees.resize(0, nullptr);
     cartes_main.resize(MAX_CARTES, nullptr);
-    cartes_noble.resize(2, nullptr);
-    gemmes_bonus.resize(6, 0);
-    nb_jeton.resize(7, 0);
-    privileges.resize(3, nullptr);
+    cartes_noble.resize(0, nullptr);
+    gemmes_bonus.resize(0, 0);
+    nb_jeton.resize(0, 0);
+    privileges.resize(0, nullptr);
 }
 
 // Destructeur
