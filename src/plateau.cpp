@@ -125,12 +125,22 @@ nombre_jetons_dans_selection(0){
     cartes_nobles = new const CarteNoble*[4];
     std::map<Couleur, int> c;
     c.insert(std::make_pair(Couleur::rouge, 3));
-    cartes_nobles[0] = new CarteNoble(3, 2, c);
-    cartes_nobles[1] = new CarteNoble(3, 2, c);
-    cartes_nobles[2] = new CarteNoble(3, 3, c);
-    cartes_nobles[3] = new CarteNoble(3, 2, c);
-    //for (unsigned int i = 0; i < 4; i++)
-    //    cartes_nobles = new const CarteNoble*;
+     cartes_nobles[0] = new CarteNoble(
+             this, nullptr, "",
+             0, 3, 0,
+             Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour,0);
+    cartes_nobles[1] = new CarteNoble(
+            this, nullptr, "",
+            0, 3, 0,
+            Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour,0);
+    cartes_nobles[2] = new CarteNoble(
+            this, nullptr, "",
+            0, 3, 0,
+            Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour,0);
+    cartes_nobles[3] = new CarteNoble(
+            this, nullptr, "",
+            0, 3, 0,
+            Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour,0);
 
     // Le plateau est vide => la première case où mettre le prochain jeton est la 0
     pointeur_case_libre = 0;
@@ -671,6 +681,92 @@ bool Plateau::hasJetonOr() {
     }
     return false;
 }
+
+std::vector<std::vector<unsigned int>>  Plateau::donnePositionsPossiblesAPartirDe(unsigned int x, unsigned int y) {
+
+    /*
+     * Vérifier
+     * 1. Ligne
+     * 2. Colonne
+     * 3. Diagonale
+     * (4. Diagonale en partant du bas)
+     */
+
+    std::vector<std::vector<unsigned int>> resultat =std::vector<std::vector<unsigned int>>(0) ;
+
+
+    // ----------- Ligne ---------------------
+    unsigned int posX = x;
+    unsigned int posY = y;
+    std::vector<unsigned int> pos_ligne = std::vector<unsigned int> (0 );
+    for (unsigned int nb_j = 0 ; nb_j < 3; nb_j ++) {
+        if (posX >= 5 || posY >= 5) break;
+
+        if (jetons[5*posX+posY] != nullptr ) {
+            pos_ligne.push_back(posX);
+            pos_ligne.push_back(posY);
+            resultat.push_back(pos_ligne);
+        } else {
+            break;
+        }
+        posX += 1;
+    }
+
+    // ----------- Colonne ---------------------
+    posX = x;
+    posY = y;
+    pos_ligne = std::vector<unsigned int> (0 );
+    for (unsigned int nb_j = 0 ; nb_j < 3; nb_j ++) {
+        if (posX >= 5 || posY >= 5) break;
+
+        if (jetons[5*posX+posY] != nullptr) {
+            pos_ligne.push_back(posX);
+            pos_ligne.push_back(posY);
+            resultat.push_back(pos_ligne);
+        } else {
+            break;
+        }
+        posY += 1;
+    }
+    // ----------- Diagonale ---------------------
+    posX = x;
+    posY = y;
+    pos_ligne = std::vector<unsigned int> (0 );
+    for (unsigned int nb_j = 0 ; nb_j < 3; nb_j ++) {
+        if (posX >= 5 || posY >= 5) break;
+
+        if (jetons[5*posX+posY] != nullptr) {
+            pos_ligne.push_back(posX);
+            pos_ligne.push_back(posY);
+            resultat.push_back(pos_ligne);
+        }
+        posX += 1;
+        posY += 1;
+    }
+
+    // ----------- Diagonale Inverse ---------------------
+    posX = x;
+    posY = y;
+    pos_ligne = std::vector<unsigned int> (0 );
+    for (unsigned int nb_j = 0 ; nb_j < 3; nb_j ++) {
+        if (posX >= 5 || posY >= 5) break;
+
+        if (jetons[5*posX+posY] != nullptr) {
+            pos_ligne.push_back(posX);
+            pos_ligne.push_back(posY);
+            resultat.push_back(pos_ligne);
+        }
+        posX -= 1;
+        posY -= 1;
+    }
+
+
+    return resultat;
+
+}
+
+
+// ----------------- Vue Plateau : --------------
 
 void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
     std::cout<<"Le jeton clicke a la position : "<<vj->getX()<<","<< vj->getY()<<"\n";

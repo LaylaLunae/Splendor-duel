@@ -96,6 +96,8 @@ public:
     unsigned int getNbPrivilegeMAX() const { return nb_privileges_MAX; }
     unsigned int getNbPrivileges() const { return nb_privileges; }
     bool hasJetonOr(); // Vérifier qu'il y a au moins un jeton or sur le plateau
+
+    std::vector<std::vector<unsigned  int>>  donnePositionsPossiblesAPartirDe(unsigned int x, unsigned int y);
 };
 
 std::tuple<int, int> choisir_jeton();
