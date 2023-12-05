@@ -15,9 +15,11 @@
 //#include "carteNoble.h"
 
 class CarteNoble;
+class Jeu;
 
 class PlateauException {
     std::string info;
+    friend class Jeu;
 public:
     PlateauException(const std::string& s): info(s) {}
     const std::string& get_info() const {return info;}
