@@ -11,6 +11,7 @@ class Privilege;
 class Plateau;
 class Pioche;
 class Jeton;
+class Jeu;
 
 const int MAX_CARTES = 500;
 const int MAX_PRIVILEGES = 3;
@@ -18,6 +19,7 @@ const int MAX_PRIVILEGES = 3;
 enum Difficulte { facile, moyen, difficile };
 
 class Joueur {
+    friend class Jeu;
 protected:
     std::string pseudo;
     int nombre_couronnes;
