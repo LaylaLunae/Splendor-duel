@@ -17,14 +17,15 @@ void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau) {
         jeton_selec = plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
         // Renvoie un int "code d'erreur" - 0 OK - 1 CASE VIDE - 2 JETON OR - 3 2 OR SELEC - 4 MAUVAISES POSITIONS
         switch (jeton_selec) {
-            case 0: std::cout << "Selection autorise\n";
-            case 1: std::cout << "Case vide\n";
+            case 0: std::cout << "Selection autorise\n"; break;
+            case 1: std::cout << "Case vide\n"; break;
             case 2:
                 std::cout << "Vous ne pouvez selectionner de jeton or lors de cette action !\n";
                 // Désélection
                 plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
+                break;
             // case 3 théoriquement impossible
-            case 4: std::cout << "Ce jeton ne peut etre selectionne !\n";
+            case 4: std::cout << "Ce jeton ne peut etre selectionne !\n"; break;
             default: std::cout << "Pour une raison ou une autre, il y a eu un probleme...\n";
         }
     } while (jeton_selec != 0);

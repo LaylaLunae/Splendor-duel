@@ -26,14 +26,15 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
             jeton_selec = plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
             // Renvoie un int "code d'erreur" - 0 OK - 1 CASE VIDE - 2 JETON OR - 3 2 OR SELEC - 4 MAUVAISES POSITIONS
             switch (jeton_selec) {
-                case 0: std::cout << "Selection autorise\n";
-                case 1: std::cout << "Case vide\n";
+                case 0: std::cout << "Selection autorise\n"; break;
+                case 1: std::cout << "Case vide\n"; break;
                 case 2:
                     std::cout << "Vous ne pouvez selectionner de jeton or lors de cette action !\n";
                     // Désélection
                     plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
-                    // case 3 théoriquement impossible
-                case 4: std::cout << "Ce jeton ne peut etre selectionne !\n";
+                    break;
+                // case 3 théoriquement impossible
+                case 4: std::cout << "Ce jeton ne peut etre selectionne !\n"; break;
                 default: std::cout << "Pour une raison ou une autre, il y a eu un probleme...\n";
             }
         } while (jeton_selec != 0);
@@ -77,11 +78,13 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
                 std::cout << "Ce n'est pas un jeton or !\n";
                 // Désélection
                 plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
-            case 1: std::cout << "Case vide\n";
+                break;
+            case 1: std::cout << "Case vide\n"; break;
             case 2:
                 std::cout << "Selection autorise\n";
+                break;
                 // case 3 théoriquement impossible
-            case 4: std::cout << "Ce jeton ne peut etre selectionne !\n";
+            case 4: std::cout << "Ce jeton ne peut etre selectionne !\n"; break;
             default: std::cout << "Pour une raison ou une autre, il y a eu un probleme...\n";
         }
     } while (jeton_selec != 0);
@@ -113,9 +116,9 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
         if (n_pioche < 1 or n_pioche > 3) std::cout << "Numero de pioche invalide !\n";
     } while (n_pioche < 1 or n_pioche > 3);
     switch (n_pioche) {
-        case 1: pioche = p1;
-        case 2: pioche = p2;
-        case 3: pioche = p3;
+        case 1: pioche = p1; break;
+        case 2: pioche = p2; break;
+        case 3: pioche = p3; break;
         default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
     }
     if (choix == 1) {
@@ -183,9 +186,9 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
                         if (n_pioche < 1 or n_pioche > 3) std::cout << "Numero de pioche invalide !\n";
                     } while (n_pioche < 1 or n_pioche > 3);
                     switch (n_pioche) {
-                        case 1: pioche = p1;
-                        case 2: pioche = p2;
-                        case 3: pioche = p3;
+                        case 1: pioche = p1; break;
+                        case 2: pioche = p2; break;
+                        case 3: pioche = p3; break;
                         default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                     }
                 } else if (achat_pioche1_possible and achat_pioche2_possible) {
@@ -196,8 +199,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
                         if (n_pioche != 1 and n_pioche != 2) std::cout << "Numero de pioche invalide !\n";
                     } while (n_pioche != 1 and n_pioche != 2);
                     switch (n_pioche) {
-                        case 1: pioche = p1;
-                        case 2: pioche = p2;
+                        case 1: pioche = p1; break;
+                        case 2: pioche = p2; break;
                         default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                     }
                 } else if (achat_pioche1_possible and achat_pioche3_possible) {
@@ -208,8 +211,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
                         if (n_pioche != 1 and n_pioche != 3) std::cout << "Numero de pioche invalide !\n";
                     } while (n_pioche != 1 and n_pioche != 3);
                     switch (n_pioche) {
-                        case 1: pioche = p1;
-                        case 3: pioche = p2;
+                        case 1: pioche = p1; break;
+                        case 3: pioche = p2; break;
                         default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                     }
                 } else if (achat_pioche2_possible and achat_pioche3_possible) {
@@ -220,8 +223,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
                         if (n_pioche != 2 and n_pioche != 3) std::cout << "Numero de pioche invalide !\n";
                     } while (n_pioche != 2 and n_pioche != 3);
                     switch (n_pioche) {
-                        case 2: pioche = p1;
-                        case 3: pioche = p2;
+                        case 2: pioche = p1; break;
+                        case 3: pioche = p2; break;
                         default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                     }
                 } else if (achat_pioche1_possible) {
@@ -259,9 +262,9 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
                     if (n_pioche < 1 or n_pioche > 3) std::cout << "Numero de pioche invalide !\n";
                 } while (n_pioche < 1 or n_pioche > 3);
                 switch (n_pioche) {
-                    case 1: pioche = p1;
-                    case 2: pioche = p2;
-                    case 3: pioche = p3;
+                    case 1: pioche = p1; break;
+                    case 2: pioche = p2; break;
+                    case 3: pioche = p3; break;
                     default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                 }
             } else if (achat_pioche1_possible and achat_pioche2_possible) {
@@ -272,8 +275,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
                     if (n_pioche != 1 and n_pioche != 2) std::cout << "Numero de pioche invalide !\n";
                 } while (n_pioche != 1 and n_pioche != 2);
                 switch (n_pioche) {
-                    case 1: pioche = p1;
-                    case 2: pioche = p2;
+                    case 1: pioche = p1; break;
+                    case 2: pioche = p2; break;
                     default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                 }
             } else if (achat_pioche1_possible and achat_pioche3_possible) {
@@ -284,8 +287,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
                     if (n_pioche != 1 and n_pioche != 3) std::cout << "Numero de pioche invalide !\n";
                 } while (n_pioche != 1 and n_pioche != 3);
                 switch (n_pioche) {
-                    case 1: pioche = p1;
-                    case 3: pioche = p2;
+                    case 1: pioche = p1; break;
+                    case 3: pioche = p2; break;
                     default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                 }
             } else if (achat_pioche2_possible and achat_pioche3_possible) {
@@ -296,8 +299,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
                     if (n_pioche != 2 and n_pioche != 3) std::cout << "Numero de pioche invalide !\n";
                 } while (n_pioche != 2 and n_pioche != 3);
                 switch (n_pioche) {
-                    case 2: pioche = p1;
-                    case 3: pioche = p2;
+                    case 2: pioche = p1; break;
+                    case 3: pioche = p2; break;
                     default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
                 }
             } else if (achat_pioche1_possible) {
@@ -333,12 +336,12 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
     for (auto elem = prix.begin(); elem != prix.end(); elem++) {
         int prix_elem = elem->second;
         switch (elem->first) {
-            case Couleur::bleu: remettreJetonSac(joueur, plateau, Couleur::bleu, difference[0], prix_elem, 0);
-            case Couleur::vert: remettreJetonSac(joueur, plateau, Couleur::vert, difference[1], prix_elem, 1);
-            case Couleur::rouge: remettreJetonSac(joueur, plateau, Couleur::rouge, difference[2], prix_elem, 2);
-            case Couleur::blanc: remettreJetonSac(joueur, plateau, Couleur::blanc, difference[3], prix_elem, 3);
-            case Couleur::noir: remettreJetonSac(joueur, plateau, Couleur::noir, difference[4], prix_elem, 4);
-            case Couleur::rose: remettreJetonSac(joueur, plateau, Couleur::rose, difference[5], prix_elem, 5);
+            case Couleur::bleu: remettreJetonSac(joueur, plateau, Couleur::bleu, difference[0], prix_elem, 0); break;
+            case Couleur::vert: remettreJetonSac(joueur, plateau, Couleur::vert, difference[1], prix_elem, 1); break;
+            case Couleur::rouge: remettreJetonSac(joueur, plateau, Couleur::rouge, difference[2], prix_elem, 2); break;
+            case Couleur::blanc: remettreJetonSac(joueur, plateau, Couleur::blanc, difference[3], prix_elem, 3); break;
+            case Couleur::noir: remettreJetonSac(joueur, plateau, Couleur::noir, difference[4], prix_elem, 4); break;
+            case Couleur::rose: remettreJetonSac(joueur, plateau, Couleur::rose, difference[5], prix_elem, 5); break;
             default: std::cout << "Il y a un probleme avec le jeton pris au joueur !\n";
         }
     }
@@ -380,21 +383,27 @@ std::vector<int> Obligatoire::ajouterJetonsJoueur(Joueur* joueur, std::vector<co
                 case Couleur::bleu:
                     nb_couleurs[0]++;
                     joueur->setNbJeton(0, joueur->getNbJeton(0) + 1);
+                    break;
                 case Couleur::vert:
                     nb_couleurs[1]++;
                     joueur->setNbJeton(1, joueur->getNbJeton(1) + 1);
+                    break;
                 case Couleur::rouge:
                     nb_couleurs[2]++;
                     joueur->setNbJeton(2, joueur->getNbJeton(2) + 1);
+                    break;
                 case Couleur::blanc:
                     nb_couleurs[3]++;
                     joueur->setNbJeton(3, joueur->getNbJeton(3) + 1);
+                    break;
                 case Couleur::noir:
                     nb_couleurs[4]++;
                     joueur->setNbJeton(4, joueur->getNbJeton(4) + 1);
+                    break;
                 case Couleur::rose:
                     nb_couleurs[5]++;
                     joueur->setNbJeton(5, joueur->getNbJeton(5) + 1);
+                    break;
                 default: std::cout << "Il y a definitivement un probleme avec la selection...\n";
             }
         }
@@ -438,12 +447,12 @@ std::vector<int> Obligatoire::calculDifference(Joueur* joueur, std::map<Couleur,
     for (auto elem = prix.begin(); elem != prix.end(); elem++) {
         int prix_elem = elem->second;
         switch (elem->first) {
-            case Couleur::bleu: difference[0] = prix_elem - joueur->getGemmesBonus(0) - joueur->getNbJeton(0);
-            case Couleur::vert: difference[1] = prix_elem - joueur->getGemmesBonus(1) - joueur->getNbJeton(1);
-            case Couleur::rouge: difference[2] = prix_elem - joueur->getGemmesBonus(2) - joueur->getNbJeton(2);
-            case Couleur::blanc: difference[3] = prix_elem - joueur->getGemmesBonus(3) - joueur->getNbJeton(3);
-            case Couleur::noir: difference[4] = prix_elem - joueur->getGemmesBonus(4) - joueur->getNbJeton(4);
-            case Couleur::rose: difference[5] = prix_elem - joueur->getGemmesBonus(5) - joueur->getNbJeton(5);
+            case Couleur::bleu: difference[0] = prix_elem - joueur->getGemmesBonus(0) - joueur->getNbJeton(0); break;
+            case Couleur::vert: difference[1] = prix_elem - joueur->getGemmesBonus(1) - joueur->getNbJeton(1); break;
+            case Couleur::rouge: difference[2] = prix_elem - joueur->getGemmesBonus(2) - joueur->getNbJeton(2); break;
+            case Couleur::blanc: difference[3] = prix_elem - joueur->getGemmesBonus(3) - joueur->getNbJeton(3); break;
+            case Couleur::noir: difference[4] = prix_elem - joueur->getGemmesBonus(4) - joueur->getNbJeton(4); break;
+            case Couleur::rose: difference[5] = prix_elem - joueur->getGemmesBonus(5) - joueur->getNbJeton(5); break;
             default: std::cout << "Il y a un probleme avec le prix de la carte !\n";
         }
     }
