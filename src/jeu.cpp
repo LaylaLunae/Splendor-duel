@@ -269,3 +269,43 @@ void Jeu::validationAction() {
         // si variable vide -> peut pas presser bouton ?
         // appeler action correspondante
 }
+
+void initCarteJoaillerie(sqlite3* db, std::vector<CarteJoaillerie>& cartes) {
+    for (int id = 1; id <= 67; ++id) {
+        CarteJoaillerieData data = queryCarteJoaillerie(db, id);
+
+        // 将查询到的数据转换为所需的格式
+        std::array<Couleur, 2> pierres = {static_cast<Couleur>(data.pierres[0]), static_cast<Couleur>(data.pierres[1])};
+        std::map<Couleur, int> prix;
+        for (const auto& p : data.prix) {
+            prix[static_cast<Couleur>(p.first)] = p.second;
+        }
+
+        CarteJoaillerie carte(nullptr, nullptr,
+                              data.niveau, data.couronnes, pierres, prix, "",
+                              data.pointPrestige,
+                              static_cast<Pouvoir>(data.pouvoirs[0]),
+                              static_cast<Pouvoir>(data.pouvoirs[1]),
+                              id);
+
+        cartes.push_back(carte);
+    }
+}
+
+void initCarteNoble(sqlite3* db, std::vector<CarteNoble>& cartesNoble) {
+    for (int id = 1; id <=4; ++id) {
+        CarteNobleData data = queryCarteNoble(db, id);
+
+        CarteNoble carteNoble(
+                nullptr, nullptr,"",
+                data.pointPrestige,
+                data.couronnes,
+                data.pointPrestige,
+                static_cast<Pouvoir>(data.pouvoirs[0]),
+                static_cast<Pouvoir>(data.pouvoirs[1]),
+                id
+        );
+
+        cartesNoble.push_back(carteNoble);
+    }
+}

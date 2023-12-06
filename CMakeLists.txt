@@ -9,7 +9,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_PREFIX_PATH "C:/Qt/6.6.0/mingw_64/lib/cmake")
 #set(CMAKE_PREFIX_PATH "/usr/local/Cellar/qt/6.5.2/lib")
 
-
+find_package(SQLite3 REQUIRED)
 
 add_executable(Splendor main.cpp
         include/couleur.h
@@ -45,7 +45,8 @@ add_executable(Splendor main.cpp
         affichage/affichage_carte.cpp
         include/affichage_joueur.h
         include/query.h
-        vcpkg.json
+        src/query.cpp
+        #        vcpkg.json
 )
 
 find_package(Qt6 COMPONENTS
@@ -58,6 +59,7 @@ target_link_libraries(Splendor
         Qt::Core
         Qt::Gui
         Qt::Widgets
+        SQLite::SQLite3
 )
 
 
