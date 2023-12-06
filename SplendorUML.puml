@@ -72,58 +72,63 @@ struct ReponseValidationSelection {
 }
 
 
-class Joueur {
-- IA : bool
-- pseudo: string
-- nombre_couronnes: int
-- points_prestige_total:int
-- points_prestige_couleurs:int[5]
-- nb_cartes_reservees : int
-- cartes_reservees:CarteJoaillerie[]
-- cartes_main:CarteJoaillerie[6]
-- cartes_noble:CarteNoble[]
-- gemmes_bonus:int[5]
-- nb_jeton:int[6]
-- privileges:Privilege[]
-- nombre_de_privileges : int
-- adversaire : Joueur*
-- droit_de_rejouer : bool
+abstract class Joueur {
+    - pseudo: string
+    - nombre_couronnes: int
+    - points_prestige_total: int
+    - points_prestige_couleurs: vector<int>
+    - cartes_reservees: vector<CarteJoaillerie*>
+    - cartes_main: vector<CarteJoaillerie*>
+    - cartes_noble: vector<CarteNoble*>
+    - gemmes_bonus: vector<int>
+    - nb_jeton: vector<int>
+    - privileges: vector<Privilege*>
+    - adversaire: Joueur*
+    - droit_de_rejouer: bool
 
-+ Joueur(nom : string const)
-+ getPointsPrestigeTotal() : int const
-+ getPseudo() : string const
-+ getNombreCouronnes() : int const
-+ getPointsPrestigeCouleurs(index : int) : int const
-+ getCarteReservee(index : int) : CarteJoaillerie const
-+ getCarteNoble(index : int) : CarteNoble const
-+ getGemmesBonus(index : int) : int const
-+ getPrivilege(index : int) : Privilege const
-+ ajouterCarteJoaillerie(carte : CarteJoaillerie) : void
-+ ajouterCarteNoble(carte : const CarteNoble&) : void : void
-+ ajouterCarteReservee(carte : const CarteJoaillerie&) : void
-+ ajouterPrivilege(privilege : const Privilege&) : void
-+ setPointsPrestigeCouleurs(index : int, valeur : int) void
-+ setGemmesBonus(index : int, value : int) : void
-+ getAdversaire() : Joueur *
-+ setAdverxaire(adv : Joueur *) : void
-+ hasPrivilege() : bool
-+ removePrivilege() : Privilege
-+ peutRejouer() : bool
-+ resetRejouer(reset : bool) : void
-+ getNbJeton(int index) const : int;
-+ setNbJeton(int index, int value) : void;
-+ getNombreDePrivileges() const : int
-+ getNbCartesReservees() const : int
+    + Joueur(nom: string const)
+    + getPointsPrestigeTotal(): int const
+    + getPseudo(): string const
+    + getNombreCouronnes(): int const
+    + getPointsPrestigeCouleurs(index: int): int const
+    + getCarteReservee(index: int): CarteJoaillerie const
+    + getCarteNoble(index: int): CarteNoble const
+    + getGemmesBonus(index: int): int const
+    + getPrivilege(index: int): Privilege const
+    + ajouterCarteJoaillerie(carte: CarteJoaillerie): void
+    + ajouterCarteNoble(carte: const CarteNoble&): void
+    + ajouterCarteReservee(carte: const CarteJoaillerie&): void
+    + ajouterPrivilege(privilege: const Privilege&): void
+    + setPointsPrestigeCouleurs(index: int, valeur: int): void
+    + setGemmesBonus(index: int, value: int): void
+    + getAdversaire(): Joueur*
+    + setAdversaire(adv: Joueur*): void
+    + hasPrivilege(): bool
+    + removePrivilege(): Privilege
+    + peutRejouer(): bool
+    + resetRejouer(reset: bool): void
+    + getNbJeton(index: int): int
+    + setNbJeton(index: int, value: int): void
+    + getNombreDePrivileges(): int
+    + getNbCartesReservees(): int
+    + choisirChoix(min: int, max: int): int virtuelle
 }
 
 class IA {
-- difficulte: Difficulte
-+ IA(pseudo : const string&, diff : difficulte)
+    - difficulte: Difficulte
+
+    + IA(pseudo: string, diff: Difficulte)
+    + choisirChoix(min: int, max: int): int override
+    + templateMethod(): void {abstract}
+    + operationPrimaire(): void override
+    + operationSpecifique(): void override
 }
 
 class Humain {
-+ Humain(pseudo : const string&)
+    + Humain(pseudo: string)
+    + choisirChoix(min: int, max: int): int override
 }
+
 
 enum Difficulte <<enumeration>> {
  facile
