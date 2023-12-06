@@ -274,15 +274,18 @@ void initCarteJoaillerie(sqlite3* db, std::vector<CarteJoaillerie>& cartes) {
     for (int id = 1; id <= 67; ++id) {
         CarteJoaillerieData data = queryCarteJoaillerie(db, id);
 
-        // 将查询到的数据转换为所需的格式
+        // Convertissez les données interrogées au format requis
         std::array<Couleur, 2> pierres = {static_cast<Couleur>(data.pierres[0]), static_cast<Couleur>(data.pierres[1])};
         std::map<Couleur, int> prix;
         for (const auto& p : data.prix) {
             prix[static_cast<Couleur>(p.first)] = p.second;
         }
 
+        //Construire le chemin de l'image
+        std::string imagePath = "../images/" + (id < 10 ? "0" + std::to_string(id) : std::to_string(id)) + ".png";
+
         CarteJoaillerie carte(nullptr, nullptr,
-                              data.niveau, data.couronnes, pierres, prix, "",
+                              data.niveau, data.couronnes, pierres, prix, imagePath,
                               data.pointPrestige,
                               static_cast<Pouvoir>(data.pouvoirs[0]),
                               static_cast<Pouvoir>(data.pouvoirs[1]),
@@ -296,8 +299,11 @@ void initCarteNoble(sqlite3* db, std::vector<CarteNoble>& cartesNoble) {
     for (int id = 1; id <=4; ++id) {
         CarteNobleData data = queryCarteNoble(db, id);
 
+        //Construire le chemin de l'image
+        std::string imagePath = "../images/" + std::to_string(id + 67) + ".png";
+
         CarteNoble carteNoble(
-                nullptr, nullptr,"",
+                nullptr, nullptr,imagePath,
                 data.pointPrestige,
                 data.couronnes,
                 data.pointPrestige,
