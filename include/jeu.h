@@ -53,6 +53,7 @@ public:
     void sauvegarderPartie(); //faut bdd
     void vainqueur(Joueur * j);
     void auSuivant(Joueur * j1, Joueur * j2);
+    void verifCarteNoble(Joueur * j, Plateau * p);
 
     void manche(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j1, Joueur * j2, Obligatoire * obl, Optionnelle * opt);
     void tour(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j, Obligatoire * obl, Optionnelle * opt);

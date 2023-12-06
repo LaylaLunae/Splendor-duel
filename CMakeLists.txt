@@ -90,5 +90,5 @@ if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     endforeach (QT_LIB)
 endif ()
 
-find_package(unofficial-sqlite3 CONFIG REQUIRED)
-target_link_libraries(Splendor unofficial::sqlite3::sqlite3)
+#find_package(unofficial-sqlite3 CONFIG REQUIRED)
+#target_link_libraries(Splendor unofficial::sqlite3::sqlite3)

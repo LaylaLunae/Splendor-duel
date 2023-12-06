@@ -133,7 +133,8 @@ bool IA::verificationCombinaisonDeuxJetons(const Jeton* jeton1, const Jeton* jet
         }
     }
 
-    return plateau.verificationSelectionPositions();
+    plateau.verificationSelectionPositions();
+
 }
 
 bool IA::verificationCombinaisonTroisJetons(const Jeton* jeton1, const Jeton* jeton2, const Jeton* jeton3, const Plateau& plateau) const {

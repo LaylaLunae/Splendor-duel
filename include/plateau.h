@@ -71,7 +71,7 @@ public:
     const Jeton* getJeton(unsigned int i) const  {return jetons[i];}
     // A mettre en privé plus tard :
     Plateau();
-    //friend class Jeu;
+    friend class Jeu;
 
     void remplissagePlateau(bool avecAffichage = false);
     std::string etatPlateau();
