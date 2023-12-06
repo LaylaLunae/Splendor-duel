@@ -45,6 +45,7 @@ add_executable(Splendor main.cpp
         affichage/affichage_carte.cpp
         include/affichage_joueur.h
         include/query.h
+        vcpkg.json
 )
 
 find_package(Qt6 COMPONENTS
@@ -52,7 +53,6 @@ find_package(Qt6 COMPONENTS
         Gui
         Widgets
         REQUIRED)
-
 
 target_link_libraries(Splendor
         Qt::Core
@@ -90,3 +90,5 @@ if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     endforeach (QT_LIB)
 endif ()
 
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+target_link_libraries(Splendor unofficial::sqlite3::sqlite3)
