@@ -1,6 +1,6 @@
 //#include "../include/carteNoble.h"
 #include "../include/jeu.h"
-CarteNoble::CarteNoble() : couronne(0) {}
+CarteNoble::CarteNoble() : couronne(0), id(0) {}
 
 CarteNoble::CarteNoble(Plateau* p, Joueur* j, const std::string& chemin,
                        int prestige,
