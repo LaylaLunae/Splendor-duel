@@ -1,17 +1,23 @@
 @startuml
 
 class Jeu {
-    - handler:static Handler
+- handler:static Handler
+- joueur_actuel: Joueur*
+- joueur_gagnant: Joueur*
 --
 - libereJeu():void
 - nouvellePartie():void
 - reprendrePartie():void
 - verifAnciennePartie():void
-- verifGagnant(): void
+- verifGagnant(Joueur * j1, Joueur * j2): void
 - sauvegarderPartie():void
-- vainqueur(): Joueur
-- auSuivant(): Joueur
-- verifObligationRemplissage()
+- vainqueur(Joueur * j): void
+- auSuivant(Joueur * j1, Joueur * j2): void
+- verifCarteNoble(Joueur * j, Plateau * p): void
+- manche(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j1, Joueur * j2, Obligatoire * obl, Optionnelle * opt): void
+- tour(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j, Obligatoire * obl, Optionnelle * opt): void
++ getJoueurActuel() const: Joueur*
++ getJoueurGagnant() const: Joueur*
 + validationAction()
 }
 
