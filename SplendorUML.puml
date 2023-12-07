@@ -187,8 +187,16 @@ class Pioche{
 - cartes_dehors:CarteJoaillerie*[] const
 - max_cartes_revelees:int
 - max_cartes_pioche:int const
-+ joueurPrend(numero_carte:int):CarteJoaillerie* const
-+ distribution()
+- getNumeroPioche() const: const int
+- getCartesDansPioche(int i) const : const CarteJoaillerie *
+- getCartesDehors(int i) const : const CarteJoaillerie *
+- getMaxCartesRevelees() const : const int
+- getMaxCartesPioche() const : int
+- Pioche(const int np, const int mcr, int mcp);
+- ~Pioche();
+- joueurPrend(int numero_carte): const CarteJoaillerie *
+- distribution(): void
+- joueurPrendPioche(): const CarteJoaillerie *
 }
 
 class Carte {
