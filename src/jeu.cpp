@@ -184,7 +184,7 @@ void Jeu::tour(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j, O
     switch(choix_obl){
         case 0:
             std::cout << "Prendre un jeton.\n";
-            obl->prendreJeton(j,p,p1,p2,p3);
+            obl->prendreJeton(j,p);
             break;
 
         case 1:
