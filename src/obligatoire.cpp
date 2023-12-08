@@ -33,7 +33,7 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
                     // Désélection
                     plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
                     break;
-                // case 3 théoriquement impossible
+                case 3: std::cout << "Vous ne pouvez selectionner de jeton or lors de cette action, encore moins 2 !\n"; //théoriquement impossible
                 case 4: std::cout << "Ce jeton ne peut etre selectionne !\n"; break;
                 default: std::cout << "Pour une raison ou une autre, il y a eu un probleme...\n";
             }
@@ -443,7 +443,7 @@ bool Obligatoire::achatCartePossible(Joueur *joueur, std::vector<int> difference
 }
 
 std::vector<int> Obligatoire::calculDifference(Joueur* joueur, std::map<Couleur, int> prix) {
-    std::vector<int> difference;
+    std::vector<int> difference(6, 0);
     for (auto elem = prix.begin(); elem != prix.end(); elem++) {
         int prix_elem = elem->second;
         switch (elem->first) {
@@ -468,7 +468,8 @@ void Obligatoire::donnerPrivilegeAdversaire(Joueur* joueur, Plateau* plateau) {
         return;
     }
     if (plateau->getNbPrivileges() == 0) {
-        privileges = joueur->getPrivileges();
+        const std::vector<Privilege*>& constPrivileges = joueur->getPrivileges();
+        auto& privileges = const_cast<std::vector<Privilege*>&>(constPrivileges);
         adversaire->ajouterPrivilege(privileges.back());
         privileges.pop_back();
     } else {
