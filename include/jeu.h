@@ -13,8 +13,7 @@
 #include "obligatoire.h"
 #include "joueur.h"
 
-//#include <sqlite3.h>
-#include "../cmake-build-debug/vcpkg_installed/x64-windows/include/sqlite3.h"
+#include <sqlite3.h>
 #include "query.h"
 
 
@@ -35,6 +34,7 @@ private:
     ~Jeu(){};
     Jeu(const Jeu& j) = delete;
     Jeu& operator=(const Jeu& j) = delete;
+    //void verifCarteNoble(Joueur * j, Plateau * p);
 
 public:
     static Jeu& getJeu();

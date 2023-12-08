@@ -1,8 +1,7 @@
 #ifndef SPLENDOR_QUERY_H
 #define SPLENDOR_QUERY_H
 
-//#include <sqlite3.h>
-#include "../cmake-build-debug/vcpkg_installed/x64-windows/include/sqlite3.h"
+#include <sqlite3.h>
 #include <string>
 #include <vector>
 #include <array>

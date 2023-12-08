@@ -6,10 +6,11 @@
 #define SPLENDOR_QUERY_H
 
 #include <sqlite3.h>
-//#include "../cmake-build-debug/vcpkg_installed/x64-windows/include/sqlite3.h"
 #include <string>
 #include <iostream>
 #include <map>
+#include <array>
+#include <vector>
 #include "../include/query.h"
 
 // Déclaration de la fonction de connexion à la base de données
