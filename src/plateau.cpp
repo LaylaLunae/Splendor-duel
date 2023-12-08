@@ -142,6 +142,7 @@ nombre_jetons_dans_selection(0){
             0, 3, 0,
             Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour,0);
 
+
     // Le plateau est vide => la première case où mettre le prochain jeton est la 0
     pointeur_case_libre = 0;
 
@@ -682,83 +683,78 @@ bool Plateau::hasJetonOr() {
     return false;
 }
 
+std::vector<unsigned int> Plateau::parcoursPlateauVerificationPosition(unsigned int x, unsigned int y, signed int coefX, signed int coefY ) {
+    signed int posX = x;
+    signed int posY = y;
+    std::vector<unsigned int> resultat = std::vector<unsigned int> (0 );
+    for (unsigned int nb_j = 0 ; nb_j < 3; nb_j ++) {
+        if (posX >= 5 || posY >= 5 || posX<0 || posY<0) break;
+
+        if (jetons[5*posX+posY] != nullptr  &&
+            jetons[5*posX+posY]->getType() != JetonType::Or)
+        {
+            resultat.push_back(posX);
+            resultat.push_back(posY);
+        } else {
+            break;
+        }
+        posX = posX + 1*coefX;
+        posY = posY + 1*coefY;
+    }
+    return resultat;
+}
+
 std::vector<std::vector<unsigned int>>  Plateau::donnePositionsPossiblesAPartirDe(unsigned int x, unsigned int y) {
 
     /*
-     * Vérifier
+     * Donne les positions de :
      * 1. Ligne
      * 2. Colonne
      * 3. Diagonale
-     * (4. Diagonale en partant du bas)
+     * 4. Diagonale en partant du bas
+     *
+     Dans ces positions, il n'y a aucun jeton or.
+
+      Les entiers sont à la suite et doivent être lus deux par deux (x,y):
+      0, 0, 1, 1, 1, 2
+      Correspond à (0, 0) puis (1,1) puis (1, 2) .
+
+     * ------------ Exemple de code  et explications ---------------- *
+     En lançant ce code depuis le main, on obtiens un affichage console.
+     L'affichage décompose les vecteurs :
+     - une ligne représente un vector<unsigned int>
+     - chaque élément d'une ligne représente un int du même vector<u i>
+
+     Le vector principal ( vect<vect<u i>> ) contiendra 4 éléments :
+     1. vector<u i> de la ligne
+     2. v<ui> de la colonne
+     3. v<ui> de la diagonale départ hautgauche -> basdroite
+     4. v<ui> de la diagonale départ basgauche -> hautdroite
+
+     Puisqu'il contient 4 éléments, il y aura 4 lignes dans la console.
+
+     Attention, si le jeton de départ est un Or, le vecteur retourné sera vide.
+
+     Code à mettre dans le main :
+
+     Plateau* p= new Plateau;
+     std::cout<<p->etatPlateau(); // il faut regarder l'affichage "Plateau affichage respecte" dans la console
+     std::vector<std::vector<unsigned int>> v = p->donnePositionsPossiblesAPartirDe(0, 1);
+     for (auto v_ :v) {
+         for (auto i : v_) {
+             std::cout<<i<<" ";
+         }
+         std::cout<<"\n";
+    }
+
+     * ----------------- Fin explications et code ----------------- *
      */
 
     std::vector<std::vector<unsigned int>> resultat =std::vector<std::vector<unsigned int>>(0) ;
-
-
-    // ----------- Ligne ---------------------
-    unsigned int posX = x;
-    unsigned int posY = y;
-    std::vector<unsigned int> pos_ligne = std::vector<unsigned int> (0 );
-    for (unsigned int nb_j = 0 ; nb_j < 3; nb_j ++) {
-        if (posX >= 5 || posY >= 5) break;
-
-        if (jetons[5*posX+posY] != nullptr ) {
-            pos_ligne.push_back(posX);
-            pos_ligne.push_back(posY);
-            resultat.push_back(pos_ligne);
-        } else {
-            break;
-        }
-        posX += 1;
-    }
-
-    // ----------- Colonne ---------------------
-    posX = x;
-    posY = y;
-    pos_ligne = std::vector<unsigned int> (0 );
-    for (unsigned int nb_j = 0 ; nb_j < 3; nb_j ++) {
-        if (posX >= 5 || posY >= 5) break;
-
-        if (jetons[5*posX+posY] != nullptr) {
-            pos_ligne.push_back(posX);
-            pos_ligne.push_back(posY);
-            resultat.push_back(pos_ligne);
-        } else {
-            break;
-        }
-        posY += 1;
-    }
-    // ----------- Diagonale ---------------------
-    posX = x;
-    posY = y;
-    pos_ligne = std::vector<unsigned int> (0 );
-    for (unsigned int nb_j = 0 ; nb_j < 3; nb_j ++) {
-        if (posX >= 5 || posY >= 5) break;
-
-        if (jetons[5*posX+posY] != nullptr) {
-            pos_ligne.push_back(posX);
-            pos_ligne.push_back(posY);
-            resultat.push_back(pos_ligne);
-        }
-        posX += 1;
-        posY += 1;
-    }
-
-    // ----------- Diagonale Inverse ---------------------
-    posX = x;
-    posY = y;
-    pos_ligne = std::vector<unsigned int> (0 );
-    for (unsigned int nb_j = 0 ; nb_j < 3; nb_j ++) {
-        if (posX >= 5 || posY >= 5) break;
-
-        if (jetons[5*posX+posY] != nullptr) {
-            pos_ligne.push_back(posX);
-            pos_ligne.push_back(posY);
-            resultat.push_back(pos_ligne);
-        }
-        posX -= 1;
-        posY -= 1;
-    }
+    resultat.push_back(parcoursPlateauVerificationPosition(x, y, 1, 0));
+    resultat.push_back(parcoursPlateauVerificationPosition(x, y, 0, 1));
+    resultat.push_back(parcoursPlateauVerificationPosition(x, y, 1, 1));
+    resultat.push_back(parcoursPlateauVerificationPosition(x, y, 1, -1));
 
 
     return resultat;

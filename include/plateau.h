@@ -64,6 +64,10 @@ class Plateau {
 
     //bool verificationSelectionPositions();
 
+    // Utilisé en interne par donnePositionsAPartirDe().
+    std::vector<unsigned int> parcoursPlateauVerificationPosition(unsigned int x, unsigned int y, int coefX, int coefY );
+
+
     friend class VuePlateau;
     //const Jeton* getJeton(unsigned int i) const  {return jetons[i];}
 public:
