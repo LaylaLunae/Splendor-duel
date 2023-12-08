@@ -38,7 +38,6 @@ std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const
     return cartesAchetable;
 }
 
-
 CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur) {
     if (pioche.getMaxCartesRevelees() == 0) {
         return nullptr;
@@ -57,121 +56,95 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
 }
 
 
-
-std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJetons(const Plateau& plateau) const {
+std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJetons(Plateau plateau) const {
     std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons;
 
-    for (unsigned int i = 0; i < 5; i++) {  // parcourt les lignes du plateau
-        for (unsigned int j = 0; j < 5; j++) {  // parcourt les colonnes du plateau
-            const Jeton* jeton1 = plateau.getJeton(i * 5 + j);  // récupère le premier jeton
+    // Parcourir le plateau de jetons
+    for (unsigned int i = 0; i < plateau.getNbJetonsPlateauMAX(); ++i) {
+        const Jeton* jeton1 = plateau.getJeton(i);
 
-            for (unsigned int k = i; k < 5; k++) {  // parcourt les lignes à partir du jeton seclectioné
-                for (unsigned int l = (k == i) ? j + 1 : 0; l < 5; l++) {   // vérifie que l'on reprend pas le même jeton
-                    const Jeton* jeton2 = plateau.getJeton(k * 5 + l);  // récupère le deuxième jeton
-                    if (verificationCombinaisonDeuxJetons(jeton1, jeton2, const_cast<Plateau &>(plateau))) {
-                        combinaisons.push_back(std::make_pair(jeton1, jeton2));
-                    }
-                }
+        // Obtenir les positions possibles pour le jeton1
+        unsigned int x = i / 5;
+        unsigned int y = i % 5;
+        std::vector<std::vector<unsigned int>> positionsPossibles = plateau.donnePositionsPossiblesAPartirDe(x, y);
+
+        // Insérer les positions possibles dans un vecteur global
+        std::vector<std::pair<unsigned int, unsigned int>> positions;
+        for (const auto& pos : positionsPossibles) {
+            for (unsigned int j = 0; j < pos.size(); j += 2) {
+                positions.push_back({pos[j], pos[j + 1]});
             }
         }
+
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(positions.begin(), positions.end(), g);
+
+        // Parcourir le vecteur de positions et sélectionner deux jetons
+        for (unsigned int k = 0; k < positions.size() && combinaisons.size() < 2; ++k) {
+            unsigned int posX = positions[k].first;
+            unsigned int posY = positions[k].second;
+            const Jeton* jeton2 = plateau.getJeton(posX * 5 + posY);
+
+            plateau.selectionJeton(posX, posY);
+
+            // Ajouter la paire de jetons
+            combinaisons.push_back({jeton1, jeton2});
+        }
     }
+    plateau.validerSelectionEtPrendreJetons();
 
     return combinaisons;
 }
 
-std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCombinaisonsTroisJetons(const Plateau& plateau) const{
+std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCombinaisonsTroisJetons(Plateau plateau) const {
     std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisons;
 
-    for (unsigned int i = 0; i < 5; i++) {
-        for (unsigned int j = 0; j < 5; j++) {
-            const Jeton* jeton1 = plateau.getJeton(i * 5 + j);
+    // Parcourir le plateau de jetons
+    for (unsigned int i = 0; i < plateau.getNbJetonsPlateauMAX(); ++i) {
+        const Jeton* jeton1 = plateau.getJeton(i);
 
-            for (unsigned int k = i; k < 5; k++) {
-                for (unsigned int l = (k == i) ? j + 1 : 0; l < 5; l++) {
-                    const Jeton* jeton2 = plateau.getJeton(k * 5 + l);
+        // Obtenir les positions possibles pour le jeton1
+        unsigned int x = i / 5;
+        unsigned int y = i % 5;
+        std::vector<std::vector<unsigned int>> positionsPossibles = plateau.donnePositionsPossiblesAPartirDe(x, y);
 
-                    for (unsigned int m = k; m < 5; m++) {
-                        for (unsigned int n = (m == k) ? l + 1 : 0; n < 5; n++) {
-                            const Jeton* jeton3 = plateau.getJeton(m * 5 + n);
-                            if (verificationCombinaisonTroisJetons(jeton1, jeton2, jeton3, plateau)) {
-                                combinaisons.push_back(std::make_tuple(jeton1, jeton2, jeton3));
-                            }
-                        }
-                    }
-                }
+        // Insérer les positions possibles dans un vecteur global
+        std::vector<std::tuple<unsigned int, unsigned int, const Jeton*>> positions;
+        for (const auto& pos : positionsPossibles) {
+            for (unsigned int j = 0; j < pos.size(); j += 2) {
+                unsigned int posX = pos[j];
+                unsigned int posY = pos[j + 1];
+                const Jeton* jeton2 = plateau.getJeton(posX * 5 + posY);
+                positions.emplace_back(posX, posY, jeton2);
             }
         }
+
+        // Mélanger le vecteur de positions avec std::shuffle
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(positions.begin(), positions.end(), g);
+
+        // Parcourir le vecteur de positions et sélectionner trois jetons
+        for (unsigned int k = 0; k < positions.size() && combinaisons.size() < 3; ++k) {
+            unsigned int posX2, posY2;
+            const Jeton* jeton2;
+            std::tie(posX2, posY2, jeton2) = positions[k];
+
+            plateau.selectionJeton(posX2, posY2);
+
+            // Ajouter la triple paire de jetons
+            combinaisons.emplace_back(jeton1, jeton2, plateau.getJeton(posX2 * 5 + posY2));
+        }
     }
+
+    // Valider la sélection après avoir parcouru toutes les positions possibles
+    plateau.validerSelectionEtPrendreJetons();
 
     return combinaisons;
 }
 
-bool IA::verificationCombinaisonDeuxJetons(const Jeton* jeton1, const Jeton* jeton2, const Plateau& plateau) const {
-    // Création d'un tableau temporaire pour stocker les positions des deux jetons
-    int temp[4] = {
-            0, 0, // Position du jeton 1
-            0, 0  // Position du jeton 2
-    };
 
-    // Vérification si les jetons sont nuls
-    if (jeton1 == nullptr || jeton2 == nullptr) {
-        return false;
-    }
-
-    // Obtention des positions des jetons dans le tableau temporaire
-    for (unsigned int i = 0; i < 5; ++i) {
-        for (unsigned int j = 0; j < 5; ++j) {
-            const Jeton* jeton = plateau.getJeton(i * 5 + j);
-            if (jeton == jeton1) {
-                temp[0] = i + 1;  // position x
-                temp[1] = j + 1;  // position y
-            }
-            else if (jeton == jeton2) {
-                temp[2] = i + 1;  // position x
-                temp[3] = j + 1;  // position y
-            }
-        }
-    }
-
-    plateau.verificationSelectionPositions();
-
-}
-
-bool IA::verificationCombinaisonTroisJetons(const Jeton* jeton1, const Jeton* jeton2, const Jeton* jeton3, const Plateau& plateau) const {
-    // Création d'un tableau temporaire pour stocker les positions des trois jetons
-    int temp[6] = {
-            0, 0, // Position du jeton 1
-            0, 0, // Position du jeton 2
-            0, 0  // Position du jeton 3
-    };
-
-    // Vérification si les jetons sont nuls (non présents)
-    if (jeton1 == nullptr || jeton2 == nullptr || jeton3 == nullptr) {
-        return false;
-    }
-
-    // Obtention des positions des jetons dans le tableau temporaire
-    for (unsigned int i = 0; i < 5; ++i) {
-        for (unsigned int j = 0; j < 5; ++j) {
-            const Jeton* jeton = plateau.getJeton(i * 5 + j);
-            if (jeton == jeton1) {
-                temp[0] = i + 1;  // position x
-                temp[1] = j + 1;  // position y
-            }
-            else if (jeton == jeton2) {
-                temp[2] = i + 1;  // position x
-                temp[3] = j + 1;  // position y
-            }
-            else if (jeton == jeton3) {
-                temp[4] = i + 1;  // position x
-                temp[5] = j + 1;  // position y
-            }
-        }
-    }
-    return plateau.verificationSelectionPositions();
-}
-
-#include <random> // N'oubliez pas d'inclure la bibliothèque random
 
 void IA::prendreJetons(Plateau* plateau) {
     // Vérifier si le plateau est vide, le remplir si nécessaire
@@ -186,28 +159,9 @@ void IA::prendreJetons(Plateau* plateau) {
     else if (choix == 2) {
         std::vector<std::pair<const Jeton*, const Jeton*>> combinaisonsDeux = genererCombinaisonsDeuxJetons(*plateau);
 
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(combinaisonsDeux.begin(), combinaisonsDeux.end(), g);
-
-        auto derniereCombinaisonDeux = combinaisonsDeux.back();
-        std::vector<int> resultatsAjout = Obligatoire::ajouterJetonsJoueur(this, {derniereCombinaisonDeux.first, derniereCombinaisonDeux.second});
-        combinaisonsDeux.pop_back();
-
-        std::vector<const Jeton*> jetonsSelectionnes = plateau->validerSelectionEtPrendreJetons();
     }
     else if (choix == 3) {
         std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisonsTrois = genererCombinaisonsTroisJetons(*plateau);
-
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(combinaisonsTrois.begin(), combinaisonsTrois.end(), g);
-
-        auto derniereCombinaisonTrois = combinaisonsTrois.back();
-        std::vector<int> resultatsAjout = Obligatoire::ajouterJetonsJoueur(this, {std::get<0>(derniereCombinaisonTrois), std::get<1>(derniereCombinaisonTrois), std::get<2>(derniereCombinaisonTrois)});
-        combinaisonsTrois.pop_back();
-
-        std::vector<const Jeton*> jetonsSelectionnes = plateau->validerSelectionEtPrendreJetons();
     }
     else {
         // Autre choix, rappeler la fonction

@@ -104,10 +104,11 @@ public:
 //    virtual bool peutAcheterCarte(const CarteJoaillerie& carte) const;
     virtual CarteJoaillerie* melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur);
 
-    virtual std::vector<std::pair<const Jeton*, const Jeton*>> genererCombinaisonsDeuxJetons(const Plateau& plateau) const;
-    virtual std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> genererCombinaisonsTroisJetons(const Plateau& plateau) const;
-    virtual bool verificationCombinaisonDeuxJetons(const Jeton* jeton1, const Jeton* jeton2, const Plateau& plateau) const;
-    virtual bool verificationCombinaisonTroisJetons(const Jeton* jeton1, const Jeton* jeton2, const Jeton* jeton3, const Plateau& plateau) const;
+    virtual std::vector<std::pair<const Jeton*, const Jeton*>> genererCombinaisonsDeuxJetons(Plateau plateau) const;
+    virtual std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> genererCombinaisonsTroisJetons(
+            Plateau plateau) const;
+    //virtual bool verificationCombinaisonDeuxJetons(const Jeton* jeton1, const Jeton* jeton2, const Plateau& plateau) const;
+    //virtual bool verificationCombinaisonTroisJetons(const Jeton* jeton1, const Jeton* jeton2, const Jeton* jeton3, const Plateau& plateau) const;
     virtual void choisirJetonSurPlateau(Plateau* plateau);
 
     virtual void prendreJetons(Plateau* plateau);
