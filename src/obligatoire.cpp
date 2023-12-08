@@ -90,7 +90,7 @@ void Obligatoire::demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioch
             case 4: std::cout << "Ce jeton ne peut etre selectionne !\n"; break;
             default: std::cout << "Pour une raison ou une autre, il y a eu un probleme...\n";
         }
-    } while (jeton_selec != 0);
+    } while (jeton_selec != 2);
     selection = plateau->validerSelectionEtPrendreJetons();
 
     // On ajoute le jeton or au joueur
@@ -101,13 +101,13 @@ void Obligatoire::demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioch
     do {
         std::cout << "Que voulez vous faire ?\n";
         std::cout << "Reserver 1 carte Joaillerie de votre choix dans la pyramide ? (1)\n";
-        std::cout << "Reserver la premiere carte de l’un des 3 paquets ? (2)";
+        std::cout << "Reserver la premiere carte de l’un des 3 paquets ? (2)\n";
         std::cout << "Choix (1 ou 2) : ";
         std::cin >> choix;
         std::cout << "\n";
     } while (choix != 1 and choix != 2);
     bool carte_revelee = true;
-    if (choix == 2)  carte_revelee = false;
+    if (choix == 2) carte_revelee = false;
 
     // Il choisi alors une carte en fonction de son choix
     int n_carte, n_pioche;
