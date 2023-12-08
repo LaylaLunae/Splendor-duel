@@ -63,7 +63,10 @@ void Obligatoire::demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioch
         std::cout << "Aucun jeton or de disponible sur le plateau !\n";
         return;
     }
-    if (joueur->getNbCartesReservees() == 3) std::cout << "Le joueur a deja 3 cartes reservees !";
+    if (joueur->getNbCartesReservees() == 3) {
+        std::cout << "Le joueur a deja 3 cartes reservees !";
+        return;
+    }
 
     // On récupère un jeton or
     std::tuple<int, int> jeton_choisi(0, 0);
@@ -142,7 +145,10 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
         std::cout << "Aucun jeton or de disponible sur le plateau !\n";
         return;
     }
-    if (joueur->getNbCartesReservees() == 3) std::cout << "Le joueur a deja 3 cartes reservees !";
+    if (joueur->getNbCartesReservees() == 3) {
+        std::cout << "Le joueur a deja 3 cartes reservees !";
+        return;
+    }
 
     Pioche* pioche;
     CarteJoaillerie* card;
@@ -160,7 +166,8 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
             std::cout << "Numero de carte invalide !\n";
             return;
         }
-        card = const_cast<CarteJoaillerie*>(pioche->joueurPrend(n_carte-1));
+        int id = pioche->getCartesDehors(n_carte-1)->getID();
+        card = const_cast<CarteJoaillerie*>(pioche->joueurPrend(id));
     } else {
         card = const_cast<CarteJoaillerie*>(pioche->joueurPrendPioche());
     }
@@ -191,7 +198,6 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
     // Le joueur choisit ce qu'il veut faire en fonction de ce qu'il peut faire
     int n_carte, n_pioche, choix;
     Pioche* pioche;
-    prix = carte->getPrix();
     std::vector<int> difference(6);
     do {
         if (achat_carte_reservees_possible and (achat_pioche1_possible or achat_pioche2_possible or achat_pioche3_possible)) {
@@ -272,7 +278,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
                     std::cout << "\n";
                     if (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees()) std::cout << "Numero de carte invalide !\n";
                 } while (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees());
-                carte = pioche->joueurPrend(n_carte);
+                int id = pioche->getCartesDehors(n_carte-1)->getID();
+                carte = pioche->joueurPrend(id);
             }
         } else if (achat_carte_reservees_possible) {
             do {
@@ -348,12 +355,14 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
                 std::cout << "\n";
                 if (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees()) std::cout << "Numero de carte invalide !\n";
             } while (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees());
-            carte = pioche->joueurPrend(n_carte);
+            int id = pioche->getCartesDehors(n_carte-1)->getID();
+            carte = pioche->joueurPrend(id);
         } else {
             std::cout << "Achat impossible!";
             return;
         }
         // Vérifier achat possible de la carte
+        prix = carte->getPrix();
         difference = calculDifference(joueur, prix);
         if (!achatCartePossible(joueur, difference)) std::cout << "Vous ne pouvez pas acheter cette carte !\n";
     } while (!achatCartePossible(joueur, difference));
