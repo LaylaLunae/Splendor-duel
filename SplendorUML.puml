@@ -123,11 +123,19 @@ abstract class Joueur {
 class IA {
     - difficulte: Difficulte
 
-    + IA(pseudo: string, diff: Difficulte)
-    + choisirChoix(min: int, max: int): int override
-    + templateMethod(): void {abstract}
-    + operationPrimaire(): void override
-    + operationSpecifique(): void override
+      + IA(pseudo: string, diff: Difficulte)
+      + choisirChoix(min: int, max: int): int override
+      + templateMethod(): void {abstract}
+      + operationPrimaire(): void override
+      + operationSpecifique(): void override
+
+      {abstract} + choisirJetonSurPlateau(plateau: Plateau): void
+      {abstract} + prendreJetons(plateau: Plateau): void
+      {abstract} + genererCombinaisonsDeuxJetons(plateau: Plateau): vector<pair<const Jeton*, const Jeton*>>
+      {abstract} + genererCombinaisonsTroisJetons(plateau: Plateau): vector<tuple<const Jeton*, const Jeton*, const Jeton*>>
+      {abstract} + melangerEtObtenirDerniereCarte(pioche: Pioche, joueur: Joueur): CarteJoaillerie*
+      {abstract} + getCartesAchetable(pioche: Pioche): vector<CarteJoaillerie*>
+
 }
 
 class Humain {
