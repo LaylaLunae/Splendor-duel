@@ -29,8 +29,8 @@ protected:
     std::vector<CarteJoaillerie*> cartes_reservees;
     std::vector<CarteJoaillerie*> cartes_main;
     std::vector<CarteNoble*> cartes_noble;
-    std::vector<int> gemmes_bonus;
-    std::vector<int> nb_jeton; // Timo - Temporaire pour actions (a un getter et setter)
+    std::vector<int> gemmes_bonus = std::vector<int>(6, 0);
+    std::vector<int> nb_jeton = std::vector<int>(7, 0); // Timo - Temporaire pour actions (a un getter et setter)
     std::vector<Privilege*> privileges;
     //int nombre_de_privileges;
 
@@ -54,7 +54,7 @@ public:
     CarteNoble * getCarteNoble(int index) const;
     int getGemmesBonus(int index) const;
     //Privilege getPrivilege(int index) const;
-    const std::vector<Privilege *> getPrivileges() const;
+    const std::vector<Privilege *>& getPrivileges() const;
     void ajouterCarteJoaillerie(CarteJoaillerie& carte);
     void ajouterCarteNoble(const CarteNoble& carte);
     void ajouterCarteReservee(CarteJoaillerie* carte);

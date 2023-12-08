@@ -33,20 +33,10 @@ void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau) {
 
     // On ajoute le jeton au joueur
     Obligatoire::ajouterJetonsJoueur(joueur, selection);
-    /*const Jeton *jeton = selection[1];
-    switch (jeton->getCouleur()) {
-        case Couleur::bleu: joueur->setNbJeton(0, joueur->getNbJeton(0) + 1);
-        case Couleur::vert: joueur->setNbJeton(1, joueur->getNbJeton(1) + 1);
-        case Couleur::rouge: joueur->setNbJeton(2, joueur->getNbJeton(2) + 1);
-        case Couleur::blanc: joueur->setNbJeton(3, joueur->getNbJeton(3) + 1);
-        case Couleur::noir: joueur->setNbJeton(4, joueur->getNbJeton(4) + 1);
-        case Couleur::rose: joueur->setNbJeton(5, joueur->getNbJeton(5) + 1);
-        default: std::cout << "Il y a definitivement un probleme avec la selection...\n";
-    }*/
 
     // On remet le privilège sur le plateau
-    std::vector<Privilege*> privileges;
-    privileges = joueur->getPrivileges();
+    const std::vector<Privilege*>& constPrivileges = joueur->getPrivileges();
+    auto& privileges = const_cast<std::vector<Privilege*>&>(constPrivileges);
     plateau->donnePrivilege(privileges.back());
     privileges.pop_back();
 }
@@ -69,19 +59,4 @@ void Optionnelle::remplissagePlateau(Joueur* joueur, Plateau* plateau) {
 
     // Et on donne un privilège à l'adversaire
     Obligatoire::donnerPrivilegeAdversaire(joueur, plateau);
-    /*Joueur* adversaire = joueur->getAdversaire();
-    const Privilege* privilege;
-    std::vector<Privilege*> privileges;
-    if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) {
-        std::cout << "L'adversaire a deja tous les privileges !\n";
-        return;
-    }
-    if (plateau->getNbPrivileges() == 0) {
-        privileges = joueur->getPrivileges();
-        adversaire->ajouterPrivilege(privileges.back());
-        privileges.pop_back();
-    } else {
-        privilege = plateau->prendrePrivilege();
-        adversaire->ajouterPrivilege(const_cast<Privilege*>(privilege));
-    }*/
 }

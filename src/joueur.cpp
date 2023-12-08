@@ -165,7 +165,7 @@ Privilege* Joueur::getPrivilege(int index) const {
 }
 */
 
-const std::vector<Privilege *> Joueur::getPrivileges() const {
+const std::vector<Privilege *>& Joueur::getPrivileges() const {
     return privileges;
 }
 
