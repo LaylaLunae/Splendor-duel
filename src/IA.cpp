@@ -183,4 +183,3 @@ void IA::choisirJetonSurPlateau(Plateau* plateau) {
     }
     std::vector<const Jeton*> jetonsSelectionnes = plateau->validerSelectionEtPrendreJetons();
 }
-
