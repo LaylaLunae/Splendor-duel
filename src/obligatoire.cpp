@@ -1,7 +1,7 @@
 //#include "../include/obligatoire.h"
 #include "../include/jeu.h"
 
-void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
+void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
     // Vérifier que le plateau n'est point vide
     if (!plateau->hasJeton()) {
         std::cout << "Plateau vide\n";
@@ -51,7 +51,7 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
     for (int i=0; i<5; i++) {
         if (nb_couleurs[i] == 3) give_privilege = true;
     }
-    if (nb_couleurs[5] == 2) give_privilege = true;
+    if (nb_couleurs[5] >= 2) give_privilege = true;
     if (give_privilege) {
         donnerPrivilegeAdversaire(joueur, plateau);
     }
@@ -128,7 +128,7 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
             std::cout << "\n";
             if (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees()) std::cout << "Numero de carte invalide !\n";
         } while (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees());
-        card = const_cast<CarteJoaillerie*>(pioche->joueurPrend(n_carte));
+        card = const_cast<CarteJoaillerie*>(pioche->joueurPrend(n_carte-1));
     } else {
         std::cout << "Vous reservez la premiere carte de cette pioche.\n";
         card = const_cast<CarteJoaillerie*>(pioche->joueurPrendPioche());
@@ -136,6 +136,30 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
 
     // On ajoute la carte réservée
     joueur->ajouterCarteReservee(card);
+}
+
+void Obligatoire::reserverCarteIA(IA* ia, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3, int n_pioche, int n_carte, bool carte_revelee) {
+    Pioche* pioche;
+    CarteJoaillerie* card;
+    switch (n_pioche) {
+        case 1: pioche = p1; break;
+        case 2: pioche = p2; break;
+        case 3: pioche = p3; break;
+        default: {
+            std::cout << "Numero de pioche invalide !\n";
+            return;
+        }
+    }
+    if (carte_revelee) {
+        if (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees()) {
+            std::cout << "Numero de carte invalide !\n";
+            return;
+        }
+        card = const_cast<CarteJoaillerie*>(pioche->joueurPrend(n_carte-1));
+    } else {
+        card = const_cast<CarteJoaillerie*>(pioche->joueurPrendPioche());
+    }
+    ia->ajouterCarteReservee(card);
 }
 
 void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
