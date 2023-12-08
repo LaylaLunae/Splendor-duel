@@ -57,7 +57,7 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
     }
 }
 
-void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
+void Obligatoire::demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
     // Vérifier que le plateau a au moins 1 jeton or et que le joueur n'a pas 3 cartes réservées déjà
     if (!plateau->hasJetonOr()) {
         std::cout << "Aucun jeton or de disponible sur le plateau !\n";
@@ -91,7 +91,6 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
     selection = plateau->validerSelectionEtPrendreJetons();
 
     // On ajoute le jeton or au joueur
-    //joueur->setNbJeton(6, joueur->getNbJeton(6) + 1);
     ajouterJetonsJoueur(joueur, selection);
 
     // Le joueur choisi quoi faire exactement
@@ -104,6 +103,8 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
         std::cin >> choix;
         std::cout << "\n";
     } while (choix != 1 and choix != 2);
+    bool carte_revelee = true;
+    if (choix == 2)  carte_revelee = false;
 
     // Il choisi alors une carte en fonction de son choix
     int n_carte, n_pioche;
@@ -121,24 +122,28 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
         case 3: pioche = p3; break;
         default: std::cout << "Numero de pioche invalide ! Théoriquement impossible...\n";
     }
-    if (choix == 1) {
+    if (carte_revelee) {
         do {
             std::cout << "Quelle carte revelee voulez vous prendre - (La plus a gauche etant la premiere, soit 1) ? Carte = ";
             std::cin >> n_carte;
             std::cout << "\n";
             if (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees()) std::cout << "Numero de carte invalide !\n";
         } while (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees());
-        card = const_cast<CarteJoaillerie*>(pioche->joueurPrend(n_carte-1));
     } else {
         std::cout << "Vous reservez la premiere carte de cette pioche.\n";
-        card = const_cast<CarteJoaillerie*>(pioche->joueurPrendPioche());
     }
 
-    // On ajoute la carte réservée
-    joueur->ajouterCarteReservee(card);
+    reserverCarte(joueur, plateau, p1, p2, p3, n_pioche, n_carte, carte_revelee);
 }
 
-void Obligatoire::reserverCarteIA(IA* ia, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3, int n_pioche, int n_carte, bool carte_revelee) {
+void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3, int n_pioche, int n_carte, bool carte_revelee) {
+    // Vérifier que le plateau a au moins 1 jeton or et que le joueur n'a pas 3 cartes réservées déjà
+    if (!plateau->hasJetonOr()) {
+        std::cout << "Aucun jeton or de disponible sur le plateau !\n";
+        return;
+    }
+    if (joueur->getNbCartesReservees() == 3) std::cout << "Le joueur a deja 3 cartes reservees !";
+
     Pioche* pioche;
     CarteJoaillerie* card;
     switch (n_pioche) {
@@ -159,7 +164,7 @@ void Obligatoire::reserverCarteIA(IA* ia, Plateau* plateau, Pioche* p1, Pioche* 
     } else {
         card = const_cast<CarteJoaillerie*>(pioche->joueurPrendPioche());
     }
-    ia->ajouterCarteReservee(card);
+    joueur->ajouterCarteReservee(card);
 }
 
 void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {

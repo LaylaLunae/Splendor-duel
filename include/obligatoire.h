@@ -14,8 +14,8 @@ public:
     Obligatoire& operator=(const Obligatoire& obligatoire) = delete;
 
     static void prendreJeton(Joueur* joueur, Plateau* plateau);
-    static void reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3);
-    static void reserverCarteIA(IA* ia, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3, int n_pioche, int n_carte, bool carte_revelee = true);
+    static void demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3);
+    static void reserverCarte(Joueur* j, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3, int n_pioche, int n_carte, bool carte_revelee = true);
     static void acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3);
 
     static void remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, int difference, int prix_elem, int index);

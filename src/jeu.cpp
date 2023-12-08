@@ -194,7 +194,7 @@ void Jeu::tour(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j, O
 
         case 2:
             std::cout << "Reserve une carte.\n";
-            obl->reserverCarte(j,p,p1,p2,p3);
+            obl->demanderCarteAReserver(j,p,p1,p2,p3);
             break;
 
         default:
