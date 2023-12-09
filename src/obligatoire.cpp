@@ -397,6 +397,7 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
 }
 
 void Obligatoire::remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, int difference, int prix_elem, int index) {
+    int bonus = joueur->getGemmesBonus(index);
     if (difference > 0) {
         // Le joueur n'a pas assez, il comble avec de l'or
         for (int i = 0; i < joueur->getNbJeton(index); i++) {
@@ -411,7 +412,7 @@ void Obligatoire::remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, 
         joueur->setNbJeton(6, joueur->getNbJeton(6) - difference);
     } else {
         // Le joueur a assez
-        for (int i = 0; i < prix_elem; i++) {
+        for (int i = 0; i < prix_elem-bonus; i++) {
             const Jeton* j = new Jeton(JetonType::Gemme, c);
             plateau->ajouterSac(j);
         }
