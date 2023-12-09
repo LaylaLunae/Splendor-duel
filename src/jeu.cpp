@@ -295,14 +295,14 @@ void initCarteJoaillerie(sqlite3* db, std::vector<CarteJoaillerie>& cartes) {
     }
 }
 
-void initCarteNoble(sqlite3* db, std::vector<CarteNoble>& cartesNoble) {
+void initCarteNoble(sqlite3* db, std::vector<const CarteNoble*>* cartesNoble) {
     for (int id = 1; id <=4; ++id) {
         CarteNobleData data = queryCarteNoble(db, id);
 
         //Construire le chemin de l'image
         std::string imagePath = "../images/" + std::to_string(id + 67) + ".png";
 
-        CarteNoble carteNoble(
+        const CarteNoble* carteNoble = new CarteNoble(
                 nullptr, nullptr,imagePath,
                 data.pointPrestige,
                 data.couronnes,
@@ -312,6 +312,6 @@ void initCarteNoble(sqlite3* db, std::vector<CarteNoble>& cartesNoble) {
                 id
         );
 
-        cartesNoble.push_back(carteNoble);
+        cartesNoble->push_back(carteNoble);
     }
 }

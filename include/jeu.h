@@ -60,7 +60,7 @@ public:
 };
 
 void initCarteJoaillerie(sqlite3* db, std::vector<CarteJoaillerie>& cartes);
-void initCarteNoble(sqlite3* db, std::vector<CarteNoble>& cartesNoble);
+void initCarteNoble(sqlite3* db, std::vector<const CarteNoble*>* cartesNoble);
 
 
 #endif //JEU_JEU_H
