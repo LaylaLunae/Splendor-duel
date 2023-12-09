@@ -262,18 +262,21 @@ enum Pouvoir <<enumeration>> {
 
 
 class Optionnelle {
-- plateau : Plateau*
-- Optionnelle(Plateau* plateau)
-- depenserPrivilege(Joueur* joueur, ReponseValidationSelection RVS)
-- remplissagePlateau(Joueur* joueur)
+{static} depenserPrivilege(Joueur* joueur, Plateau* plateau)
+{static} remplissagePlateau(Joueur* joueur, Plateau* plateau)
 }
 
 class Obligatoire {
-- plateau : Plateau*
-- Obligatoire(Plateau* plateau)
-- prendreJeton(Joueur* joueur, ReponseValidationSelection RVS)
-- reserverCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card)
-- acheterCarte(Joueur* joueur, ReponseValidationSelection RVS, CarteJoaillerie* card)
+{static} prendreJeton(Joueur* joueur, Plateau* plateau)
+{static} demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3)
+{static} reserverCarte(Joueur* j, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3, int n_pioche, int n_carte, bool carte_revelee = true)
+{static} acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3)
+{static} remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, int difference, int prix_elem, int index)
+{static} ajouterJetonsJoueur(Joueur* joueur, std::vector<const Jeton*> selection): std::vector<int>
+{static} achatPiochePossible(Joueur* joueur, Pioche* p): bool
+{static} achatCartePossible(Joueur *joueur, std::vector<int> difference): bool
+{static} calculDifference(Joueur* joueur, std::map<Couleur, int> prix): std::vector<int>
+{static} donnerPrivilegeAdversaire(Joueur* joueur, Plateau* plateau)
 }
 
 Joueur <|-- IA
