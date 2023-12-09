@@ -511,8 +511,6 @@ std::vector<int> Obligatoire::calculDifference(Joueur* joueur, std::map<Couleur,
 
 void Obligatoire::donnerPrivilegeAdversaire(Joueur* joueur, Plateau* plateau) {
     Joueur* adversaire = joueur->getAdversaire();
-    std::vector<Privilege*> privileges;
-    Privilege* privilege;
     if (adversaire->getNombreDePrivileges() == plateau->getNbPrivilegeMAX()) {
         std::cout << "L'adversaire a deja tous les privileges.\n";
         return;
@@ -523,6 +521,7 @@ void Obligatoire::donnerPrivilegeAdversaire(Joueur* joueur, Plateau* plateau) {
         adversaire->ajouterPrivilege(privileges.back());
         privileges.pop_back();
     } else {
+        Privilege* privilege;
         privilege = const_cast<Privilege*>(plateau->prendrePrivilege());
         adversaire->ajouterPrivilege(privilege);
     }
