@@ -51,14 +51,15 @@ class Plateau {
 - nb_jetons_sac_MAX  unsigned int
 - nb_privileges_MAX  unsigned int
 - nb_jetons_plateau_MAX unsigned int
+- matrix: unsigned int[5][5]
 -- methods --
-- verificationSelectionPositions() : bool
-+ etatPlateau() : string
+- parcoursPlateauVerificationPosition(unsigned int x, unsigned int y, int, int) : std::vector<unsigned int>
++ verificationSelectionPositions() : bool
 + remplissagePlateau(bool avecAffichage = false):
-+ verificationChoixJetonPlateau()
++ etatPlateau() : string
 + ajouterSac(const Jeton *j)
-+ selectionJeton(unsigned int position_x, unsigned int position_y)
-+ validerSelectionEtPrendreJetons() : ReponseValidationSelection
++ selectionJeton(unsigned int position_x, unsigned int position_y): int
++ validerSelectionEtPrendreJetons() : std::vector<const Jeton*>
 + prendreJeton(unsigned int position_x, unsigned int position_y) : const Jeton
 + prendrePrivilege() : const Privilege*
 + donnePrivilege(const Privilege* p)
@@ -70,11 +71,7 @@ class Plateau {
 + getNbPrivilegeMAX() const : unsigned int
 + getNbPrivileges() const : unsigned int
 + hasJetonOr() : bool
-}
-
-struct ReponseValidationSelection {
-    + jetons:const Jeton*[]
-    + nombre: unsigned int;
++ donnePositionsPossiblesAPartirDe((unsigned int, unsigned int) : std::vector<std::vector<unsigned int>>
 }
 
 
