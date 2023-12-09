@@ -33,8 +33,12 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
                     // Désélection
                     plateau->selectionJeton(std::get<0>(jeton_choisi), std::get<1>(jeton_choisi));
                     break;
-                case 3: std::cout << "Vous ne pouvez selectionner de jeton or lors de cette action, encore moins 2 !\n"; //théoriquement impossible
+                //case 3 théoriquement impossible
+                case 3: std::cout << "Cas théoriquement impossible, il y a eu un probleme... (case 3 - prendreJeton)\n"; break;
                 case 4: std::cout << "Ce jeton ne peut etre selectionne !\n"; break;
+                case 5: std::cout << "On evite de tricher, 3 jetons max !\n"; break;
+                case 6: std::cout << "Deselection du jeton\n"; break;
+                case 7: std::cout << "Pas la peine de reessayer, toujours pas de jeton or autorise !\n"; break;
                 default: std::cout << "Pour une raison ou une autre, il y a eu un probleme...\n";
             }
         } while (jeton_selec != 0);
@@ -86,8 +90,12 @@ void Obligatoire::demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioch
             case 2:
                 std::cout << "Selection autorise\n";
                 break;
-                // case 3 théoriquement impossible
+            //case 3 théoriquement impossible
+            case 3: std::cout << "Cas théoriquement impossible, il y a eu un probleme... (case 3 - demanderCarteAReserver)\n"; break;
             case 4: std::cout << "Ce jeton ne peut etre selectionne !\n"; break;
+            case 5: std::cout << "On evite de tricher, 3 jetons max !\n"; break;
+            case 6: std::cout << "Deselection du jeton\n"; break;
+            case 7: std::cout << "Un jeton or autorise, pas 2 !\n"; break;
             default: std::cout << "Pour une raison ou une autre, il y a eu un probleme...\n";
         }
     } while (jeton_selec != 2);
