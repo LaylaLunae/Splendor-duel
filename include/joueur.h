@@ -39,7 +39,7 @@ protected:
     bool droitDeRejouer; // Marqueur pour le droit de jouer un tour supplémentaire
 
     Joueur(const std::string nom);
-    ~Joueur();
+    virtual ~Joueur();
     Joueur(const Joueur& autre);
     Joueur& operator=(const Joueur& autre);
 
@@ -97,6 +97,7 @@ protected:
 
 public:
     IA(const std::string& pseudo, Difficulte diff) : Joueur(pseudo), difficulte(diff) {}
+    ~IA() {}
 
     virtual int choisirChoix(int min, int max) override;
 
@@ -123,6 +124,7 @@ protected:
 
 public:
     Humain(const std::string& pseudo) : Joueur(pseudo) {}
+    ~Humain(){}
     //int choisirChoixUtilisateur(int min, int max);
     virtual int choisirChoix(int min, int max) override;
 

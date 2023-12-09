@@ -17,23 +17,27 @@ Joueur::Joueur(const std::string nom)
 
 // Destructeur
 Joueur::~Joueur() {
-    // Utilisation de la boucle for each pour parcourir le vecteur
-    for (auto& carte : cartes_reservees) {
+    for (CarteJoaillerie* carte : cartes_reservees) {
         delete carte;
     }
+    cartes_reservees.clear();
 
-    for (auto& carte : cartes_main) {
+    for (CarteJoaillerie* carte : cartes_main) {
         delete carte;
     }
+    cartes_main.clear();
 
-    for (auto& carte : cartes_noble) {
+    for (CarteNoble* carte : cartes_noble) {
         delete carte;
     }
+    cartes_noble.clear();
 
-    for (auto& privilege : privileges) {
+    for (Privilege* privilege : privileges) {
         delete privilege;
     }
+    privileges.clear();
 }
+
 
 // Constructeur de recopie
 Joueur::Joueur(const Joueur& autre)
