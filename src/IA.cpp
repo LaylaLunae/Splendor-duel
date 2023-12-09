@@ -50,7 +50,7 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
 
     CarteJoaillerie* derniereCarte = cartesAchetable.back();
 
-    // Remettre les jetons dans le sac en utilisant la fonction Obligatoire::remettreJetonSac
+    // Remettre les jetons dans le sac
     for (const auto& cout : derniereCarte->getPrix()) {
         if (cout.second > 0) {
             Obligatoire::remettreJetonSac(&joueur, &plateau, cout.first, joueur.getNbJeton((int) cout.first) - cout.second, cout.second,(int) cout.first);
