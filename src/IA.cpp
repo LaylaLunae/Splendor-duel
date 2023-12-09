@@ -57,8 +57,40 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
         }
     }
     joueur.ajouterCarteJoaillerie(*derniereCarte);
+    activerPouvoir(reinterpret_cast<CarteJoaillerie &>(derniereCarte));
     return derniereCarte;
 }
+
+// Implémentation de la fonction activerPouvoir dans la classe IA
+void IA::activerPouvoir(CarteJoaillerie& carte) {
+    for (const auto& pouvoir : carte.existancePouvoir()) {
+        switch (pouvoir) {
+            case Pouvoir::nouveau_tour:
+                //rejouer
+                break;
+
+            case Pouvoir::bonus_pierre:
+                //
+                break;
+
+            case Pouvoir::pierre_en_plus:
+                //
+                break;
+
+            case Pouvoir::privilege_en_plus:
+                //
+                break;
+
+            case Pouvoir::vol_pierre:
+                //
+                break;
+            default:
+                //pas de pouvoir.
+                break;
+        }
+    }
+}
+
 
 
 std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJetons(Plateau* plateau) {
