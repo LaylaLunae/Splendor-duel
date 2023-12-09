@@ -38,11 +38,11 @@ std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const
     return cartesAchetable;
 }
 
-CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur) {
+
+CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur, Plateau& plateau) {
     if (pioche.getMaxCartesRevelees() == 0) {
         return nullptr;
     }
-
     std::vector<CarteJoaillerie*> cartesAchetable = getCartesAchetable(pioche);
 
     std::default_random_engine generator;
@@ -50,8 +50,13 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
 
     CarteJoaillerie* derniereCarte = cartesAchetable.back();
 
+    // Remettre les jetons dans le sac en utilisant la fonction Obligatoire::remettreJetonSac
+    for (const auto& cout : derniereCarte->getPrix()) {
+        if (cout.second > 0) {
+            Obligatoire::remettreJetonSac(&joueur, &plateau, cout.first, joueur.getNbJeton((int) cout.first) - cout.second, cout.second,(int) cout.first);
+        }
+    }
     joueur.ajouterCarteJoaillerie(*derniereCarte);
-
     return derniereCarte;
 }
 
