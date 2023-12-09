@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 
+enum class Couleur;
+
 class Obligatoire {
     friend class Jeu;
 

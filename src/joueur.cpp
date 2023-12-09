@@ -7,11 +7,12 @@ Joueur::Joueur(const std::string nom)
 
     // Utilisation de vecteurs au lieu de tableaux statiques
     cartes_reservees.resize(0, nullptr);
-    cartes_main.resize(MAX_CARTES, nullptr);
+    cartes_main.resize(0, nullptr);
     cartes_noble.resize(0, nullptr);
     gemmes_bonus.resize(0, 0);
     nb_jeton.resize(0, 0);
     privileges.resize(0, nullptr);
+    points_prestige_couleurs.resize(5,0);
 }
 
 // Destructeur
@@ -222,6 +223,9 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {
             gemmes_bonus[i]+=carte.getNombrePierre();
         }
     }
+
+    CarteJoaillerie* temp = &carte;
+    cartes_main.push_back(const_cast<CarteJoaillerie*>(temp));
 }
 
 void Joueur::ajouterCarteNoble(const CarteNoble& carte) {

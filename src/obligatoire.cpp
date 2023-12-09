@@ -209,9 +209,12 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
     std::vector<int> difference(6);
     do {
         if (achat_carte_reservees_possible and (achat_pioche1_possible or achat_pioche2_possible or achat_pioche3_possible)) {
-            std::cout << "Souhaitez vous acheter une carte reservee (1) ou une carte revelee (2) ? Choix = ";
-            std::cin >> choix;
-            std::cout << "\n";
+            do {
+                std::cout << "Souhaitez vous acheter une carte reservee (1) ou une carte revelee (2) ? Choix = ";
+                std::cin >> choix;
+                std::cout << "\n";
+                if (choix != 1 and choix != 2) std::cout << "Choix invalide !\n";
+            } while (choix != 1 and choix != 2);
             if (choix == 1) {
                 do {
                     std::cout << "Quelle carte reservee voulez vous prendre ? Carte = ";

@@ -17,6 +17,10 @@
 
 class CarteNoble;
 class Jeu;
+class Jeton;
+class Privilege;
+class QPushButton;
+class VueJeton;
 
 class PlateauException {
     std::string info;
