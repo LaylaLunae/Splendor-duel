@@ -82,7 +82,7 @@ void testes_pour_plateau() {
 }
 
 
-Plateau::Plateau():jetons(nullptr),sac(nullptr),privileges(nullptr),
+Plateau::Plateau(sqlite3** db):jetons(nullptr),sac(nullptr),privileges(nullptr),
 cartes_nobles(nullptr),nb_jetons_plateau(0),
 nb_jetons_sac(0), selection_courante(nullptr),
 selection_courante_positions(nullptr),
@@ -125,23 +125,40 @@ nombre_jetons_dans_selection(0){
     cartes_nobles = new const CarteNoble*[4];
     std::map<Couleur, int> c;
     c.insert(std::make_pair(Couleur::rouge, 3));
-     cartes_nobles[0] = new CarteNoble(
-             this, nullptr, "",
-             0, 3, 0,
-             Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour,0);
-    cartes_nobles[1] = new CarteNoble(
-            this, nullptr, "",
-            0, 3, 0,
-            Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour,0);
-    cartes_nobles[2] = new CarteNoble(
-            this, nullptr, "",
-            0, 3, 0,
-            Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour,0);
-    cartes_nobles[3] = new CarteNoble(
-            this, nullptr, "",
-            0, 3, 0,
-            Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour,0);
 
+
+
+    sqlite3* dbInstance = nullptr;
+    sqlite3** db_ = &dbInstance;
+    std::cout<<"before\n";
+    bool ok = connectToDatabase(db_, "../base.db");
+    if (ok) {
+        std::cout << "Connexion db : " << ok << std::endl;
+        std::vector<const CarteNoble *> *vec_cartesNobles = new std::vector<const CarteNoble *>(0);
+        std::cout << "cartes\n";
+        initCarteNoble(*db_, vec_cartesNobles);
+        std::cout << "init\n";
+        for (size_t i = 0; i < vec_cartesNobles->size(); i++) {
+            cartes_nobles[i] = vec_cartesNobles->at(i);
+        }
+    } else {
+        cartes_nobles[0] = new CarteNoble(
+                this, nullptr, "",
+                0, 3, 0,
+                Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour, 0);
+        cartes_nobles[1] = new CarteNoble(
+                this, nullptr, "",
+                0, 3, 0,
+                Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour, 0);
+        cartes_nobles[2] = new CarteNoble(
+                this, nullptr, "",
+                0, 3, 0,
+                Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour, 0);
+        cartes_nobles[3] = new CarteNoble(
+                this, nullptr, "",
+                0, 3, 0,
+                Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour, 0);
+    }
 
     // Le plateau est vide => la première case où mettre le prochain jeton est la 0
     pointeur_case_libre = 0;

@@ -9,9 +9,10 @@
 #include <tuple>
 #include <QGridLayout>
 #include <vector>
+#include <sqlite3.h>
 
-#include "privilege.h" // safe
-#include "jeton.h" // safe
+//#include "privilege.h" // safe
+//#include "jeton.h" // safe
 //#include "carteNoble.h"
 
 class CarteNoble;
@@ -74,7 +75,7 @@ public:
     bool verificationSelectionPositions()const;
     const Jeton* getJeton(unsigned int i) const  {return jetons[i];}
     // A mettre en privé plus tard :
-    Plateau();
+    Plateau(sqlite3** db= nullptr);
     friend class Jeu;
 
     void remplissagePlateau(bool avecAffichage = false);
