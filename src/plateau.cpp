@@ -436,6 +436,26 @@ bool Plateau::verificationSelectionPositions() const{
 
 int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
 
+    /* --------------------- Description ------------------
+     Cette fonction fait la vérification de case vide.
+     Elle désélectionne le jeton si il est déjà dans la sélection.
+     Si le jeton n'est pas déjà dans la selection, il est ajouté si : :
+        - c'est un or et il est tout seul dans la sélection
+        - ce n'est pas un or et sa position et légale
+
+        ----------------------	Valeurs de retour --------------
+		0 = OK (jeton sélectionné)
+		1 = Case vide (jeton non sélectionné)
+        2 = Jeton or (jeton sélectionné)
+		3 = le joueur essaie de choisir un 2ème or (jeton non sélectionné)
+		4 = mauvaises positions (jeton non sélectionné)
+		5 = le joueur essaie de choisir un 4ème jeton (jeton non sélectionné)
+		6 = le joueur dé-sélectionne un jeton (jeton non sélectionné : il est enlevé)
+		7 = le joueur essaie de choisir un 1er jeton or alors qu’il a déjà des jetons   (non sélectionné)
+
+     */
+
+
     // L'attribut "jetons" est une liste simple et non un tableau.
     // Il faut donc convertir les coordonnees en index de liste.
     // avant matrix:
@@ -491,12 +511,24 @@ int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
         }
 
         // Vérification sur l'or: ne peut être un jeton or que si un seul jeton est prix.
-        if (nombre_jetons_dans_selection >= 1 &&
-            (selection_courante[0]->getCouleurString() == "Or" ||
-            jetons[position_dans_plateau]->getCouleurString() == "Or")) {
+        if (
+                jetons[position_dans_plateau]->getCouleurString()== "Or" &&
+                ((nombre_jetons_dans_selection == 1 &&
+                selection_courante[0] ->getCouleurString()=="Or") ||
+                (nombre_jetons_dans_selection == 2 &&
+                selection_courante[0] -> getCouleurString() == "Or")
+                )) {
             //throw PlateauException("\nQue un seul jeton or possible!  <('o'<)");
             std::cout<<"\nQue un seul jeton or possible!  <('o'<)"<<"\n";
             return 3;
+        }
+
+        // La condition suivante vérifie si le joueur essaie de prendre
+        // un jeton Or alors que d'autres jetons sont déjà sélectionné
+        if (jetons[position_dans_plateau]->getCouleurString() == "Or" &&
+                nombre_jetons_dans_selection> 0) {
+                std::cout<<"\nLe jeton Or doit se prendre seul !  <('o'<)\n";
+                return 7;
         }
 
 
@@ -787,6 +819,7 @@ void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
             vj->getX(),
             vj->getY()
             );
+    std::cout<<"Le résultat est : "<<res<<std::endl;
     if (res == 0 || res == 2) {
         vj->setSelected(true);
     } else {
