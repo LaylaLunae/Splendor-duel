@@ -90,12 +90,14 @@ public:
     IA(const std::string& pseudo, Difficulte diff) : Joueur(pseudo), difficulte(diff) {}
     int choisirChoix(int min, int max);
     int ChoixJetons(IA &a);
+    virtual ~IA();
 };
 
 class Humain : public Joueur {
 public:
     Humain(const std::string& pseudo) : Joueur(pseudo) {}
     int choisirChoixUtilisateur(int min, int max);
+    virtual ~Humain(){}
 };
 
 

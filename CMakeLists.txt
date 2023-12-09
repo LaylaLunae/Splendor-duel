@@ -7,6 +7,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_PREFIX_PATH "C:/Qt/6.6.0/mingw_64/lib/cmake")
+#set(CMAKE_PREFIX_PATH "/usr/local/Cellar/qt/6.5.2/lib")
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+find_package(SQLite3 REQUIRED)
 
 
 
@@ -33,10 +37,19 @@ add_executable(Splendor main.cpp
         src/pioche.cpp
         include/jeu.h
         src/IA.cpp
+        src/IA.cpp
         src/humain.cpp
-        src/affichage_joueur.cpp
+        src/humain.cpp
+        src/jeu.cpp
         include/affichage_joueur.h
-
+        include/plateau.h
+        include/jeton.h
+        affichage/affichage_carte.h
+        affichage/affichage_carte.cpp
+        include/affichage_joueur.h
+        include/query.h
+        src/query.cpp
+        #vcpkg.json
 )
 
 find_package(Qt6 COMPONENTS
@@ -46,11 +59,17 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 
 
+
+include_directories("C:/sqlite3/")
+
+
 target_link_libraries(Splendor
         Qt::Core
         Qt::Gui
         Qt::Widgets
+        SQLite::SQLite3
 )
+
 
 
 if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -81,4 +100,3 @@ if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
                 "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
     endforeach (QT_LIB)
 endif ()
-
