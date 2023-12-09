@@ -150,7 +150,7 @@ std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCom
 }
 
 
-
+/*
 void IA::prendreJetons(Plateau* plateau) {
     // Vérifier si le plateau est vide, le remplir si nécessaire
     if (!plateau->hasJeton()) {
@@ -171,6 +171,51 @@ void IA::prendreJetons(Plateau* plateau) {
     else {
         // Autre choix, rappeler la fonction
         prendreJetons(plateau);
+    }
+}
+*/
+
+
+
+
+
+void IA::prendreJetons(Plateau* plateau) {
+    if (!plateau->hasJeton()) {
+        Optionnelle::remplissagePlateau(this, plateau);
+    }
+    // Calculer le nombre actuel de jetons
+    int nombreJetonsActuel = std::accumulate(nb_jeton.begin(), nb_jeton.end(), 0);
+
+    int choix;
+
+    if (nombreJetonsActuel == 9) {
+        choisirJetonSurPlateau(plateau);
+    }
+    if (nombreJetonsActuel == 8) {
+        choix = choisirChoix(1, 2);
+        if (choix == 1)
+            choisirJetonSurPlateau(plateau);
+        else {
+            std::vector<std::pair<const Jeton*, const Jeton*>> combinaisonsDeux = genererCombinaisonsDeuxJetons(reinterpret_cast<const Plateau &>(plateau));
+
+            std::vector<int> resultatAjout = Obligatoire::ajouterJetonsJoueur(this, {combinaisonsDeux[0].first, combinaisonsDeux[0].second});
+        }
+    }
+    else {
+        choix = choisirChoix(1, 3);
+
+        if (choix == 1)
+            choisirJetonSurPlateau(plateau);
+        else if (choix == 2) {
+            std::vector<std::pair<const Jeton*, const Jeton*>> combinaisonsDeux = genererCombinaisonsDeuxJetons(reinterpret_cast<const Plateau &>(plateau));
+
+            std::vector<int> resultatAjout = Obligatoire::ajouterJetonsJoueur(this, {combinaisonsDeux[0].first, combinaisonsDeux[0].second});
+        }
+        else if (choix == 3) {
+            std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisonsTrois = genererCombinaisonsTroisJetons(reinterpret_cast<const Plateau &>(plateau));
+
+            std::vector<int> resultatAjout = Obligatoire::ajouterJetonsJoueur(this, {std::get<0>(combinaisonsTrois[0]), std::get<1>(combinaisonsTrois[0]), std::get<2>(combinaisonsTrois[0])});
+        }
     }
 }
 
