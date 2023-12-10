@@ -360,3 +360,16 @@ std::ostream& operator<<(std::ostream& os, const Joueur& joueur) {
     return os;
 }
 
+
+// tests
+void Joueur::initialiserJoueur() {
+
+    for (int i = 0; i < 10; ++i) {
+        CarteJoaillerie* carte = new CarteJoaillerie();
+        cartes_main.push_back(carte);
+    }
+
+    for (int i = 0; i < 7; ++i) {
+        nb_jeton[i] = 10;
+    }
+}

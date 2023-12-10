@@ -92,6 +92,10 @@ public:
     int getNbJetonsParCouleur(int couleur) const;
 
     virtual int choisirChoix(int min, int max) = 0;
+
+
+    // test :
+    void initialiserJoueur();
 };
 
 class IA : public Joueur {

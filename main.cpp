@@ -8,10 +8,11 @@
 #include <QDir>
 #include <vector>
 
-//#include "./include/jeu.h"
+#include "./include/jeu.h"
 #include "./include/plateau.h"
 #include "affichage/affichage_carte.h"
 #include "./include/affichage_joueur.h"
+
 class Plateau;
 class Pioche;
 class Joueur;
@@ -20,32 +21,78 @@ class Joueur;
 int main(int argc, char *argv[]) {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
+    Plateau * plateau_jeu = new Plateau();
+    std::string sortie = plateau_jeu->etatPlateau();
+    std::cout << sortie << "\n";
 
-    //Plateau plateau;
-    //Pioche pioche;
+    Pioche * pioche1 = new Pioche(1,5,30);
+    Pioche * pioche2 = new Pioche(2,4,24);
+    Pioche * pioche3 = new Pioche(3,3,13);
+
     IA ia("IA1", Difficulte::aleatoire);
+    ia.initialiserJoueur();
+
+    Optionnelle * act_opt = new Optionnelle();
+    Obligatoire * act_obl = new Obligatoire();
+
+    act_opt->remplissagePlateau(&ia, plateau_jeu);
+
 
     int choixIA = ia.choisirChoix(1, 3);
     std::cout << "Choix de l'IA : " << choixIA << std::endl;
 
-
-
 /*
-    Humain joueur("NomDuJoueur");
+    //tester pour prendre des cartes avec l'IA
 
-    joueur.ajouterPrivilege(new Privilege());
-    int nombreDePrivileges = joueur.getNombreDePrivileges();
+    std::vector<CarteJoaillerie*> cartesAchetable = ia.getCartesAchetable(reinterpret_cast<Pioche &>(pioche1));
 
+    std::cout<<"jfjzflj";
+
+    for (const auto& carte : cartesAchetable) {
+        //std::cout << "Prix de la carte : " << carte->getPrix() << std::endl;
+        std::cout << "prix : \n  " ;
+    }
+
+
+    Carte carte;
+    CarteJoaillerie* derniereCarte = ia.melangerEtObtenirDerniereCarte(reinterpret_cast<Pioche &>(pioche1), ia, reinterpret_cast<Plateau &>(plateau_jeu), carte);
+
+    //std::cout << "Dernière carte obtenue - Prix : " << derniereCarte->getPrix() << std::endl;
+
+
+// test pour prendre des jetons à l'IA :
+
+// pour 2 jetons
+    std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons = ia.genererCombinaisonsDeuxJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
+
+    std::cout << "Combinaisons générées :\n";
+    for (const auto& combinaison : combinaisons) {
+        //std::cout << "Jeton 1 : " << combinaison.first->getCouleur() << ", Jeton 2 : " << combinaison.second->getCouleur() << std::endl;
+        std::cout<<"flkjfsldkjf \n";
+    }
+
+// pour 3 jetons
+    std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisons3 = ia.genererCombinaisonsTroisJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
+
+    // Affichez les combinaisons générées
+    std::cout << "Combinaisons générées :\n";
+    for (const auto& combinaison3 : combinaisons3) {
+        const Jeton* jeton1 = std::get<0>(combinaison3);
+        const Jeton* jeton2 = std::get<1>(combinaison3);
+        const Jeton* jeton3 = std::get<2>(combinaison3);
+
+        //std::cout << "Jeton 1 : " << jeton1->getCouleur() << ", Jeton 2 : " << jeton2->getCouleur() << ", Jeton 3 : " << jeton3->getCouleur() << std::endl;
+        std::cout<<"jslkdfj\n";
+    }
+
+    // prendre 1 jeton
+    ia.choisirJetonSurPlateau(reinterpret_cast<Plateau *>(&plateau_jeu));
+
+    // tous choix jetons confondus :
+    ia.prendreJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
 
 */
-/*
-    QApplication app(argc, argv);
 
-    FenetreInformations fenetre;
-    fenetre.show();
-//
-    return app.exec();
-*/
     /* Création Jeton : */
 
 
