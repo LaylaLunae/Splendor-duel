@@ -11,3 +11,11 @@ PrivilegeStatus Privilege::getStatus() {
 void Privilege::setStatus(PrivilegeStatus p) {
     status = p;
 }
+
+void VuePrivilege::paintEvent(QPaintEvent *event) {
+
+    QPalette palette = this->palette();
+    palette.setColor(QPalette::Button, Qt::white);
+    setPalette(palette);
+    QPushButton::paintEvent(event);
+}
