@@ -59,9 +59,10 @@ int main(int argc, char *argv[]) {
 
     //std::cout << "Dernière carte obtenue - Prix : " << derniereCarte->getPrix() << std::endl;
 
+*/
 
 // test pour prendre des jetons à l'IA :
-
+/*
 // pour 2 jetons
     std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons = ia.genererCombinaisonsDeuxJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
 
@@ -86,10 +87,12 @@ int main(int argc, char *argv[]) {
     }
 
     // prendre 1 jeton
+    std::cout<<"fmdlkf \n";
     ia.choisirJetonSurPlateau(reinterpret_cast<Plateau *>(&plateau_jeu));
+    std::cout<<"fmdlkf \n";
 
     // tous choix jetons confondus :
-    ia.prendreJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
+   // ia.prendreJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
 
 */
 

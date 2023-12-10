@@ -25,8 +25,9 @@ std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const
     std::vector<CarteJoaillerie*> cartesAchetable;
 
     for (int i = 0; i < pioche.getMaxCartesRevelees(); ++i) {
+        std::cout<<"azzzzzzz\n";
         const CarteJoaillerie* carte = pioche.getCartesDehors(i);
-
+        std::cout<<"azzzzzzz\n";
         if (carte) {
             std::vector<int> difference = Obligatoire::calculDifference((Joueur *) this, carte->getPrix());
 
@@ -102,7 +103,7 @@ void IA::activerPouvoir(Joueur& joueur, CarteJoaillerie& carte, Plateau & platea
 
 std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJetons(Plateau* plateau) {
     std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons;
-
+    std::cout<<"fmdlkf \n";
     // Parcourir le plateau de jetons
     for (unsigned int i = 0; i < plateau->getNbJetonsPlateauMAX(); ++i) {
         const Jeton* jeton1 = plateau->getJeton(i);
@@ -110,16 +111,16 @@ std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJe
         // Obtenir les positions possibles pour le jeton1
         unsigned int x = i / 5;
         unsigned int y = i % 5;
+        std::cout<<"fmdlkf \n";
         std::vector<std::vector<unsigned int>> positionsPossibles = plateau->donnePositionsPossiblesAPartirDe(x, y);
-
-        // Insérer les positions possibles dans un vecteur global
+        std::cout<<"fmdlkf \n";
+        // Insérer les positions possibles dans un vecteur
         std::vector<std::pair<unsigned int, unsigned int>> positions;
         for (const auto& pos : positionsPossibles) {
             for (unsigned int j = 0; j < pos.size(); j += 2) {
                 positions.push_back({pos[j], pos[j + 1]});
             }
         }
-
         std::random_device rd;
         std::mt19937 g(rd());
         std::shuffle(positions.begin(), positions.end(), g);
@@ -239,10 +240,14 @@ void IA::choisirJetonSurPlateau(Plateau* plateau) {
     int positionY = rand() % 5 + 1;
 
     if (plateau->selectionJeton(positionX, positionY) == 0) {  // sélection valide
+        std::cout<<"fmdlkf \n";
         const Jeton* jetonSelectionne = plateau->getJeton(positionX * 5 + positionY);
-
+        std::cout<<"fmdlkf \n";
         std::vector<const Jeton*> jetonsSelectionnes = {jetonSelectionne};
         std::vector<int> resultatsAjout = Obligatoire::ajouterJetonsJoueur(this, jetonsSelectionnes);
+        std::cout<<"fmdlkf \n";
     }
+    std::cout<<"fmdlkf \n";
     std::vector<const Jeton*> jetonsSelectionnes = plateau->validerSelectionEtPrendreJetons();
+    std::cout<<"fmdlkf \n";
 }
