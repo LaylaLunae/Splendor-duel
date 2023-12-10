@@ -264,6 +264,13 @@ void Joueur::ajouterPrivilege(Privilege *privilege) {
         throw std::runtime_error("Le joueur ne peut pas avoir plus de 3 privilèges.");
     }
 }
+/*
+void Joueur::ajouterGemmeBonus(int index) {
+    if (index >= 0 && index < gemmes_bonus.size()) {
+        gemmes_bonus[index]++;
+    }
+}
+*/
 
 // Définir l'adversaire
 void Joueur::setAdversaire(Joueur *adv) {

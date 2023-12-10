@@ -39,7 +39,7 @@ std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const
 }
 
 
-CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur, Plateau& plateau) {
+CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur, Plateau& plateau, Carte& carte) {
     if (pioche.getMaxCartesRevelees() == 0) {
         return nullptr;
     }
@@ -57,40 +57,48 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
         }
     }
     joueur.ajouterCarteJoaillerie(*derniereCarte);
-    activerPouvoir(*this,reinterpret_cast<CarteJoaillerie &>(derniereCarte), plateau);
+    carte.actionPouvoir();
     return derniereCarte;
 }
 
+/*
 // Implémentation de la fonction activerPouvoir dans la classe IA
 void IA::activerPouvoir(Joueur& joueur, CarteJoaillerie& carte, Plateau & plateau) {
     for (const auto& pouvoir : carte.existancePouvoir()) {
         switch (pouvoir) {
-            case Pouvoir::nouveau_tour:
-                joueur.resetRejouer(true);
-                break;
+            case Pouvoir::nouveau_tour: {
 
-            case Pouvoir::bonus_pierre:
-                //
                 break;
+            }
 
-            case Pouvoir::pierre_en_plus:
+            case Pouvoir::bonus_pierre: {
+                int choix = choisirChoix(1,5);
+                joueur.ajouterGemmeBonus(choix);
+                break;
+            }
+
+            case Pouvoir::pierre_en_plus: {
                 //choisirJetonSurPlateau(plateau);
                 break;
+            }
 
-            case Pouvoir::privilege_en_plus:
-                //const Privilege* nouveauPrivilege = plateau.prendrePrivilege();
-                //joueur.ajouterPrivilege(const_cast<Privilege *>(nouveauPrivilege));
+            case Pouvoir::privilege_en_plus: {
+                const Privilege* nouveauPrivilege = plateau.prendrePrivilege();
+                joueur.ajouterPrivilege(const_cast<Privilege *>(nouveauPrivilege));
                 break;
-
-            case Pouvoir::vol_pierre:
+            }
+            case Pouvoir::vol_pierre: {
                 //
                 break;
+            }
             default:
                 //pas de pouvoir.
                 break;
         }
     }
 }
+
+*/
 
 std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJetons(Plateau* plateau) {
     std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons;

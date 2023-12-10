@@ -13,6 +13,7 @@ class Plateau;
 class Pioche;
 class Jeton;
 class Jeu;
+class Carte;
 
 const int MAX_CARTES = 500;
 const int MAX_PRIVILEGES = 3;
@@ -61,6 +62,9 @@ public:
     void ajouterCarteReservee(CarteJoaillerie* carte);
     void ajouterPrivilege(Privilege* privilege);
 
+    //void ajouterGemmeBonus(int index);
+
+
     void setPointsPrestigeCouleurs(int index, int valeur);
     void setGemmesBonus(int index, int value);
 
@@ -104,8 +108,8 @@ public:
 
     virtual std::vector<CarteJoaillerie*> getCartesAchetable(const Pioche& pioche) const ;
 //    virtual bool peutAcheterCarte(const CarteJoaillerie& carte) const;
-    virtual CarteJoaillerie* melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur,Plateau& plateau);
-    void activerPouvoir(Joueur& joueur, CarteJoaillerie& carte, Plateau& plateau);
+    virtual CarteJoaillerie* melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur,Plateau& plateau, Carte& carte);
+    //void activerPouvoir(Joueur& joueur, CarteJoaillerie& carte, Plateau& plateau);
 
     virtual std::vector<std::pair<const Jeton*, const Jeton*>> genererCombinaisonsDeuxJetons(Plateau* plateau);
     virtual std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> genererCombinaisonsTroisJetons(Plateau *plateau) const;
