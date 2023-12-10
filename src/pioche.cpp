@@ -2,7 +2,9 @@
 #include <cstdlib>
 #include <ctime>
 //#include "pioche.h"
-#include "jeu.h"
+
+#include "../include/jeu.h"
+enum class Couleur;
 
 Pioche::Pioche(int np, int mcr, int mcp):numero_pioche(np),
                                          max_cartes_revelees(mcr), max_cartes_pioche(mcp){
