@@ -12,9 +12,22 @@
 #include "./include/plateau.h"
 #include "affichage/affichage_carte.h"
 #include "./include/affichage_joueur.h"
+class Plateau;
+class Pioche;
+class Joueur;
 
 
 int main(int argc, char *argv[]) {
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+
+    //Plateau plateau;
+    //Pioche pioche;
+    IA ia("IA1", Difficulte::aleatoire);
+
+    int choixIA = ia.choisirChoix(1, 3);
+    std::cout << "Choix de l'IA : " << choixIA << std::endl;
+
 
 
 /*
@@ -25,14 +38,14 @@ int main(int argc, char *argv[]) {
 
 
 */
-
+/*
     QApplication app(argc, argv);
 
     FenetreInformations fenetre;
     fenetre.show();
 //
     return app.exec();
-
+*/
     /* Création Jeton : */
 
 

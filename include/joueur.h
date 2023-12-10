@@ -17,7 +17,7 @@ class Jeu;
 const int MAX_CARTES = 500;
 const int MAX_PRIVILEGES = 3;
 
-enum Difficulte { facile, moyen, difficile };
+enum Difficulte {aleatoire, facile, moyen, difficile };
 
 class Joueur {
     friend class Jeu;
@@ -105,7 +105,7 @@ public:
     virtual std::vector<CarteJoaillerie*> getCartesAchetable(const Pioche& pioche) const ;
 //    virtual bool peutAcheterCarte(const CarteJoaillerie& carte) const;
     virtual CarteJoaillerie* melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur,Plateau& plateau);
-    void activerPouvoir(CarteJoaillerie& carte);
+    void activerPouvoir(Joueur& joueur, CarteJoaillerie& carte, Plateau& plateau);
 
     virtual std::vector<std::pair<const Jeton*, const Jeton*>> genererCombinaisonsDeuxJetons(Plateau* plateau);
     virtual std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> genererCombinaisonsTroisJetons(Plateau *plateau) const;
