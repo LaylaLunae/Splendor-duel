@@ -91,8 +91,6 @@ void IA::activerPouvoir(CarteJoaillerie& carte) {
     }
 }
 
-
-
 std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJetons(Plateau* plateau) {
     std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons;
 
