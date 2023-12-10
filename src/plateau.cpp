@@ -82,11 +82,11 @@ void testes_pour_plateau() {
 }
 
 
-Plateau::Plateau(sqlite3** db):jetons(nullptr),sac(nullptr),privileges(nullptr),
+Plateau::Plateau(sqlite3** db, VuePlateau* vp):jetons(nullptr),sac(nullptr),privileges(nullptr),
 cartes_nobles(nullptr),nb_jetons_plateau(0),
 nb_jetons_sac(0), selection_courante(nullptr),
 selection_courante_positions(nullptr),
-nombre_jetons_dans_selection(0){
+nombre_jetons_dans_selection(0), vuePlateau(vp){
 
     jetons = new const Jeton*[nb_jetons_plateau_MAX];
     sac = new const Jeton*[nb_jetons_sac_MAX];
@@ -130,14 +130,10 @@ nombre_jetons_dans_selection(0){
 
     sqlite3* dbInstance = nullptr;
     sqlite3** db_ = &dbInstance;
-    std::cout<<"before\n";
     bool ok = connectToDatabase(db_, "../base.db");
     if (ok) {
-        std::cout << "Connexion db : " << ok << std::endl;
         std::vector<const CarteNoble *> *vec_cartesNobles = new std::vector<const CarteNoble *>(0);
-        std::cout << "cartes\n";
         initCarteNoble(*db_, vec_cartesNobles);
-        std::cout << "init\n";
         for (size_t i = 0; i < vec_cartesNobles->size(); i++) {
             cartes_nobles[i] = vec_cartesNobles->at(i);
         }
@@ -629,16 +625,20 @@ std::vector<const Jeton*> Plateau::validerSelectionEtPrendreJetons() {
 const Privilege* Plateau::prendrePrivilege() {
     /*
      * Enlève un privilège de la liste et le retourne.
-     * S'il n'y a plus de privilège, lève une exception.
+     * S'il n'y a plus de privilège, écrit dans la console.
+     * Appelle VuePlateau pour mettre à jour l'affichage.
      */
 
-    if (nb_privileges == 0)
-        //throw PlateauException("Il n'y a plus de Privilege sur le plateau... ¯\\_(^^')_/¯");
-        std::cout<<"Il n'y a plus de Privilege sur le plateau... ¯\\_(^^')_/¯"<<"\n";
+    if (nb_privileges == 0) {
+        std::cout << "Il n'y a plus de Privilege sur le plateau... ¯\\_(^^')_/¯" << "\n";
+        return nullptr;
+    }
     const Privilege* resultat = privileges[nb_privileges-1];
 
     privileges[nb_privileges-1] = nullptr;
     nb_privileges--;
+
+    vuePlateau->affichagePrivileges();
 
     return resultat;
 }
@@ -646,14 +646,19 @@ const Privilege* Plateau::prendrePrivilege() {
 
 void Plateau::donnePrivilege(const Privilege* p) {
     /*
-     * Redonner un privilège au plateau
+     * Redonner un privilège au plateau.
+     * Appelle VuePlateau pour mettre à jour l'affichage des privilèges.
      */
 
-    if (nb_privileges == nb_privileges_MAX)
-        //throw PlateauException("Il y a déjà assez de privilège sur le plateau... ¯\\_(^^')_/¯");
-        std::cout<<"Il y a déjà assez de privilège sur le plateau... ¯\\_(^^')_/¯"<<"\n";
+    if (nb_privileges == nb_privileges_MAX) {
+        std::cout << "Il y a déjà assez de privilège sur le plateau... ¯\\_(^^')_/¯" << "\n";
+        return;
+    }
 
     privileges[nb_privileges++] = p;
+
+    // Mettre à jour l'affichage privilège.
+    vuePlateau->affichagePrivileges();
 }
 
 
@@ -827,14 +832,53 @@ void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
     }
 }
 
-VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent), vuesJetons(25, nullptr)
+//const Privilege* VuePlateau::privilegeClick_Plateau(VuePrivilege *vp) {
+//    std::cout<<"Privilege clicked!";
+//    const Privilege* p = plateau->prendrePrivilege();
+//    if (p != nullptr) {
+//        affichagePrivileges();
+//    }
+//    return p;
+//}
+
+void VuePlateau::affichagePrivileges() {
+    /*
+     * Méthode utilisée pour remettre à jour complètement les privilèges
+     * depuis les Privilèges du plateau.
+     * Détruit tout, reconstruit en appelant plateau et ré-affiche.
+     */
+    while (QLayoutItem *item = layout_privilege->takeAt(0)) {
+        if (QWidget *widget = item->widget()) {
+            widget->deleteLater();
+        }
+        delete item;
+    }
+
+    vuesPrivileges.clear();
+    for (size_t i = 0; i < plateau->nb_privileges; i ++) {
+        vuesPrivileges[i] = new VuePrivilege(plateau->privileges[i], this);
+        layout_privilege->addWidget(vuesPrivileges[i]);
+//        connect(
+//                vuesPrivileges[i],
+//                SIGNAL(privilegeClick(VuePrivilege*)),
+//                this,
+//                SLOT(privilegeClick_Plateau(VuePrivilege*))
+//        );
+    }
+    repaint();
+}
+
+VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent),
+    vuesJetons(25, nullptr),
+    vuesPrivileges(3, nullptr)
 {
-    plateau = new Plateau();
+    plateau = new Plateau(nullptr, this);
     //std::cout<<plateau->etatPlateau();
 
     main_layout = new QVBoxLayout(this);
     layout_info = new QHBoxLayout();
     layout_bouton = new QGridLayout();
+    layout_privilege = new QHBoxLayout();
 
     affichageJetons();
 
@@ -866,10 +910,37 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent), vuesJetons(25, nullpt
     boutonRemplissage->show();
     layout_info->addWidget(boutonRemplissage);
 
+//    boutonDonnerPrivilege = new QPushButton("Déposer Privilège", this);
+//    QString styleSheetPrivilege = "background-color: lightyellow; color: black;";
+//    boutonDonnerPrivilege->setStyleSheet(styleSheetPrivilege);
+//    QObject::connect(
+//            boutonDonnerPrivilege,
+//            &QPushButton::clicked,
+//            this,
+//            &VuePlateau::donnerPrivilege
+//    );
+
+   affichagePrivileges();
+
+    layout_info->addLayout(layout_privilege);
     main_layout->addLayout(layout_bouton);
     main_layout->addLayout(layout_info);
     setLayout(main_layout);
 }
+
+//void VuePlateau::donnerPrivilege(const Privilege* p) {
+//    /**
+//     * Méthode utilisée pour déposer un privilège sur la plateau et
+//     * mettre à jour l'affichage.
+//     */
+//
+//    if (p == nullptr) {
+//        std::cout << "Le privilege donné à vue plateau est un nullptr    \\_0o0_/\n";
+//        return;
+//    }
+//    plateau->donnePrivilege(p);
+//    affichagePrivileges();
+//}
 
 void VuePlateau::validerPlateau() {
     std::vector<const Jeton*> main = plateau->validerSelectionEtPrendreJetons();

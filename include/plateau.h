@@ -11,8 +11,8 @@
 #include <vector>
 #include <sqlite3.h>
 
-//#include "privilege.h" // safe
-//#include "jeton.h" // safe
+#include "privilege.h" // safe
+#include "jeton.h" // safe
 //#include "carteNoble.h"
 
 class CarteNoble;
@@ -21,6 +21,7 @@ class Jeton;
 class Privilege;
 class QPushButton;
 class VueJeton;
+class VuePlateau;
 
 class PlateauException {
     std::string info;
@@ -67,7 +68,8 @@ class Plateau {
                         21, 20, 19, 18, 17};
 
 
-    //bool verificationSelectionPositions();
+    // VuePlateau utilisé pour mettre à jour l'affichage du plateau
+    VuePlateau* vuePlateau;
 
     // Utilisé en interne par donnePositionsAPartirDe().
     std::vector<unsigned int> parcoursPlateauVerificationPosition(unsigned int x, unsigned int y, int coefX, int coefY );
@@ -79,7 +81,9 @@ public:
     bool verificationSelectionPositions()const;
     const Jeton* getJeton(unsigned int i) const  {return jetons[i];}
     // A mettre en privé plus tard :
-    Plateau(sqlite3** db= nullptr);
+
+
+    Plateau(sqlite3** db= nullptr, VuePlateau* vp = nullptr);
     friend class Jeu;
 
     void remplissagePlateau(bool avecAffichage = false);
@@ -117,22 +121,30 @@ class VuePlateau : public QWidget {
 Q_OBJECT
 public:
     explicit VuePlateau(QWidget *parent = nullptr);
+    Plateau* getPlateau() {return plateau;}
 private:
     Plateau* plateau = nullptr;
     QGridLayout* layout_bouton;
     QHBoxLayout* layout_info;
     QVBoxLayout* main_layout;
+    QHBoxLayout* layout_privilege;
     std::vector<VueJeton*> vuesJetons;
     QPushButton* boutonValider;
     QPushButton* boutonRemplissage;
+    QPushButton* boutonDonnerPrivilege;
+    std::vector<VuePrivilege*> vuesPrivileges;
 
     void miseAJourJetons();
     void affichageJetons();
+    void affichagePrivileges();
+    friend class Plateau;
 
 private slots:
     void jetonClick_Plateau(VueJeton*) ;//{ std::cout<<"Clicked!\n"; }
     void validerPlateau();
     void remplirPlateau();
+    //const Privilege* privilegeClick_Plateau(VuePrivilege*);
+    //void donnerPrivilege(const Privilege* p);
 
 };
 
