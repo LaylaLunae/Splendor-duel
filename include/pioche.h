@@ -5,11 +5,11 @@
 //#include "carteJoaillerie.h"
 
 class CarteJoaillerie;
+class Jeu;
 
 class Pioche {
+    friend Jeu;
 private:
-    friend class Jeu;
-
     const int numero_pioche;
     const CarteJoaillerie ** cartes_dans_pioche; // à revoir
     const CarteJoaillerie ** cartes_dehors; // à revoir
@@ -28,8 +28,10 @@ public:
     const int getMaxCartesRevelees() const {return max_cartes_revelees;}
     int getMaxCartesPioche() const {return max_cartes_pioche;}
 
+    const CarteJoaillerie * setCartesDansPioche(const CarteJoaillerie * c, int i) {cartes_dans_pioche[i] = c; return cartes_dans_pioche[i];}
+
     Pioche(const int np, const int mcr, int mcp);
-    ~Pioche(); //à revoir
+    ~Pioche();
 
     const CarteJoaillerie * joueurPrend(int numero_carte);
     void distribution();
