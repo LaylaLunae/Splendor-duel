@@ -457,7 +457,7 @@ int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
     // avant matrix:
     // unsigned int position_dans_plateau = nombre_jetons_par_cote_de_plateau  *  (position_y-1) + position_x-1;
     unsigned  int position_dans_plateau = matrix[position_y][position_x]-1;
-    std::cout<<"La position dans le plateau memoire  : "<<position_dans_plateau<<"\n";
+    //std::cout<<"La position dans le plateau memoire  : "<<position_dans_plateau<<"\n";
     bool a_selectionne_un_jeton_or;
 
     // Erreur si la case est vide.
@@ -809,7 +809,6 @@ std::vector<std::vector<unsigned int>>  Plateau::donnePositionsPossiblesAPartirD
     resultat.push_back(parcoursPlateauVerificationPosition(x, y, 0, 1));
     resultat.push_back(parcoursPlateauVerificationPosition(x, y, 1, 1));
     resultat.push_back(parcoursPlateauVerificationPosition(x, y, 1, -1));
-
 
     return resultat;
 
