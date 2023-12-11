@@ -103,7 +103,7 @@ void IA::activerPouvoir(Joueur& joueur, CarteJoaillerie& carte, Plateau & platea
 
 std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJetons(Plateau* plateau) {
     std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons;
-    std::cout<<"fmdlkf \n";
+
     // Parcourir le plateau de jetons
     for (unsigned int i = 0; i < plateau->getNbJetonsPlateauMAX(); ++i) {
         const Jeton* jeton1 = plateau->getJeton(i);
@@ -116,7 +116,7 @@ std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJe
         for (auto vec : plateau->donnePositionsPossiblesAPartirDe(x, y)) {
             positionsPossibles.push_back(vec);
         }
-        std::cout<<"fmdlkf \n";
+
         // Insérer les positions possibles dans un vecteur
         std::vector<std::pair<unsigned int, unsigned int>> positions;
         for (const auto& pos : positionsPossibles) {
@@ -159,8 +159,16 @@ std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCom
         // Obtenir les positions possibles pour le jeton1
         unsigned int x = i / 5;
         unsigned int y = i % 5;
-        std::vector<std::vector<unsigned int>> positionsPossibles = plateau->donnePositionsPossiblesAPartirDe(x, y);
 
+        std::cout<<x<<","<<y<<"\n";
+
+        std::vector<std::vector<unsigned int>> positionsPossibles = std::vector<std::vector<unsigned int>>();
+        std::cout<<"ckc";
+        for (auto vec : plateau->donnePositionsPossiblesAPartirDe(x, y)) {
+            std::cout<<"ckc";
+            positionsPossibles.push_back(vec);
+        }
+        std::cout<<"ckc";
         // Insérer les positions possibles dans un vecteur
         std::vector<std::tuple<unsigned int, unsigned int, const Jeton*>> positions;
         for (const auto& pos : positionsPossibles) {
@@ -243,15 +251,11 @@ void IA::choisirJetonSurPlateau(Plateau* plateau) {
 
     int retour = plateau->selectionJeton(positionX, positionY);
     if (retour== 0) {  // sélection valide
-        std::cout<<"fmdlkf \n";
-        //const Jeton* jetonSelectionne = plateau->getJeton(positionX * 5 + positionY);
         std::vector<const Jeton*> jetonsSelectionne = plateau->validerSelectionEtPrendreJetons();
 
-        std::cout<<"fmdlkf \n";
         std::vector<const Jeton*> jetonsSelectionnes = {jetonsSelectionne[0]};
         std::vector<int> resultatsAjout = Obligatoire::ajouterJetonsJoueur(this, jetonsSelectionnes);
-        std::cout<<"fmdlkf \n";
     }
-    std::cout<<"fmdlkf \n";
-    std::cout<<"fmdlkf \n";
+    else
+        choisirJetonSurPlateau(plateau);
 }
