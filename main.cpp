@@ -62,16 +62,17 @@ int main(int argc, char *argv[]) {
 */
 
 // test pour prendre des jetons à l'IA :
-/*
+
 // pour 2 jetons
-    std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons = ia.genererCombinaisonsDeuxJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
+
+    std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons = ia.genererCombinaisonsDeuxJetons(plateau_jeu);
 
     std::cout << "Combinaisons générées :\n";
     for (const auto& combinaison : combinaisons) {
-        //std::cout << "Jeton 1 : " << combinaison.first->getCouleur() << ", Jeton 2 : " << combinaison.second->getCouleur() << std::endl;
-        std::cout<<"flkjfsldkjf \n";
+        std::cout << "Jeton 1 : " << combinaison.first->getCouleurString() << ", Jeton 2 : " << combinaison.second->getCouleurString() << std::endl;
+        std::cout<<"tour suivant \n";
     }
-
+/*
 // pour 3 jetons
     std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisons3 = ia.genererCombinaisonsTroisJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
 
@@ -88,13 +89,13 @@ int main(int argc, char *argv[]) {
 
     // prendre 1 jeton
     std::cout<<"fmdlkf \n";
-    ia.choisirJetonSurPlateau(reinterpret_cast<Plateau *>(&plateau_jeu));
+    ia.choisirJetonSurPlateau(plateau_jeu);
+//    ia.choisirJetonSurPlateau(reinterpret_cast<Plateau *>(&plateau_jeu));
     std::cout<<"fmdlkf \n";
-
+*/
     // tous choix jetons confondus :
    // ia.prendreJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
 
-*/
 
     /* Création Jeton : */
 
