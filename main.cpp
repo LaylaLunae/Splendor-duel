@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 
 
     // tous choix jetons confondus :
-   // ia.prendreJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
+    // ia.prendreJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
 
 
     /* Création Jeton : */
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
     //return app.exec();
 
 
-     /* Affichage cartes v0.1 */
+    /* Affichage cartes v0.1 */
 //     QApplication app(argc, argv);
 //     QLabel label;
 //     QPixmap pixmap("../images/01.png");
