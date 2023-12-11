@@ -394,6 +394,9 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
             default: std::cout << "Il y a un probleme avec le jeton pris au joueur !\n";
         }
     }
+
+    auto* carte_non_const = const_cast<CarteJoaillerie*>(carte);
+    carte_non_const->actionPouvoir();
 }
 
 void Obligatoire::remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, int difference, int prix_elem, int index) {
