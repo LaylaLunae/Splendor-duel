@@ -141,7 +141,6 @@ int main(int argc, char *argv[]) {
         std::cout<<"jslkdfj\n";
     }
 */
-
     // prendre 1 jeton
 
     //ia.choisirJetonSurPlateau(plateau_jeu);
