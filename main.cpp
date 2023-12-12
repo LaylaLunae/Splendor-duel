@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
         std::cout << "Jeton 1 : " << combinaison.first->getCouleurString() << ", Jeton 2 : " << combinaison.second->getCouleurString() << std::endl;
     }
 */
-/*
+
 // pour 3 jetons
     std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisons3 = ia.genererCombinaisonsTroisJetons(plateau_jeu);
 
@@ -140,7 +140,7 @@ int main(int argc, char *argv[]) {
         std::cout << "Jeton 1 : " << jeton1->getCouleurString() << ", Jeton 2 : " << jeton2->getCouleurString() << ", Jeton 3 : " << jeton3->getCouleurString() << std::endl;
         std::cout<<"jslkdfj\n";
     }
-*/
+
     // prendre 1 jeton
 
     //ia.choisirJetonSurPlateau(plateau_jeu);

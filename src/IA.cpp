@@ -151,8 +151,6 @@ std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJe
 }
 
 
-// ...
-
 std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCombinaisonsTroisJetons(Plateau* plateau) const {
     std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisons;
 
@@ -164,18 +162,16 @@ std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCom
         unsigned int x = i / 5;
         unsigned int y = i % 5;
 
-        // Debug Output
-        std::cout << x << "," << y << "\n";
 
         // Obtenir les positions possibles à partir de la position (x, y)
         std::vector<std::vector<unsigned int>> positionsPossibles = plateau->donnePositionsPossiblesAPartirDe(x, y);
 
         // Insérer les positions possibles dans un vecteur de tuples
         std::vector<std::tuple<unsigned int, unsigned int, const Jeton*>> positions;
-        for (const auto& pos : positionsPossibles) {
-            for (unsigned int j = 0; j < pos.size(); j += 2) {
-                unsigned int posX = pos[j];
-                unsigned int posY = pos[j + 1];
+        for (int i=0; i<positionsPossibles.size(); i++){
+            for (unsigned int j = 0; j < positionsPossibles[i].size(); j += 2) {
+                unsigned int posX = positionsPossibles[i][j];
+                unsigned int posY = positionsPossibles[i][j + 1];
                 const Jeton* jeton2 = plateau->getJeton(posX * 5 + posY);
                 positions.emplace_back(posX, posY, jeton2);
             }
