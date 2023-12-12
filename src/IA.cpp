@@ -150,7 +150,62 @@ std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJe
     return combinaisons;
 }
 
+std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCombinaisonsTroisJetons(Plateau* plateau) const {
+    std::vector<std::tuple<const Jeton *, const Jeton *, const Jeton *>> combinaisons;
+    // Parcourir le plateau de jetons
+    for (unsigned int i = 0; i < plateau->getNbJetonsPlateauMAX(); ++i) {
+        const Jeton *jeton1 = plateau->getJeton(i);
 
+        // Obtenir les positions possibles pour le jeton1
+        unsigned int x = i / 5;
+        unsigned int y = i % 5;
+        std::cout << x << "," << y << "\n";
+        std::vector<std::vector<unsigned int>> positionsPossibles = std::vector<std::vector<unsigned int>>(0);
+        for (auto vec: plateau->donnePositionsPossiblesAPartirDe(x, y)) {
+            positionsPossibles.push_back(vec);
+        }
+
+        // Insérer les positions possibles dans un vecteur
+        std::vector<std::pair<unsigned int, unsigned int>> positions;
+        for (const auto &pos: positionsPossibles) {
+            for (unsigned int j = 0; j < pos.size(); j += 2) {
+                positions.push_back({pos[j], pos[j + 1]});
+            }
+        }
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(positions.begin(), positions.end(), g);
+
+        // Parcourir le vecteur de positions et sélectionner deux jetons
+        for (unsigned int k = 0; k < positions.size() && combinaisons.size() < 2; ++k) {
+            unsigned int posX = positions[k].first;
+            unsigned int posY = positions[k].second;
+            const Jeton *jeton2 = plateau->getJeton(posX * 5 + posY);
+
+            for(unsigned int l = 0; l<positions.size(); l++){
+                unsigned int posX2 = positions[l].first;
+                unsigned int posY2 = positions[l].second;
+                const Jeton *jeton3 = plateau->getJeton(posX2 * 5 + posY2);
+
+                int selectionResult = plateau->selectionJeton(posX2, posY2);
+                combinaisons.push_back({jeton1, jeton2, jeton3});
+
+                if(selectionResult==2){
+                    return genererCombinaisonsTroisJetons(plateau);
+                }
+                if (jeton1->getCouleur()==Couleur::rose && jeton2->getCouleur()==Couleur::rose) {
+                    Obligatoire::donnerPrivilegeAdversaire((Joueur *) this, plateau);
+                }
+            }
+        }
+    }
+    plateau->validerSelectionEtPrendreJetons();
+    return combinaisons;
+}
+
+
+
+/*
 std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCombinaisonsTroisJetons(Plateau* plateau) const {
     std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisons;
 
@@ -159,66 +214,50 @@ std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCom
         const Jeton* jeton1 = plateau->getJeton(i);
 
         // Obtenir les positions possibles pour le jeton1
-        unsigned int x = i / 5;
-        unsigned int y = i % 5;
+        unsigned int x1 = i / 5;
+        unsigned int y1 = i % 5;
 
+        // Obtenir les positions possibles à partir de la position (x1, y1)
+        std::vector<std::vector<unsigned int>> positionsPossibles1 = plateau->donnePositionsPossiblesAPartirDe(x1, y1);
 
-        // Obtenir les positions possibles à partir de la position (x, y)
-        std::vector<std::vector<unsigned int>> positionsPossibles = plateau->donnePositionsPossiblesAPartirDe(x, y);
+        // Première boucle pour le premier jeton
+        for (auto pos1 : positionsPossibles1) {
+            unsigned int posX1 = pos1[0];
+            unsigned int posY1 = pos1[1];
+            const Jeton* jeton2 = plateau->getJeton(posX1 * 5 + posY1);
 
-        // Insérer les positions possibles dans un vecteur de tuples
-        std::vector<std::tuple<unsigned int, unsigned int, const Jeton*>> positions;
-        for (int i=0; i<positionsPossibles.size(); i++){
-            for (unsigned int j = 0; j < positionsPossibles[i].size(); j += 2) {
-                unsigned int posX = positionsPossibles[i][j];
-                unsigned int posY = positionsPossibles[i][j + 1];
-                const Jeton* jeton2 = plateau->getJeton(posX * 5 + posY);
-                positions.emplace_back(posX, posY, jeton2);
-            }
-        }
+            // Deuxième boucle pour le deuxième jeton
+            for (unsigned int k = 0; k < positionsPossibles1.size(); ++k) {
+                unsigned int posX2 = positionsPossibles1[k][0];
+                unsigned int posY2 = positionsPossibles1[k][1];
+                const Jeton* jeton3 = plateau->getJeton(posX2 * 5 + posY2);
 
-        // Mélanger les positions de manière aléatoire
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(positions.begin(), positions.end(), g);
+                int selectionResult = plateau->selectionJeton(posX1, posY1);
+                selectionResult += plateau->selectionJeton(posX2, posY2);
+                combinaisons.push_back({jeton1, jeton2, jeton3});
 
-        // Parcourir le vecteur de positions et sélectionner trois jetons
-        for (unsigned int k = 0; k < positions.size() && combinaisons.size() < 3; ++k) {
-            unsigned int posX2, posY2;
-            const Jeton* jeton2;
-            std::tie(posX2, posY2, jeton2) = positions[k];
+                if (selectionResult == 2) {
+                    return genererCombinaisonsTroisJetons(plateau);
+                }
 
-            // Sélectionner le jeton à la position (posX2, posY2)
-            int selectionResult = plateau->selectionJeton(posX2, posY2);
+                if (jeton1->getCouleur() == jeton2->getCouleur() && jeton1->getCouleur() == jeton3->getCouleur()) {
+                    Obligatoire::donnerPrivilegeAdversaire((Joueur *) this, plateau);
+                }
 
-            // Ajouter la combinaison à la liste
-            combinaisons.emplace_back(jeton1, jeton2, plateau->getJeton(posX2 * 5 + posY2));
-
-            // Gérer les conditions spéciales
-            if (selectionResult == 2) {
-                // Revenir récursivement si la sélection a échoué
-                return genererCombinaisonsTroisJetons(plateau);
-            }
-
-            // Conditions spéciales pour donner des privilèges à l'adversaire
-            if ((jeton1->getCouleur() == Couleur::rose && jeton2->getCouleur() == Couleur::rose) ||
-                (jeton1->getCouleur() == Couleur::rose && plateau->getJeton(posX2 * 5 + posY2)->getCouleur() == Couleur::rose) ||
-                (jeton2->getCouleur() == Couleur::rose && plateau->getJeton(posX2 * 5 + posY2)->getCouleur() == Couleur::rose)) {
-                Obligatoire::donnerPrivilegeAdversaire((Joueur*)this, plateau);
-            }
-
-            if (jeton1->getCouleur() == jeton2->getCouleur() && jeton1->getCouleur() == plateau->getJeton(posX2 * 5 + posY2)->getCouleur()) {
-                Obligatoire::donnerPrivilegeAdversaire((Joueur*)this, plateau);
+                if ((jeton1->getCouleur() == Couleur::rose && jeton2->getCouleur() == Couleur::rose) ||
+                    (jeton1->getCouleur() == Couleur::rose && jeton3->getCouleur() == Couleur::rose) ||
+                    (jeton2->getCouleur() == Couleur::rose && jeton3->getCouleur() == Couleur::rose)) {
+                    Obligatoire::donnerPrivilegeAdversaire((Joueur *) this, plateau);
+                }
             }
         }
     }
-
-    // Valider la sélection et prendre les jetons
     plateau->validerSelectionEtPrendreJetons();
-
-    // Retourner la liste de combinaisons générées
     return combinaisons;
 }
+
+*/
+
 
 
 void IA::prendreJetons(Plateau* plateau) {
