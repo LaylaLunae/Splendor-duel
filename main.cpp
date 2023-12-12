@@ -116,9 +116,9 @@ int main(int argc, char *argv[]) {
 
 
 // test pour prendre des jetons à l'IA :
-
-// pour 2 jetons
 /*
+// pour 2 jetons
+
     std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons = ia.genererCombinaisonsDeuxJetons(plateau_jeu);
 
     std::cout << "Combinaisons générées :\n";
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
         const Jeton* jeton2 = std::get<1>(combinaison3);
         const Jeton* jeton3 = std::get<2>(combinaison3);
 
-        //std::cout << "Jeton 1 : " << jeton1->getCouleur() << ", Jeton 2 : " << jeton2->getCouleur() << ", Jeton 3 : " << jeton3->getCouleur() << std::endl;
+        std::cout << "Jeton 1 : " << jeton1->getCouleurString() << ", Jeton 2 : " << jeton2->getCouleurString() << ", Jeton 3 : " << jeton3->getCouleurString() << std::endl;
         std::cout<<"jslkdfj\n";
     }
 */

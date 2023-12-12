@@ -137,8 +137,10 @@ std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJe
             int selectionResult = plateau->selectionJeton(posX, posY);
             combinaisons.push_back({jeton1, jeton2});
 
-            if (selectionResult == 2 || selectionResult == 5) {
-                // Appel de la fonction donnerPrivilegeAdversaire de l'objet Obligatoire
+            if(selectionResult==2){
+                return genererCombinaisonsDeuxJetons(plateau);
+            }
+            if (jeton1->getCouleur()==Couleur::rose && jeton2->getCouleur()==Couleur::rose) {
                 Obligatoire::donnerPrivilegeAdversaire(this, plateau);
             }
         }
@@ -194,15 +196,16 @@ std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCom
 
             combinaisons.emplace_back(jeton1, jeton2, plateau->getJeton(posX2 * 5 + posY2));
 
-
-            if (selectionResult == 2 || selectionResult == 5) {
-                Obligatoire::donnerPrivilegeAdversaire((Joueur *) this, plateau);
-                // si trois jetons meme couleurs || si deux perles
-            }
             if(selectionResult==2){
-                //rappeller la fonction
-            }
+                return genererCombinaisonsTroisJetons(plateau) ;
+                }
 
+            if((jeton1->getCouleur()==Couleur::rose && jeton2->getCouleur()==Couleur::rose) || (jeton1->getCouleur()==Couleur::rose && plateau->getJeton(posX2 * 5 + posY2)->getCouleur()==Couleur::rose) || (jeton2->getCouleur()==Couleur::rose && plateau->getJeton(posX2 * 5 + posY2)->getCouleur()==Couleur::rose) ){
+                Obligatoire::donnerPrivilegeAdversaire((Joueur *) this, plateau);
+            }
+            if (jeton1->getCouleur() == jeton2->getCouleur() && jeton1->getCouleur() == plateau->getJeton(posX2 * 5 + posY2)->getCouleur()) {
+                Obligatoire::donnerPrivilegeAdversaire((Joueur *) this, plateau);
+            }
         }
     }
     plateau->validerSelectionEtPrendreJetons();
