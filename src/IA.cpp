@@ -194,9 +194,15 @@ std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCom
 
             combinaisons.emplace_back(jeton1, jeton2, plateau->getJeton(posX2 * 5 + posY2));
 
+
             if (selectionResult == 2 || selectionResult == 5) {
                 Obligatoire::donnerPrivilegeAdversaire((Joueur *) this, plateau);
+                // si trois jetons meme couleurs || si deux perles
             }
+            if(selectionResult==2){
+                //rappeller la fonction
+            }
+
         }
     }
     plateau->validerSelectionEtPrendreJetons();

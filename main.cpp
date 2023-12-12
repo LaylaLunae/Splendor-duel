@@ -41,10 +41,64 @@ int main(int argc, char *argv[]) {
     int choixIA = ia.choisirChoix(1, 3);
     std::cout << "Choix de l'IA : " << choixIA << std::endl;
 
+
+/*
+    Plateau* p = new Plateau();
+    std::cout << p->etatPlateau();
+    IA* ia = new IA("Jean",aleatoire);
+    IA* j2 = new IA("Adversaire",aleatoire);
+    ia->setAdversaire(j2);
+    Pioche* p1 = new Pioche(1,5,30);
+    Pioche* p2 = new Pioche(2,4,24);
+    Pioche* p3 = new Pioche(3,3,13);
+
+    std::array<Couleur, 2> pierres = {Couleur::rouge, Couleur::bleu};
+    std::map<Couleur, int> prix = {{Couleur::rouge, 3}, {Couleur::bleu, 2}};
+    int id = 1;
+    CarteJoaillerie* c = new CarteJoaillerie(p, ia, 3, 2, pierres, prix, "chemin_image.jpg", 5, Pouvoir(), Pouvoir(), id);
+
+    for (int i=0; i<5;i++) {
+        p1->cartes_dehors[i] = c;
+        id++;
+        c = new CarteJoaillerie(p, ia, 3, 2, pierres, prix, "chemin_image.jpg", 5, Pouvoir(), Pouvoir(), id);
+    }
+    for (int i=0; i<30; i++) {
+        p1->cartes_dans_pioche[i] = c;
+        id++;
+        c = new CarteJoaillerie(p, ia, 3, 2, pierres, prix, "chemin_image.jpg", 5, Pouvoir(), Pouvoir(), id);
+    }
+    for (int i=0; i<4;i++) {
+        p2->cartes_dehors[i] = c;
+        id++;
+        c = new CarteJoaillerie(p, ia, 3, 2, pierres, prix, "chemin_image.jpg", 5, Pouvoir(), Pouvoir(), id);
+    }
+    for (int i=0; i<24; i++) {
+        p2->cartes_dans_pioche[i] = c;
+        id++;
+        c = new CarteJoaillerie(p, ia, 3, 2, pierres, prix, "chemin_image.jpg", 5, Pouvoir(), Pouvoir(), id);
+    }
+    for (int i=0; i<3;i++) {
+        p3->cartes_dehors[i] = c;
+        id++;
+        c = new CarteJoaillerie(p, ia, 3, 2, pierres, prix, "chemin_image.jpg", 5, Pouvoir(), Pouvoir(), id);
+    }
+    for (int i=0; i<13; i++) {
+        p3->cartes_dans_pioche[i] = c;
+        id++;
+        c = new CarteJoaillerie(p, ia, 3, 2, pierres, prix, "chemin_image.jpg", 5, Pouvoir(), Pouvoir(), id);
+    }
+
+    p1->afficherCartesRevelees();
+    p2->afficherCartesRevelees();
+    p3->afficherCartesRevelees();
+
+
+*/
+
 /*
     //tester pour prendre des cartes avec l'IA
 
-    std::vector<CarteJoaillerie*> cartesAchetable = ia.getCartesAchetable(reinterpret_cast<Pioche &>(pioche1));
+    std::vector<CarteJoaillerie*> cartesAchetable = ia->getCartesAchetable(&p1);
 
     std::cout<<"jfjzflj";
 
@@ -52,14 +106,14 @@ int main(int argc, char *argv[]) {
         //std::cout << "Prix de la carte : " << carte->getPrix() << std::endl;
         std::cout << "prix : \n  " ;
     }
+*/
 
-
-    Carte carte;
-    CarteJoaillerie* derniereCarte = ia.melangerEtObtenirDerniereCarte(reinterpret_cast<Pioche &>(pioche1), ia, reinterpret_cast<Plateau &>(plateau_jeu), carte);
+    //Carte carte;
+    //CarteJoaillerie* derniereCarte = ia.melangerEtObtenirDerniereCarte(reinterpret_cast<Pioche &>(pioche1), ia, reinterpret_cast<Plateau &>(plateau_jeu), carte);
 
     //std::cout << "Dernière carte obtenue - Prix : " << derniereCarte->getPrix() << std::endl;
 
-*/
+
 
 // test pour prendre des jetons à l'IA :
 
@@ -74,7 +128,7 @@ int main(int argc, char *argv[]) {
 */
 /*
 // pour 3 jetons
-    std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisons3 = ia.genererCombinaisonsTroisJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
+    std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisons3 = ia.genererCombinaisonsTroisJetons(plateau_jeu);
 
     // Affichez les combinaisons générées
     std::cout << "Combinaisons générées :\n";
@@ -86,15 +140,15 @@ int main(int argc, char *argv[]) {
         //std::cout << "Jeton 1 : " << jeton1->getCouleur() << ", Jeton 2 : " << jeton2->getCouleur() << ", Jeton 3 : " << jeton3->getCouleur() << std::endl;
         std::cout<<"jslkdfj\n";
     }
-
 */
+
     // prendre 1 jeton
 
     //ia.choisirJetonSurPlateau(plateau_jeu);
 
 
     // tous choix jetons confondus :
-    // ia.prendreJetons(reinterpret_cast<Plateau *>(&plateau_jeu));
+     //ia.prendreJetons(plateau_jeu);
 
 
     /* Création Jeton : */
