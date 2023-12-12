@@ -20,7 +20,7 @@ class Joueur;
 
 int main(int argc, char *argv[]) {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
+/*
     Plateau * plateau_jeu = new Plateau();
     std::string sortie = plateau_jeu->etatPlateau();
     std::cout << sortie << "\n";
@@ -40,9 +40,9 @@ int main(int argc, char *argv[]) {
 
     int choixIA = ia.choisirChoix(1, 3);
     std::cout << "Choix de l'IA : " << choixIA << std::endl;
-
-
+*/
 /*
+
     Plateau* p = new Plateau();
     std::cout << p->etatPlateau();
     IA* ia = new IA("Jean",aleatoire);
@@ -91,14 +91,11 @@ int main(int argc, char *argv[]) {
     p1->afficherCartesRevelees();
     p2->afficherCartesRevelees();
     p3->afficherCartesRevelees();
-
-
 */
-
 /*
     //tester pour prendre des cartes avec l'IA
-
-    std::vector<CarteJoaillerie*> cartesAchetable = ia->getCartesAchetable(&p1);
+    const Pioche& piocheRef = *p1; // Créer une référence constante à p1
+    std::vector<CarteJoaillerie*> cartesAchetable = ia->getCartesAchetable(piocheRef);
 
     std::cout<<"jfjzflj";
 
@@ -109,9 +106,8 @@ int main(int argc, char *argv[]) {
 */
 
     //Carte carte;
-    //CarteJoaillerie* derniereCarte = ia.melangerEtObtenirDerniereCarte(reinterpret_cast<Pioche &>(pioche1), ia, reinterpret_cast<Plateau &>(plateau_jeu), carte);
-
-    //std::cout << "Dernière carte obtenue - Prix : " << derniereCarte->getPrix() << std::endl;
+    //CarteJoaillerie* derniereCarte = ia->melangerEtObtenirDerniereCarte(*p1, *ia, *p, *c);
+    std::cout << "prix :" << std::endl;
 
 
 
@@ -147,7 +143,7 @@ int main(int argc, char *argv[]) {
 
 
     // tous choix jetons confondus :
-     ia.prendreJetons(plateau_jeu);
+     //ia.prendreJetons(plateau_jeu);
 
 
     /* Création Jeton : */

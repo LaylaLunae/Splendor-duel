@@ -25,9 +25,8 @@ std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const
     std::vector<CarteJoaillerie*> cartesAchetable;
 
     for (int i = 0; i < pioche.getMaxCartesRevelees(); ++i) {
-        std::cout<<"azzzzzzz\n";
         const CarteJoaillerie* carte = pioche.getCartesDehors(i);
-        std::cout<<"azzzzzzz\n";
+
         if (carte) {
             std::vector<int> difference = Obligatoire::calculDifference((Joueur *) this, carte->getPrix());
 
@@ -48,9 +47,9 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
 
     std::default_random_engine generator;
     std::shuffle(cartesAchetable.begin(), cartesAchetable.end(), generator);
-
+// ici que ca bug
     CarteJoaillerie* derniereCarte = cartesAchetable.back();
-
+    std::cout<<"dede";
     // Remettre les jetons dans le sac
     for (const auto& cout : derniereCarte->getPrix()) {
         if (cout.second > 0) {
