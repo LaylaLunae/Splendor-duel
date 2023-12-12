@@ -111,7 +111,7 @@ std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJe
         // Obtenir les positions possibles pour le jeton1
         unsigned int x = i / 5;
         unsigned int y = i % 5;
-        std::cout<<x<<","<<y<<"\n";
+
         std::vector<std::vector<unsigned int>> positionsPossibles = std::vector<std::vector<unsigned int>>(0);
         for (auto vec : plateau->donnePositionsPossiblesAPartirDe(x, y)) {
             positionsPossibles.push_back(vec);
@@ -146,7 +146,6 @@ std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJe
         }
     }
     plateau->validerSelectionEtPrendreJetons();
-
     return combinaisons;
 }
 
@@ -159,7 +158,7 @@ std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCom
         // Obtenir les positions possibles pour le jeton1
         unsigned int x = i / 5;
         unsigned int y = i % 5;
-        std::cout << x << "," << y << "\n";
+
         std::vector<std::vector<unsigned int>> positionsPossibles = std::vector<std::vector<unsigned int>>(0);
         for (auto vec: plateau->donnePositionsPossiblesAPartirDe(x, y)) {
             positionsPossibles.push_back(vec);
@@ -204,62 +203,6 @@ std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCom
 }
 
 
-
-/*
-std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCombinaisonsTroisJetons(Plateau* plateau) const {
-    std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> combinaisons;
-
-    // Parcourir le plateau de jetons
-    for (unsigned int i = 0; i < plateau->getNbJetonsPlateauMAX(); ++i) {
-        const Jeton* jeton1 = plateau->getJeton(i);
-
-        // Obtenir les positions possibles pour le jeton1
-        unsigned int x1 = i / 5;
-        unsigned int y1 = i % 5;
-
-        // Obtenir les positions possibles à partir de la position (x1, y1)
-        std::vector<std::vector<unsigned int>> positionsPossibles1 = plateau->donnePositionsPossiblesAPartirDe(x1, y1);
-
-        // Première boucle pour le premier jeton
-        for (auto pos1 : positionsPossibles1) {
-            unsigned int posX1 = pos1[0];
-            unsigned int posY1 = pos1[1];
-            const Jeton* jeton2 = plateau->getJeton(posX1 * 5 + posY1);
-
-            // Deuxième boucle pour le deuxième jeton
-            for (unsigned int k = 0; k < positionsPossibles1.size(); ++k) {
-                unsigned int posX2 = positionsPossibles1[k][0];
-                unsigned int posY2 = positionsPossibles1[k][1];
-                const Jeton* jeton3 = plateau->getJeton(posX2 * 5 + posY2);
-
-                int selectionResult = plateau->selectionJeton(posX1, posY1);
-                selectionResult += plateau->selectionJeton(posX2, posY2);
-                combinaisons.push_back({jeton1, jeton2, jeton3});
-
-                if (selectionResult == 2) {
-                    return genererCombinaisonsTroisJetons(plateau);
-                }
-
-                if (jeton1->getCouleur() == jeton2->getCouleur() && jeton1->getCouleur() == jeton3->getCouleur()) {
-                    Obligatoire::donnerPrivilegeAdversaire((Joueur *) this, plateau);
-                }
-
-                if ((jeton1->getCouleur() == Couleur::rose && jeton2->getCouleur() == Couleur::rose) ||
-                    (jeton1->getCouleur() == Couleur::rose && jeton3->getCouleur() == Couleur::rose) ||
-                    (jeton2->getCouleur() == Couleur::rose && jeton3->getCouleur() == Couleur::rose)) {
-                    Obligatoire::donnerPrivilegeAdversaire((Joueur *) this, plateau);
-                }
-            }
-        }
-    }
-    plateau->validerSelectionEtPrendreJetons();
-    return combinaisons;
-}
-
-*/
-
-
-
 void IA::prendreJetons(Plateau* plateau) {
     if (!plateau->hasJeton()) {
         Optionnelle::remplissagePlateau(this, plateau);
@@ -278,7 +221,6 @@ void IA::prendreJetons(Plateau* plateau) {
             choisirJetonSurPlateau(plateau);
         else {
             std::vector<std::pair<const Jeton*, const Jeton*>> combinaisonsDeux = genererCombinaisonsDeuxJetons(plateau);
-
             std::vector<int> resultatAjout = Obligatoire::ajouterJetonsJoueur(this, {combinaisonsDeux[0].first, combinaisonsDeux[0].second});
         }
     }

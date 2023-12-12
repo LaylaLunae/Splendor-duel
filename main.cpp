@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
 
 
     // tous choix jetons confondus :
-     //ia.prendreJetons(plateau_jeu);
+     ia.prendreJetons(plateau_jeu);
 
 
     /* Création Jeton : */
