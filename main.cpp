@@ -104,12 +104,12 @@ int main(int argc, char *argv[]) {
         std::cout << "prix : \n  " ;
     }
 */
-
+/*
     //Carte carte;
-    //CarteJoaillerie* derniereCarte = ia->melangerEtObtenirDerniereCarte(*p1, *ia, *p, *c);
+    CarteJoaillerie* derniereCarte = ia->melangerEtObtenirDerniereCarte(*p1, *ia, *p, *c);
     std::cout << "prix :" << std::endl;
 
-
+*/
 
 // test pour prendre des jetons à l'IA :
 /*

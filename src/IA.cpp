@@ -38,7 +38,34 @@ std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const
     return cartesAchetable;
 }
 
+CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur, Plateau& plateau, Carte& carte) {
+    if (pioche.getMaxCartesRevelees() == 0 || pioche.getCartesDehors(0) == nullptr) {
+        return nullptr;
+    }
 
+    std::random_device rd;
+    std::default_random_engine generator(rd());
+
+    std::vector<CarteJoaillerie*> cartesAchetable = getCartesAchetable(pioche);
+    if (cartesAchetable.empty()) {
+        return nullptr;
+    }
+    std::shuffle(cartesAchetable.begin(), cartesAchetable.end(), generator);
+    CarteJoaillerie* derniereCarte = cartesAchetable.back();
+
+    for (const auto& cout : derniereCarte->getPrix()) {
+        if (cout.second > 0) {
+            Obligatoire::remettreJetonSac(&joueur, &plateau, cout.first, joueur.getNbJeton((int) cout.first) - cout.second, cout.second,(int) cout.first);
+        }
+    }
+    joueur.ajouterCarteJoaillerie(*derniereCarte);
+    carte.actionPouvoir();
+    return derniereCarte;
+}
+
+
+
+/*
 CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur, Plateau& plateau, Carte& carte) {
     if (pioche.getMaxCartesRevelees() == 0) {
         return nullptr;
@@ -48,6 +75,7 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
     std::default_random_engine generator;
     std::shuffle(cartesAchetable.begin(), cartesAchetable.end(), generator);
 // ici que ca bug
+    std::cout<<"dkj";
     CarteJoaillerie* derniereCarte = cartesAchetable.back();
     std::cout<<"dede";
     // Remettre les jetons dans le sac
@@ -60,7 +88,7 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
     carte.actionPouvoir();
     return derniereCarte;
 }
-
+*/
 /*
 // Implémentation de la fonction activerPouvoir dans la classe IA
 void IA::activerPouvoir(Joueur& joueur, CarteJoaillerie& carte, Plateau & plateau) {
