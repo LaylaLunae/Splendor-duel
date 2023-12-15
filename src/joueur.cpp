@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 #include "../include/jeu.h"
 
 Joueur::Joueur(const std::string nom)
@@ -104,7 +105,7 @@ std::string Joueur::getPseudo() const {
 }
 
 void Joueur::setPseudo(std::string pse) {
-    pseudo = pse;
+    pseudo = std::move(pse);
 }
 
 int Joueur::getNombreCouronnes()const {
