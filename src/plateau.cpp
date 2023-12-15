@@ -83,9 +83,9 @@ void testes_pour_plateau() {
 
 
 Plateau::Plateau(sqlite3** db, VuePlateau* vp):jetons(nullptr),sac(nullptr),privileges(nullptr),
-cartes_nobles(nullptr),nb_jetons_plateau(0),
+cartes_nobles(0),nb_jetons_plateau(0),
 nb_jetons_sac(0), selection_courante(nullptr),
-selection_courante_positions(nullptr),
+selection_courante_positions(nullptr),nb_carte_noble(nb_cartes_nobles_MAX),
 nombre_jetons_dans_selection(0), vuePlateau(vp){
 
     jetons = new const Jeton*[nb_jetons_plateau_MAX];
@@ -118,11 +118,12 @@ nombre_jetons_dans_selection(0), vuePlateau(vp){
     nb_jetons_sac = nb_jetons_sac_MAX;
 
     privileges = new const Privilege*[nb_privileges_MAX];
-    for (unsigned int j = 0; j<3; j++)
-        privileges[j] = new const Privilege();
+    for (unsigned int j = 0; j<3; j++) {
+        privileges[j] = new const Privilege(j);
+    }
     nb_privileges = nb_privileges_MAX;
 
-    cartes_nobles = new const CarteNoble*[4];
+    cartes_nobles = std::vector<const CarteNoble*>(nb_cartes_nobles_MAX);
     std::map<Couleur, int> c;
     c.insert(std::make_pair(Couleur::rouge, 3));
 
@@ -668,7 +669,7 @@ const CarteNoble* Plateau::prendreCarteNoble(unsigned int numero) {
         std::cout<<"Cette carte n'est plus sur le plateau... ¯\\_(^^')_/¯"<<"\n";
 
     const CarteNoble* resultat = cartes_nobles[numero];
-    cartes_nobles[numero] = nullptr;
+    cartes_nobles.erase(cartes_nobles.begin() + numero); //cartes_nobles[numero] = nullptr;
     nb_carte_noble--;
     return  resultat;
 }
@@ -690,7 +691,7 @@ Plateau::~Plateau() {
     }
     delete[] privileges;
 
-    delete[] cartes_nobles;
+    cartes_nobles.clear();
 
     for (size_t i = 0; i < nb_jetons_sac; i ++) {
         delete sac[i];
@@ -823,63 +824,10 @@ std::vector<std::vector<unsigned int>>  Plateau::donnePositionsPossiblesAPartirD
 // --------------------------------------------------------------------------
 // --------------------------- Vue Plateau : -------------------------------
 
-void VuePlateau::carteNobleClick_Plateau(VueCarteNoble* vc) {
-   plateau->prendreCarteNoble(vc->getNumero()) ;
-   affichageCartes();
-}
-
-void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
-    std::cout<<"Le jeton clicke a la position : "<<vj->getX()<<","<< vj->getY()<<"\n";
-    int res = plateau->selectionJeton(
-            vj->getX(),
-            vj->getY()
-            );
-    std::cout<<"Le résultat est : "<<res<<std::endl;
-    if (res == 0 || res == 2) {
-        vj->setSelected(true);
-    } else {
-        vj->setSelected(false);
-    }
-}
-
-void VuePlateau::privilegeClick_Plateau(VuePrivilege *vp) {
-    const Privilege* p = plateau->prendrePrivilege();
-    if (p != nullptr) {
-        affichagePrivileges();
-    }
-}
-
-void VuePlateau::affichagePrivileges() {
-    /*
-     * Méthode utilisée pour remettre à jour complètement les privilèges
-     * depuis les Privilèges du plateau.
-     * Détruit tout, reconstruit en appelant plateau et ré-affiche.
-     */
-    while (QLayoutItem *item = layout_privilege->takeAt(0)) {
-        if (QWidget *widget = item->widget()) {
-            widget->deleteLater();
-        }
-        delete item;
-    }
-
-    vuesPrivileges.clear();
-    for (size_t i = 0; i < plateau->nb_privileges; i ++) {
-        vuesPrivileges[i] = new VuePrivilege(plateau->privileges[i], this);
-        layout_privilege->addWidget(vuesPrivileges[i]);
-        connect(
-                vuesPrivileges[i],
-                SIGNAL(privilegeClick(VuePrivilege*)),
-                this,
-                SLOT(privilegeClick_Plateau(VuePrivilege*))
-        );
-    }
-    repaint();
-}
-
 VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent),
-    vuesJetons(25, nullptr),
-    vuesPrivileges(3, nullptr),
-    vuesCartes(4)
+                                          vuesJetons(25, nullptr),
+                                          vuesPrivileges(3, nullptr),
+                                          vuesCartes(4)
 {
 
 
@@ -943,6 +891,71 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent),
     setLayout(main_layout);
 }
 
+void VuePlateau::carteNobleClick_Plateau(VueCarteNoble* vc) {
+   const CarteNoble* cn= plateau->prendreCarteNoble(vc->getNumero()) ;
+   if (cn == nullptr) {
+       std::cout<<"Erreur lors du click : le plateau a renvoye un pointeur null";
+       return;
+   }
+   std::cout<<"La carte choisie a "<<cn->getCouronne()<<" couronnes\n";
+   try {
+       Jeu::getJeu().getJoueurActuel()->ajouterCarteNoble(*cn);
+   } catch(const char* e) {
+       std::cout<<e;
+       plateau->cartes_nobles.push_back(cn);
+       plateau->nb_carte_noble++;
+   }
+   affichageCartes();
+}
+
+void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
+    std::cout<<"Le jeton clicke a la position : "<<vj->getX()<<","<< vj->getY()<<"\n";
+    int res = plateau->selectionJeton(
+            vj->getX(),
+            vj->getY()
+            );
+    std::cout<<"Le résultat de la selection est : "<<res<<std::endl;
+    if (res == 0 || res == 2) {
+        vj->setSelected(true);
+    } else {
+        vj->setSelected(false);
+    }
+}
+
+void VuePlateau::privilegeClick_Plateau(VuePrivilege *vp) {
+    const Privilege* p = plateau->prendrePrivilege();
+    if (p != nullptr) {
+        affichagePrivileges();
+    }
+}
+
+void VuePlateau::affichagePrivileges() {
+    /*
+     * Méthode utilisée pour remettre à jour complètement les privilèges
+     * depuis les Privilèges du plateau.
+     * Détruit tout, reconstruit en appelant plateau et ré-affiche.
+     */
+    while (QLayoutItem *item = layout_privilege->takeAt(0)) {
+        if (QWidget *widget = item->widget()) {
+            widget->deleteLater();
+        }
+        delete item;
+    }
+
+    vuesPrivileges.clear();
+    for (size_t i = 0; i < plateau->nb_privileges; i ++) {
+        vuesPrivileges[i] = new VuePrivilege(plateau->privileges[i], this);
+        layout_privilege->addWidget(vuesPrivileges[i]);
+        connect(
+                vuesPrivileges[i],
+                SIGNAL(privilegeClick(VuePrivilege*)),
+                this,
+                SLOT(privilegeClick_Plateau(VuePrivilege*))
+        );
+    }
+    repaint();
+}
+
 //void VuePlateau::donnerPrivilege(const Privilege* p) {
 //    /**
 //     * Méthode utilisée pour déposer un privilège sur la plateau et
@@ -990,10 +1003,9 @@ void VuePlateau::affichageCartes() {
         delete item;
     }
 
-    std::cout<<"CN "<<plateau->nb_carte_noble<<std::endl;
 
     vuesCartes.clear();
-    for (size_t i = 0; i < plateau->getNbCarteNoble(); i++) {
+    for (size_t i = 0; i < plateau->nb_cartes_nobles_MAX; i++) {
         const CarteNoble* pt = plateau->cartes_nobles[i];
         if (pt != nullptr) {
             vuesCartes[i] = new VueCarteNoble(

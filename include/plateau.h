@@ -45,12 +45,12 @@ class Plateau {
     const Jeton** jetons;
     const Privilege** privileges;
     const Jeton** sac;
-    const CarteNoble** cartes_nobles;
+    std::vector<const CarteNoble*> cartes_nobles;
     unsigned int nb_jetons_sac;
     unsigned int nb_jetons_plateau;
     unsigned int pointeur_case_libre = 0;
     unsigned int nb_privileges;
-    unsigned int nb_carte_noble = 4;
+    unsigned int nb_carte_noble;
 
 
     const Jeton** selection_courante;
@@ -63,6 +63,7 @@ class Plateau {
     unsigned int nb_jetons_sac_MAX = 25;
     unsigned int nb_privileges_MAX = 3;
     unsigned int nb_jetons_plateau_MAX = 25;
+    unsigned int nb_cartes_nobles_MAX = 4;
 
     int matrix[5][5] = {25, 10, 11, 12, 13,
                         24, 9, 2, 3, 14,
@@ -146,15 +147,15 @@ public:
     }
 
     void setCartesNobles(const std::vector<const CarteNoble*>& newCartesNobles) {
-        delete[] cartes_nobles;
-        cartes_nobles = new const CarteNoble*[newCartesNobles.size()];
+        cartes_nobles.clear();
+        cartes_nobles =  std::vector<const CarteNoble*>(newCartesNobles.size());
         for (size_t i = 0; i < newCartesNobles.size(); ++i) { cartes_nobles[i] = newCartesNobles[i]; }
         nb_carte_noble = static_cast<unsigned int>(newCartesNobles.size());
     }
 
     std::vector<const CarteNoble*> getCartesNobles() const {
         std::vector<const CarteNoble*> cartesNoblesCopy;
-        for (unsigned int i = 0; i < nb_carte_noble; ++i) { cartesNoblesCopy.push_back(cartes_nobles[i]); }
+        for (unsigned int i = 0; i < nb_carte_noble; i++) { cartesNoblesCopy.push_back(cartes_nobles[i]); }
         return cartesNoblesCopy;
     }
 
@@ -167,7 +168,11 @@ public:
 
     std::vector<const Privilege*> getPrivileges() const {
         std::vector<const Privilege*> privilegesCopy;
-        for (unsigned int i = 0; i < nb_privileges; ++i) { privilegesCopy.push_back(privileges[i]); }
+        for (unsigned int i = 0; i < nb_privileges; i++) {
+            std::cout<<"privilege ";
+            privilegesCopy.push_back(privileges[i]);
+        }
+        std::cout<<"\returned\n";
         return privilegesCopy;
     }
 
