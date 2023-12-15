@@ -78,7 +78,7 @@ void sauvegarderPartie(sqlite3* db,
                        const Jeu& jeu,
                        const Joueur& joueur1,
                        const Joueur& joueur2,
-                       const std::vector<Pioche>& pioches,
+                       std::vector<Pioche *> pioches,
                        const Plateau& plateau);
 
 // Interface de récupération de données pour continuer le jeu

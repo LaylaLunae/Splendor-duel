@@ -20,6 +20,7 @@ class Joueur;
 
 int main(int argc, char *argv[]) {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
 /*
     Plateau * plateau_jeu = new Plateau();
     std::string sortie = plateau_jeu->etatPlateau();
@@ -180,25 +181,28 @@ int main(int argc, char *argv[]) {
 
 
     // ZhenyangZhenyangZhenyangZhenyangZhenyangZhenyangZhenyang: test 3 fonctions de BDD
+
     sqlite3* db;
     if (sqlite3_open("../base.db", &db) != SQLITE_OK) {
         std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
         return -1;
     }
 
-    //clearAndInitializeTables(db); // succès
+    clearAndInitializeTables(db); // succès
 
     auto* cartesJoaillerie = new std::vector<const CarteJoaillerie*>();
     auto* cartesNoble = new std::vector<const CarteNoble*>();
-    std::vector<Privilege> privileges;
+    //std::vector<Privilege> privileges;
 
     initCarteJoaillerie(db, cartesJoaillerie); // succès
     initCarteNoble(db, cartesNoble); // succès
-    for (int id = 1; id <= 3; ++id) {
-        Privilege privilege;
-        privilege.setID(id);
-        privileges.push_back(privilege);
-    }
+//    for (int id = 1; id <= 3; ++id) {
+//        Privilege privilege;
+//        privilege.setID(id);
+//        privileges.push_back(privilege);
+//    }
+
+    std::cout<<"          1\n";
 
     std::cout << "init carteJoaillerie" << std::endl;
     for (auto carteJoaillerie : *cartesJoaillerie) {
@@ -210,115 +214,138 @@ int main(int argc, char *argv[]) {
         std::cout << carteNoble->getID() << std::endl;
     }
 
-    Humain joueur1("Joueur1");
-    Humain joueur2("Joueur2");
-    std::vector<CarteJoaillerie> cartesDansPioche;
-    std::vector<CarteJoaillerie> cartesDehors;
-    std::vector<Pioche> pioches;
-//    Pioche* pioche1 = new Pioche(1, 5, 30);
-//    Pioche* pioche2 = new Pioche(2, 4, 24);
-//    Pioche* pioche3 = new Pioche(3, 3, 13);
-//
-//    pioches.push_back(*pioche1);
-//    pioches.push_back(*pioche2);
-//    pioches.push_back(*pioche3);
+    Humain joueur1("Joueur Alex");
+    Humain joueur2("Joueur 2");
+    std::vector<CarteJoaillerie*> cartesDansPioche;
+    std::vector<CarteJoaillerie*> cartesDehors;
+    Pioche* pioche1 = new Pioche(1, 5, 30);
+    Pioche* pioche2 = new Pioche(2, 4, 24);
+    Pioche* pioche3 = new Pioche(3, 3, 13);
 
-    Plateau plateau_jeu;
+    std::cout<<"            2\n";
+    std::vector<Pioche*> pioches (0);
+    pioches.push_back(pioche1);
+    pioches.push_back(pioche2);
+    pioches.push_back(pioche3);
 
-//    joueur1.setIsIA(false);
-//    joueur1.setNombreCouronnes(100);
-//    joueur1.setPointsPrestigeTotal(200);
-//    joueur1.setPointsPrestigeCouleurs(0,10);
-//    joueur1.setPointsPrestigeCouleurs(1,10);
-//    joueur1.setPointsPrestigeCouleurs(2,10);
-//    joueur1.setPointsPrestigeCouleurs(3,10);
-//    joueur1.setPointsPrestigeCouleurs(4,10);
-//    joueur1.setPointsPrestigeCouleurs(5,10);
-//    joueur1.setGemmesBonus(0,20);
-//    joueur1.setGemmesBonus(1,20);
-//    joueur1.setGemmesBonus(2,20);
-//    joueur1.setGemmesBonus(3,20);
-//    joueur1.setGemmesBonus(4,20);
-//    joueur1.setGemmesBonus(5,20);
-//    joueur1.setNbJeton(0, 100);
-//    joueur1.setNbJeton(1, 100);
-//    joueur1.setNbJeton(2, 100);
-//    joueur1.setNbJeton(3, 100);
-//    joueur1.setNbJeton(4, 100);
-//    joueur1.setNbJeton(5, 100);
-//    joueur1.setNbJeton(6, 100);
-//    joueur1.setAdversaire(&joueur2);
-//    joueur1.resetRejouer();
-//    joueur1.setDifficulte(aleatoire);
-//
-//
-//    joueur2.setIsIA(false);
-//    joueur2.setNombreCouronnes(100);
-//    joueur2.setPointsPrestigeTotal(200);
-//    joueur2.setPointsPrestigeCouleurs(0,10);
-//    joueur2.setPointsPrestigeCouleurs(1,10);
-//    joueur2.setPointsPrestigeCouleurs(2,10);
-//    joueur2.setPointsPrestigeCouleurs(3,10);
-//    joueur2.setPointsPrestigeCouleurs(4,10);
-//    joueur2.setPointsPrestigeCouleurs(5,10);
-//    joueur2.setGemmesBonus(0,20);
-//    joueur2.setGemmesBonus(1,20);
-//    joueur2.setGemmesBonus(2,20);
-//    joueur2.setGemmesBonus(3,20);
-//    joueur2.setGemmesBonus(4,20);
-//    joueur2.setGemmesBonus(5,20);
-//    joueur2.setNbJeton(0, 100);
-//    joueur2.setNbJeton(1, 100);
-//    joueur2.setNbJeton(2, 100);
-//    joueur2.setNbJeton(3, 100);
-//    joueur2.setNbJeton(4, 100);
-//    joueur2.setNbJeton(5, 100);
-//    joueur2.setNbJeton(6, 100);
-//    joueur2.setAdversaire(&joueur2);
-//    joueur2.resetRejouer();
-//    joueur2.setDifficulte(aleatoire);
-//
-//    for (const auto& carte : *cartesJoaillerie) {
-//        if (carte != nullptr) {
-//            cartesDansPioche.push_back(*carte);
-//        }
-//    }
-//    for (int i = 0; i < pioche1->getMaxCartesPioche(); ++i) {
-//        if (i < cartesJoaillerie->size()) {
-//            pioche1->setCartesDansPioche((*cartesJoaillerie)[i], i);
-//        }
-//    }
-//    for (int i = 0; i < pioche2->getMaxCartesPioche(); ++i) {
-//        if (i < cartesJoaillerie->size()) {
-//            pioche2->setCartesDansPioche((*cartesJoaillerie)[i], i);
-//        }
-//    }
-//    for (int i = 0; i < pioche3->getMaxCartesPioche(); ++i) {
-//        if (i < cartesJoaillerie->size()) {
-//            pioche3->setCartesDansPioche((*cartesJoaillerie)[i], i);
-//        }
-//    }
 
-//    plateau_jeu.setNbCarteNoble(10);
-//    plateau_jeu.setPointeurCaseLibre(10000);
-//
+    std::cout<<"            3\n";
+
+    joueur1.setIsIA(false);
+    joueur1.setNombreCouronnes(100);
+    joueur1.setPointsPrestigeTotal(200);
+    joueur1.setPointsPrestigeCouleurs(0,10);
+    joueur1.setPointsPrestigeCouleurs(1,10);
+    joueur1.setPointsPrestigeCouleurs(2,10);
+    joueur1.setPointsPrestigeCouleurs(3,10);
+    joueur1.setPointsPrestigeCouleurs(4,10);
+    joueur1.setPointsPrestigeCouleurs(5,10);
+    joueur1.setGemmesBonus(0,20);
+    joueur1.setGemmesBonus(1,20);
+    joueur1.setGemmesBonus(2,20);
+    joueur1.setGemmesBonus(3,20);
+    joueur1.setGemmesBonus(4,20);
+    joueur1.setGemmesBonus(5,20);
+    joueur1.setNbJeton(0, 100);
+    joueur1.setNbJeton(1, 100);
+    joueur1.setNbJeton(2, 100);
+    joueur1.setNbJeton(3, 100);
+    joueur1.setNbJeton(4, 100);
+    joueur1.setNbJeton(5, 100);
+    joueur1.setNbJeton(6, 100);
+    joueur1.setAdversaire(&joueur2);
+    joueur1.resetRejouer();
+    joueur1.setDifficulte(aleatoire);
+
+
+    joueur2.setIsIA(false);
+    joueur2.setNombreCouronnes(100);
+    joueur2.setPointsPrestigeTotal(200);
+    joueur2.setPointsPrestigeCouleurs(0,10);
+    joueur2.setPointsPrestigeCouleurs(1,10);
+    joueur2.setPointsPrestigeCouleurs(2,10);
+    joueur2.setPointsPrestigeCouleurs(3,10);
+    joueur2.setPointsPrestigeCouleurs(4,10);
+    joueur2.setPointsPrestigeCouleurs(5,10);
+    joueur2.setGemmesBonus(0,20);
+    joueur2.setGemmesBonus(1,20);
+    joueur2.setGemmesBonus(2,20);
+    joueur2.setGemmesBonus(3,20);
+    joueur2.setGemmesBonus(4,20);
+    joueur2.setGemmesBonus(5,20);
+    joueur2.setNbJeton(0, 100);
+    joueur2.setNbJeton(1, 100);
+    joueur2.setNbJeton(2, 100);
+    joueur2.setNbJeton(3, 100);
+    joueur2.setNbJeton(4, 100);
+    joueur2.setNbJeton(5, 100);
+    joueur2.setNbJeton(6, 100);
+    joueur2.setAdversaire(&joueur2);
+    joueur2.resetRejouer();
+    joueur2.setDifficulte(aleatoire);
+
+    std::cout<<"            4\n";
+
+    for (const auto& carte :* cartesJoaillerie) {
+        if (carte != nullptr) {
+            cartesDansPioche.push_back(const_cast<CarteJoaillerie *&&>(carte));
+        }
+    }
+    for (int i = 0; i < pioche1->getMaxCartesPioche(); ++i) {
+        if (i < cartesJoaillerie->size()) {
+            pioche1->setCartesDansPioche((*cartesJoaillerie)[i], i);
+        }
+    }
+    for (int i = 0; i < pioche2->getMaxCartesPioche(); ++i) {
+        if (i < cartesJoaillerie->size()) {
+            pioche2->setCartesDansPioche((*cartesJoaillerie)[i], i);
+        }
+    }
+    for (int i = 0; i < pioche3->getMaxCartesPioche(); ++i) {
+        if (i < cartesJoaillerie->size()) {
+            pioche3->setCartesDansPioche((*cartesJoaillerie)[i], i);
+        }
+    }
+
+    std::cout<<"            5\n";
+    //plateau_jeu.setNbCarteNoble(10);
+    //plateau_jeu.setPointeurCaseLibre(10000);
+
     Jeu& jeu = Jeu::getJeu();
-//    jeu.setJoueurActuel(&joueur1);
+    jeu.setJoueurActuel(&joueur1);
+
+    //QApplication app(argc, argv);
+    //VuePlateau vueplateau;
+
+    Plateau* plateau_jeu =new Plateau();//= vueplateau.getPlateau();
+
+
+    //vueplateau.show();
+
+
 //    jeu.setJoueurGagnant(&joueur2);
 
-    //sauvegarderPartie(db, jeu, joueur1, joueur2, pioches, plateau_jeu); // succès
+    sauvegarderPartie(db, jeu, joueur1, joueur2, pioches, *plateau_jeu); // succès
 
+    // ----------------------------- Gestion BDD ---------------------------
+    /*
+    // Si on clique sur le bouton continuer, il faut appeler :
     continuerLaPartie(db, reinterpret_cast<std::vector<CarteJoaillerie> &>(cartesJoaillerie),
-                      reinterpret_cast<std::vector<CarteNoble *> &>(cartesNoble), cartesDansPioche, cartesDehors, jeu, joueur1, joueur2, pioches,
+                      reinterpret_cast<std::vector<CarteNoble *> &>(cartesNoble),
+                      //cartesDansPioche, cartesDehors,
+                      jeu, joueur1, joueur2, pioches,
                       plateau_jeu, privileges);
 
     std::cout << joueur1.getNombreCouronnes() << std::endl;
 
+    // Si on clique sur le bouton Nouvelle partie, il faut appeler :
     clearAndInitializeTables(db); // succès
 
     // Close the database connection
     sqlite3_close(db);
+    */
 
+    //return app.exec();
 }
 
 /*

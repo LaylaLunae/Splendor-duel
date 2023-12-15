@@ -746,23 +746,30 @@ void sauvegarderPartie(sqlite3* db,
                        const Jeu& jeu,
                        const Joueur& joueur1,
                        const Joueur& joueur2,
-                       const std::vector<Pioche>& pioches,
+                       std::vector<Pioche*> pioches,
                        const Plateau& plateau) {
 
     // 0 先清空之前的信息
     clearAndInitializeTables(db);
 
     // 1 存储和Pioche有关的信息
-    for (const Pioche& pioche : pioches) {
+    for (Pioche* pioche : pioches) {
         // 存储 cartes_dans_pioche
-        for (int i = 0; i < pioche.getMaxCartesPioche(); ++i) {
-            insertCarteInPioche(db, "CartesDansPioche", pioche.getNumeroPioche(), pioche.getCartesDansPioche(i)->getID());
+        for (int i = 0; i < pioche->getMaxCartesPioche(); ++i) {
+            insertCarteInPioche(db, "CartesDansPioche", pioche->getNumeroPioche(), pioche->getCartesDansPioche(i)->getID());
         }
         // 存储 cartes_dehors
-        for (int i = 0; i < pioche.getMaxCartesRevelees(); ++i) {
-            insertCarteInPioche(db, "CartesDehors", pioche.getNumeroPioche(), pioche.getCartesDehors(i)->getID());
+        for (int i = 0; i < pioche->getMaxCartesRevelees(); ++i) {
+            const int numero = pioche->getNumeroPioche();
+            const CarteJoaillerie* carte= pioche->getCartesDehors(i);
+            if (carte != nullptr) {
+                const int carteid = carte->getID();
+                std::cout << carteid << std::endl;
+                insertCarteInPioche(db, "CartesDehors", numero, carteid);
+            }
         }
     }
+
 
     // 更新 Joueur 数据
     std::string updateSql = R"(UPDATE Joueur SET
@@ -879,14 +886,16 @@ void sauvegarderPartie(sqlite3* db,
         return;
     }
 
+
     sqlite3_bind_int(stmtJeu, 1, joueur1.getPseudo() == jeu.getJoueurActuel()->getPseudo() ? 1 : 2);
-    sqlite3_bind_int(stmtJeu, 2, joueur1.getPseudo() == jeu.getJoueurGagnant()->getPseudo() ? 1 : 2);
+    if (jeu.getJoueurActuel() != nullptr && jeu.getJoueurGagnant() != nullptr) sqlite3_bind_int(stmtJeu, 2, joueur1.getPseudo() == jeu.getJoueurGagnant()->getPseudo() ? 1 : 2);
     sqlite3_bind_int(stmtJeu, 3, 1); // 假设游戏 ID 为 1
 
     if (sqlite3_step(stmtJeu) != SQLITE_DONE) {
         std::cerr << "Error executing update statement for Jeu: " << sqlite3_errmsg(db) << std::endl;
     }
     sqlite3_finalize(stmtJeu);
+
 
 
     // 更新 Plateau 数据
@@ -898,16 +907,18 @@ void sauvegarderPartie(sqlite3* db,
 
     // 更新PlateauCartesNoble PlateauJetons PlateauPrivileges PlateauSac
     auto plateauCartesNobles = plateau.getCartesNobles();
-    for (const auto& carteNoble : plateauCartesNobles) {
+    for (auto carteNoble : plateauCartesNobles) {
         if (carteNoble) {
             int carteNobleId = carteNoble->getID();
             insertIntoPlateauCartesNoble(db, 1, carteNobleId);
         }
     }
 
+
+
     auto plateauPrivileges = plateau.getPrivileges();
-    for (const auto& privilege : plateauPrivileges) {
-        if (privilege) {
+    for (auto privilege : plateauPrivileges) {
+        if (privilege != nullptr) {
             int privilegeId = privilege->getID();
             insertIntoPlateauPrivileges(db, 1, privilegeId);
         }
