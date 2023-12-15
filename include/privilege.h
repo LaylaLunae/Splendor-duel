@@ -58,7 +58,6 @@ private:
     QPen pen;
     QBrush brush;
     signals:
-            // quand la vude de carte est cliquée, elle émet un signal en transmettant son adresse
             void privilegeClick(VuePrivilege*);
 public slots:
 private slots:
