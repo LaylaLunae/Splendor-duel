@@ -83,11 +83,11 @@ void sauvegarderPartie(sqlite3* db,
 
 // Interface de récupération de données pour continuer le jeu
 void continuerLaPartie(sqlite3* db,
-                       std::vector<CarteJoaillerie>& cartesJoaillerie,
-                       std::vector<CarteNoble*>& cartesNoble,
-                       std::vector<CarteJoaillerie>& cartesDansPioche,
-                       std::vector<CarteJoaillerie>& cartesDehors,
-                       Jeu& jeu,
+                       std::vector<CarteJoaillerie>& cartesJoaillerie, // Avant de continuer le jeu, vous devez initialiser toutes les cartesJoaillerie
+                       std::vector<CarteNoble*>& cartesNoble, // Avant de continuer le jeu, vous devez initialiser toutes les cartesNoble
+                       //std::vector<CarteJoaillerie>& cartesDansPioche,
+                       //std::vector<CarteJoaillerie>& cartesDehors,
+                       Jeu& jeu, // Avant de continuer le jeu, vous devez initialiser un objet vide pour stocker les données lues.
                        Joueur& joueur1,
                        Joueur& joueur2,
                        std::vector<Pioche>& pioches,
