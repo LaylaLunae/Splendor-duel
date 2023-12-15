@@ -506,14 +506,15 @@ int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
             return 5;
         }
 
-        // Vérification sur l'or: ne peut être un jeton or que si un seul jeton est prix.
-        if (
-                jetons[position_dans_plateau]->getCouleurString()== "Or" &&
-                ((nombre_jetons_dans_selection == 1 &&
-                selection_courante[0] ->getCouleurString()=="Or") ||
-                (nombre_jetons_dans_selection == 2 &&
-                selection_courante[0] -> getCouleurString() == "Or")
-                )) {
+        // Vérification sur l'or:
+        // La sélection est invalise si j'ai déjà des jetons dans la sélection
+        // et que je choisir un or OU que le jeton que j'ai déjà est or
+        if ( (nombre_jetons_dans_selection> 0 && (
+                jetons[position_dans_plateau]->getCouleurString()== "Or" ||
+                selection_courante[0]->getCouleurString()=="Or" )) ||
+                nombre_jetons_dans_selection == 2 && selection_courante[1]->getCouleurString()=="Or")
+                // On choisit un jeton Or alors que le joueur possède déjà des jetons
+                {
             //throw PlateauException("\nQue un seul jeton or possible!  <('o'<)");
             std::cout<<"\nQue un seul jeton or possible!  <('o'<)"<<"\n";
             return 3;
