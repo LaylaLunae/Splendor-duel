@@ -12,11 +12,10 @@ enum PrivilegeStatus {
 
 class Privilege {
 public:
-    Privilege() : status(NONE) {}
+    Privilege(int id) : status(NONE),id(id) {}
     PrivilegeStatus getStatus();
     void setStatus(PrivilegeStatus p);
     int getID() const;
-    void setID(int idP);
 
 private:
     PrivilegeStatus status;
