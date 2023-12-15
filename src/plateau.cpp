@@ -119,7 +119,7 @@ nombre_jetons_dans_selection(0), vuePlateau(vp){
 
     privileges = new const Privilege*[nb_privileges_MAX];
     for (unsigned int j = 0; j<3; j++)
-        privileges = new const Privilege*;
+        privileges[j] = new const Privilege();
     nb_privileges = nb_privileges_MAX;
 
     cartes_nobles = new const CarteNoble*[4];
@@ -292,12 +292,6 @@ void Plateau::remplissagePlateau(bool avecAffichage) {
 
         i++;
     }
-
-    //for (unsigned int index = 0; index < 5; i++) {
-     //   for (unsigned int index_j = 0; index_j < 5; index_j++) {
-            //jetons[index][index_j]
-     //   }
-    //}
 }
 
 
@@ -639,7 +633,7 @@ const Privilege* Plateau::prendrePrivilege() {
     privileges[nb_privileges-1] = nullptr;
     nb_privileges--;
 
-    vuePlateau->affichagePrivileges();
+    //vuePlateau->affichagePrivileges();
 
     return resultat;
 }
@@ -664,6 +658,11 @@ void Plateau::donnePrivilege(const Privilege* p) {
 
 
 const CarteNoble* Plateau::prendreCarteNoble(unsigned int numero) {
+    if (numero > nb_carte_noble-1) {
+        std::cout<<"Le numéro de carte noble est trop grand ! ";
+        std::cout<<"Il n'y a que "<<nb_carte_noble<<" sur le plateau!"<<std::endl;
+        return nullptr;
+    }
     if (cartes_nobles[numero] == nullptr)
         //throw PlateauException("Cette carte n'est plus sur le plateau... ¯\\_(^^')_/¯");
         std::cout<<"Cette carte n'est plus sur le plateau... ¯\\_(^^')_/¯"<<"\n";
@@ -816,7 +815,18 @@ std::vector<std::vector<unsigned int>>  Plateau::donnePositionsPossiblesAPartirD
 }
 
 
-// ----------------- Vue Plateau : --------------
+// --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
+// --------------------------- Vue Plateau : -------------------------------
+
+void VuePlateau::carteNobleClick_Plateau(VueCarteNoble* vc) {
+   plateau->prendreCarteNoble(vc->getNumero()) ;
+   affichageCartes();
+}
 
 void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
     std::cout<<"Le jeton clicke a la position : "<<vj->getX()<<","<< vj->getY()<<"\n";
@@ -832,14 +842,12 @@ void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
     }
 }
 
-//const Privilege* VuePlateau::privilegeClick_Plateau(VuePrivilege *vp) {
-//    std::cout<<"Privilege clicked!";
-//    const Privilege* p = plateau->prendrePrivilege();
-//    if (p != nullptr) {
-//        affichagePrivileges();
-//    }
-//    return p;
-//}
+void VuePlateau::privilegeClick_Plateau(VuePrivilege *vp) {
+    const Privilege* p = plateau->prendrePrivilege();
+    if (p != nullptr) {
+        affichagePrivileges();
+    }
+}
 
 void VuePlateau::affichagePrivileges() {
     /*
@@ -858,29 +866,35 @@ void VuePlateau::affichagePrivileges() {
     for (size_t i = 0; i < plateau->nb_privileges; i ++) {
         vuesPrivileges[i] = new VuePrivilege(plateau->privileges[i], this);
         layout_privilege->addWidget(vuesPrivileges[i]);
-//        connect(
-//                vuesPrivileges[i],
-//                SIGNAL(privilegeClick(VuePrivilege*)),
-//                this,
-//                SLOT(privilegeClick_Plateau(VuePrivilege*))
-//        );
+        connect(
+                vuesPrivileges[i],
+                SIGNAL(privilegeClick(VuePrivilege*)),
+                this,
+                SLOT(privilegeClick_Plateau(VuePrivilege*))
+        );
     }
     repaint();
 }
 
 VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent),
     vuesJetons(25, nullptr),
-    vuesPrivileges(3, nullptr)
+    vuesPrivileges(3, nullptr),
+    vuesCartes(4)
 {
+
+
     plateau = new Plateau(nullptr, this);
     //std::cout<<plateau->etatPlateau();
 
     main_layout = new QVBoxLayout(this);
     layout_info = new QHBoxLayout();
     layout_bouton = new QGridLayout();
+    layout_carte = new QGridLayout();
     layout_privilege = new QHBoxLayout();
 
     affichageJetons();
+    affichageCartes();
+    affichagePrivileges();
 
     boutonValider = new QPushButton("Valider", this);
     // Set the background color to light green
@@ -910,6 +924,7 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent),
     boutonRemplissage->show();
     layout_info->addWidget(boutonRemplissage);
 
+
 //    boutonDonnerPrivilege = new QPushButton("Déposer Privilège", this);
 //    QString styleSheetPrivilege = "background-color: lightyellow; color: black;";
 //    boutonDonnerPrivilege->setStyleSheet(styleSheetPrivilege);
@@ -920,10 +935,10 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent),
 //            &VuePlateau::donnerPrivilege
 //    );
 
-   affichagePrivileges();
 
     layout_info->addLayout(layout_privilege);
     main_layout->addLayout(layout_bouton);
+    main_layout->addLayout(layout_carte);
     main_layout->addLayout(layout_info);
     setLayout(main_layout);
 }
@@ -944,9 +959,16 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent),
 
 void VuePlateau::validerPlateau() {
     std::vector<const Jeton*> main = plateau->validerSelectionEtPrendreJetons();
-    for (auto j : main) {
-        plateau->ajouterSac(j);
-    }
+
+    // ------------------ Test ---------------
+    // Décommenter la ligne suivant pour pouvoir tester le remplissage
+    //for (auto j : main) {plateau->ajouterSac(j);}
+
+
+    Jeu& jeu = Jeu::getJeu();
+    std::cout<<"Jetons donnés à  : "<<jeu.getJoueurActuel()->getPseudo();
+    Obligatoire::ajouterJetonsJoueur(jeu.getJoueurActuel(), main);
+
     affichageJetons();
 }
 
@@ -955,7 +977,51 @@ void VuePlateau::remplirPlateau() {
     affichageJetons();
 }
 
+void VuePlateau::affichageCartes() {
+    /*
+     * Appelée pour mettre à jour l'affichage des cartes Nobles
+     * sur le plateau. Est fait en fonction des cartes contenues dans le
+     * tableau de pointeurs de cartesNobles chez Plateau;
+     */
+    while (QLayoutItem *item = layout_carte->takeAt(0)) {
+        if (QWidget *widget = item->widget()) {
+            widget->deleteLater();
+        }
+        delete item;
+    }
+
+    std::cout<<"CN "<<plateau->nb_carte_noble<<std::endl;
+
+    vuesCartes.clear();
+    for (size_t i = 0; i < plateau->getNbCarteNoble(); i++) {
+        const CarteNoble* pt = plateau->cartes_nobles[i];
+        if (pt != nullptr) {
+            vuesCartes[i] = new VueCarteNoble(
+                    //plateau->cartes_nobles[i],
+                    i, this);
+//                    new QPushButton(
+//                    QString::fromStdString(
+//                            std::string("Cartes Noble ") + std::to_string(i)
+//                    )
+        //    );
+            layout_carte->addWidget(vuesCartes[i], i/2, i%2);
+            connect(
+                    vuesCartes[i],
+                    SIGNAL(carteClick(VueCarteNoble*)),
+                    this,
+                    SLOT(carteNobleClick_Plateau(VueCarteNoble*))
+            );
+        }
+    }
+    repaint();
+}
+
 void VuePlateau::affichageJetons() {
+    /*
+     * Appelée pour mettre à jour l'affichage des jetons sur le plateau.
+     * Est fait en fonction des jetons contenus dans le tableau de pointeurs
+     * de jetons chez Plateau;
+     */
     while (QLayoutItem *item = layout_bouton->takeAt(0)) {
         if (QWidget *widget = item->widget()) {
             widget->deleteLater();
@@ -979,9 +1045,9 @@ void VuePlateau::affichageJetons() {
                 layout_bouton->addWidget(vuesJetons[5 * i + j], i, j);
                 connect(
                         vuesJetons[5 * i + j],
-                        SIGNAL(jetonClick(VueJeton * )),
+                        SIGNAL(jetonClick(VueJeton*)),
                         this,
-                        SLOT(jetonClick_Plateau(VueJeton * ))
+                        SLOT(jetonClick_Plateau(VueJeton*))
                 );
             } // Fin if
         }

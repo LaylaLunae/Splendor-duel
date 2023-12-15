@@ -13,6 +13,8 @@
 
 #include "privilege.h" // safe
 #include "jeton.h" // safe
+//#include "jeu.h"
+//#include "carte.h"
 //#include "carteNoble.h"
 
 class CarteNoble;
@@ -22,6 +24,7 @@ class Privilege;
 class QPushButton;
 class VueJeton;
 class VuePlateau;
+class VueCarteNoble;
 
 class PlateauException {
     std::string info;
@@ -175,6 +178,11 @@ std::tuple<int, int> choisir_jeton();
 
 void testes_pour_plateau();
 
+
+
+
+
+
 class VuePlateau : public QWidget {
 Q_OBJECT
 public:
@@ -183,10 +191,12 @@ public:
 private:
     Plateau* plateau = nullptr;
     QGridLayout* layout_bouton;
+    QGridLayout* layout_carte;
     QHBoxLayout* layout_info;
     QVBoxLayout* main_layout;
     QHBoxLayout* layout_privilege;
     std::vector<VueJeton*> vuesJetons;
+    std::vector<VueCarteNoble*> vuesCartes;
     QPushButton* boutonValider;
     QPushButton* boutonRemplissage;
     QPushButton* boutonDonnerPrivilege;
@@ -194,6 +204,7 @@ private:
 
     void miseAJourJetons();
     void affichageJetons();
+    void affichageCartes();
     void affichagePrivileges();
     friend class Plateau;
 
@@ -201,7 +212,8 @@ private slots:
     void jetonClick_Plateau(VueJeton*) ;//{ std::cout<<"Clicked!\n"; }
     void validerPlateau();
     void remplirPlateau();
-    //const Privilege* privilegeClick_Plateau(VuePrivilege*);
+    void privilegeClick_Plateau(VuePrivilege*);
+    void carteNobleClick_Plateau(VueCarteNoble*);
     //void donnerPrivilege(const Privilege* p);
 
 };
