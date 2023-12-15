@@ -16,9 +16,6 @@ int Privilege::getID() const {
     return id;
 }
 
-void Privilege::setID(int idP) {
-    id = idP;
-}
 
 void VuePrivilege::paintEvent(QPaintEvent *event) {
 
