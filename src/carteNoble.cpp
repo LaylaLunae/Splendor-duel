@@ -20,3 +20,11 @@ int CarteNoble::getPointPrestige() const {
 const int CarteNoble::getID() const {
     return id;
 }
+
+
+void VueCarteNoble::paintEvent(QPaintEvent *event) {
+    QPalette palette = this->palette();
+    palette.setColor(QPalette::Button, Qt::yellow);
+    setPalette(palette);
+    QPushButton::paintEvent(event);
+}
