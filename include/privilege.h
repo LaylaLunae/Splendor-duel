@@ -12,12 +12,15 @@ enum PrivilegeStatus {
 
 class Privilege {
 public:
-    Privilege() : status(NONE) {} // 构造函数初始化为NONE状态
+    Privilege() : status(NONE) {}
     PrivilegeStatus getStatus();
     void setStatus(PrivilegeStatus p);
+    int getID() const;
+    void setID(int idP);
 
 private:
-    PrivilegeStatus status; // 成员变量表示特权状态
+    PrivilegeStatus status;
+    int id;
 };
 class VuePrivilege : public QPushButton {
     Q_OBJECT

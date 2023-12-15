@@ -12,6 +12,14 @@ void Privilege::setStatus(PrivilegeStatus p) {
     status = p;
 }
 
+int Privilege::getID() const {
+    return id;
+}
+
+void Privilege::setID(int idP) {
+    id = idP;
+}
+
 void VuePrivilege::paintEvent(QPaintEvent *event) {
 
     QPalette palette = this->palette();

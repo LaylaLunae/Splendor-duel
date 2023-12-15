@@ -42,15 +42,17 @@ public:
 
     Joueur* getJoueurActuel() const {return joueur_actuel;}
     Joueur* getJoueurGagnant() const {return joueur_gagnant;}
+    void setJoueurActuel(Joueur* joueur) {joueur_actuel = joueur;}
+    void setJoueurGagnant(Joueur* joueur) {joueur_gagnant = joueur;}
 
     void validationAction();
 
     //pour l'instant dans public
-    void nouvellePartie();
-    void reprendrePartie(); //faut bdd
-    void verifAnciennePartie(); //faut bdd
+    void nouvellePartie(); // faut bdd
+    //void reprendrePartie(); //faut bdd
+    //void verifAnciennePartie(); //faut bdd  Zhenyang: pas necessaire
+    //void sauvegarderPartie(); //faut bdd
     void verifGagnant(Joueur * j1, Joueur * j2);
-    void sauvegarderPartie(); //faut bdd
     void vainqueur(Joueur * j);
     void auSuivant(Joueur * j1, Joueur * j2);
     void verifCarteNoble(Joueur * j, Plateau * p);
@@ -59,8 +61,37 @@ public:
     void tour(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j, Obligatoire * obl, Optionnelle * opt);
 };
 
-void initCarteJoaillerie(sqlite3* db, std::vector<CarteJoaillerie>& cartes);
-void initCarteNoble(sqlite3* db, std::vector<const CarteNoble*>* cartesNoble);
+/* =============================================== Fonctions avec BDD =============================================== */
+void executeSQL(sqlite3* db, const std::string& sql);
 
+void initCarteJoaillerie(sqlite3* db, std::vector<const CarteJoaillerie*>* cartes);
+void initCarteNoble(sqlite3* db, std::vector<const CarteNoble*>* cartesNoble);
+//void initPrivileges(sqlite3* db, std::vector<const Privilege*>* privileges);
+
+// Interface de fonction pour initialiser toute la base de données du jeu
+void clearAndInitializeTables(sqlite3* db);
+
+// Interface fonctionnelle pour stocker l'intégralité du jeu
+void sauvegarderPartie(sqlite3* db,
+        //const std::vector<CarteJoaillerie>& cartesDansPioche,
+        //const std::vector<CarteJoaillerie>& cartesDehors,
+                       const Jeu& jeu,
+                       const Joueur& joueur1,
+                       const Joueur& joueur2,
+                       const std::vector<Pioche>& pioches,
+                       const Plateau& plateau);
+
+// Interface de récupération de données pour continuer le jeu
+void continuerLaPartie(sqlite3* db,
+                       std::vector<CarteJoaillerie>& cartesJoaillerie,
+                       std::vector<CarteNoble*>& cartesNoble,
+                       std::vector<CarteJoaillerie>& cartesDansPioche,
+                       std::vector<CarteJoaillerie>& cartesDehors,
+                       Jeu& jeu,
+                       Joueur& joueur1,
+                       Joueur& joueur2,
+                       std::vector<Pioche>& pioches,
+                       Plateau& plateau,
+                       std::vector<Privilege>& privileges);
 
 #endif //JEU_JEU_H

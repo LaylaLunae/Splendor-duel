@@ -22,6 +22,7 @@ public:
 
     int getCouronne() const;
     int getPointPrestige()const;
+    const int getID() const;
 };
 
 #endif // CARTENOBLE_H

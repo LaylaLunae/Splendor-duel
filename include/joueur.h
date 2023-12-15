@@ -39,6 +39,9 @@ protected:
     Joueur* adversaire; // Pointeur vers le joueur adverse
     bool droitDeRejouer; // Marqueur pour le droit de jouer un tour supplémentaire
 
+    bool isIA;
+    Difficulte diff;
+
     Joueur(const std::string nom);
     virtual ~Joueur();
     Joueur(const Joueur& autre);
@@ -55,6 +58,11 @@ public:
     CarteJoaillerie * getCarteMain(int index) const;
     CarteNoble * getCarteNoble(int index) const;
     int getGemmesBonus(int index) const;
+
+    std::vector<CarteJoaillerie*> getCartesReservees() const;
+    std::vector<CarteJoaillerie*> getCartesMain() const;
+    std::vector<CarteNoble*> getCartesNoble() const;
+
     //Privilege getPrivilege(int index) const;
     const std::vector<Privilege *>& getPrivileges() const;
     void ajouterCarteJoaillerie(CarteJoaillerie& carte);
@@ -67,6 +75,9 @@ public:
 
     void setPointsPrestigeCouleurs(int index, int valeur);
     void setGemmesBonus(int index, int value);
+    void setNombreCouronnes(int nbCour);
+    void setPseudo(std::string pse);
+    void setPointsPrestigeTotal(int pointP);
 
     // Timo - Temporaire pour action
     int getNbJeton(int index) const;
@@ -91,8 +102,15 @@ public:
     int getNbJetonTotal() const;
     int getNbJetonsParCouleur(int couleur) const;
 
+    bool getDroitDeRejouer() const;
+
     virtual int choisirChoix(int min, int max) = 0;
 
+    // Utilisé pour décider s'il faut initialiser IA ou Hum ai n lors de la poursuite du jeu
+    bool getIsIA() const;
+    void setIsIA(bool isia);
+    Difficulte getDifficulte() const;
+    void setDifficulte(Difficulte difficulte);
 
     // test :
     void initialiserJoueur();
@@ -123,7 +141,7 @@ public:
 
     virtual void prendreJetons(Plateau* plateau);
 
-
+    void setDifficulte(Difficulte diff);
 };
 
 

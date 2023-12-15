@@ -1,7 +1,6 @@
 #include <iostream>
 #include "../include/jeu.h"
 
-
 Joueur::Joueur(const std::string nom)
         : pseudo(nom), nombre_couronnes(0), points_prestige_total(0), droitDeRejouer(false), adversaire(nullptr){
 
@@ -96,16 +95,32 @@ int Joueur::getPointsPrestigeTotal() const{
     return points_prestige_total;
 }
 
+void Joueur::setPointsPrestigeTotal(int pointP) {
+    points_prestige_total = pointP;
+}
+
 std::string Joueur::getPseudo() const {
     return pseudo;
+}
+
+void Joueur::setPseudo(std::string pse) {
+    pseudo = pse;
 }
 
 int Joueur::getNombreCouronnes()const {
     return nombre_couronnes;
 }
 
+void Joueur::setNombreCouronnes(int nbCour) {
+    nombre_couronnes = nbCour;
+}
+
+void Joueur::setDifficulte(Difficulte difficulte) {
+    diff = difficulte;
+}
+
 int Joueur:: getPointsPrestigeCouleurs(int index) const {
-    if (index >= 0 && index < 5) {
+    if (index >= 0 && index < 6) {
         return points_prestige_couleurs[index];
     }
     return 0;
@@ -159,7 +174,11 @@ int Joueur::getNbJetonsParCouleur(int couleur) const {
     return totalJetonsCouleur;
 }
 
+bool Joueur::getDroitDeRejouer() const { return droitDeRejouer; }
 
+std::vector<CarteJoaillerie*> Joueur::getCartesReservees() const { return cartes_reservees; }
+std::vector<CarteJoaillerie*> Joueur::getCartesMain() const { return cartes_main; }
+std::vector<CarteNoble*> Joueur::getCartesNoble() const{ return cartes_noble; }
 
 /*
 Privilege* Joueur::getPrivilege(int index) const {
@@ -185,9 +204,6 @@ int Joueur::getNbCartesReservees() const {
 int Joueur::getNombreCartesNobles() const {
     return cartes_noble.size();
 }
-
-
-
 
 int Joueur::getNbJeton(int index) const{
     return nb_jeton[index];
@@ -302,7 +318,7 @@ Privilege Joueur::removePrivilege() {
 
 // Ajouter une méthode setter à la classe Joueur
 void Joueur::setPointsPrestigeCouleurs(int index, int valeur) {
-    if (index >= 0 && index < 5) { // Assurez-vous que l'indice est dans la plage valide
+    if (index >= 0 && index < 6) { // Assurez-vous que l'indice est dans la plage valide
         points_prestige_couleurs[index] = valeur;
     } else {
         std::cerr << "L'indice est hors limites." << std::endl;
@@ -326,13 +342,15 @@ void Joueur::resetRejouer() {
         droitDeRejouer = true;
 }
 
-void Joueur::resetRejouer(bool reset) {
-    droitDeRejouer = reset;
-}
+void Joueur::resetRejouer(bool reset) {droitDeRejouer = reset;}
 
+bool Joueur::getIsIA() const {return isIA;}
 
+void Joueur::setIsIA(bool isia) {isIA = isia;}
 
+Difficulte Joueur::getDifficulte() const {return diff;}
 
+void IA::setDifficulte(Difficulte diff) {difficulte = diff;}
 
 // Flux ostream
 std::ostream& operator<<(std::ostream& os, const Joueur& joueur) {

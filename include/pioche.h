@@ -29,6 +29,7 @@ public:
     int getMaxCartesPioche() const {return max_cartes_pioche;}
 
     const CarteJoaillerie * setCartesDansPioche(const CarteJoaillerie * c, int i) {cartes_dans_pioche[i] = c; return cartes_dans_pioche[i];}
+    const CarteJoaillerie * setCartesDehors(const CarteJoaillerie * c, int i) {cartes_dehors[i] = c; return cartes_dehors[i];}
 
     Pioche(const int np, const int mcr, int mcp);
     ~Pioche();

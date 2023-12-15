@@ -25,58 +25,6 @@ bool connectToDatabase(sqlite3** db, const std::string& dbPath) {
     }
 }
 
-template <typename T>
-T queryJoueurField(sqlite3* db, const std::string& fieldName, int joueurId) {
-    sqlite3_stmt* stmt;
-    std::string query = "SELECT " + fieldName + " FROM Joueur WHERE id = ?;";
-    T result;
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
-        std::cerr << "Error preparing statement: " << sqlite3_errmsg(db) << std::endl;
-        return T();
-    }
-
-    sqlite3_bind_int(stmt, 1, joueurId);
-
-    if (sqlite3_step(stmt) == SQLITE_ROW) {
-        if constexpr (std::is_same_v<T, int>) {
-            result = sqlite3_column_int(stmt, 0);
-        } else if constexpr (std::is_same_v<T, std::string>) {
-            result = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-        } else if constexpr (std::is_same_v<T, bool>) {
-            result = static_cast<bool>(sqlite3_column_int(stmt, 0));
-        }
-    } else {
-        std::cerr << "Error executing query: " << sqlite3_errmsg(db) << std::endl;
-    }
-
-    sqlite3_finalize(stmt);
-    return result;
-}
-
-template <typename T>
-bool updateJoueurField(sqlite3* db, const std::string& fieldName, T value, int joueurId) {
-    sqlite3_stmt* stmt;
-    std::string query = "UPDATE Joueur SET " + fieldName + " = ? WHERE id = ?;";
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
-        std::cerr << "Error preparing statement: " << sqlite3_errmsg(db) << std::endl;
-        return false;
-    }
-
-    if constexpr (std::is_same_v<T, int> || std::is_same_v<T, bool>) {
-        sqlite3_bind_int(stmt, 1, static_cast<int>(value));
-    } else if constexpr (std::is_same_v<T, std::string>) {
-        sqlite3_bind_text(stmt, 1, value.c_str(), -1, SQLITE_STATIC);
-    }
-
-    sqlite3_bind_int(stmt, 2, joueurId);
-
-    bool success = sqlite3_step(stmt) == SQLITE_DONE;
-    sqlite3_finalize(stmt);
-    return success;
-}
-
 int queryJeuField(sqlite3* db, const std::string& fieldName, int jeuId) {
     sqlite3_stmt* stmt;
     std::string query = "SELECT " + fieldName + " FROM Jeu WHERE handler_id = ?;";
@@ -173,7 +121,6 @@ struct CarteNobleData {
     std::array<int, 2> pouvoirs;
 };
 
-
 CarteNobleData queryCarteNoble(sqlite3* db, int carteId) {
     sqlite3_stmt* stmt;
     std::string query = "SELECT * FROM CarteNoble WHERE id = ?;";
@@ -194,24 +141,6 @@ CarteNobleData queryCarteNoble(sqlite3* db, int carteId) {
     return data;
 }
 
-template <typename T>
-T queryPrivilege(sqlite3* db, int privilegeId) {
-    sqlite3_stmt* stmt;
-    std::string query = "SELECT status FROM Privilege WHERE id = ?;";
-    T status = 0;
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, privilegeId);
-
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            status = static_cast<T>(sqlite3_column_int(stmt, 0));
-        }
-        sqlite3_finalize(stmt);
-    }
-
-    return status;
-}
-
 void updatePrivilegeStatus(sqlite3* db, int privilegeId, int status) {
     sqlite3_stmt* stmt;
     std::string update = "UPDATE Privilege SET status = ? WHERE id = ?;";
@@ -223,35 +152,6 @@ void updatePrivilegeStatus(sqlite3* db, int privilegeId, int status) {
         sqlite3_step(stmt);
         sqlite3_finalize(stmt);
     }
-}
-
-template <typename T>
-T queryPiocheField(sqlite3* db, const std::string& fieldName, int piocheId) {
-    sqlite3_stmt* stmt;
-    std::string query = "SELECT " + fieldName + " FROM Pioche WHERE id = ?;";
-    T result;
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
-        std::cerr << "Error preparing statement: " << sqlite3_errmsg(db) << std::endl;
-        return T();
-    }
-
-    sqlite3_bind_int(stmt, 1, piocheId);
-
-    if (sqlite3_step(stmt) == SQLITE_ROW) {
-        if constexpr (std::is_same_v<T, int>) {
-            result = sqlite3_column_int(stmt, 0);
-        } else if constexpr (std::is_same_v<T, std::string>) {
-            result = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-        } else if constexpr (std::is_same_v<T, bool>) {
-            result = static_cast<bool>(sqlite3_column_int(stmt, 0));
-        }
-    } else {
-        std::cerr << "Error executing query: " << sqlite3_errmsg(db) << std::endl;
-    }
-
-    sqlite3_finalize(stmt);
-    return result;
 }
 
 // JoueurCartesReservees JoueurCartesMain JoueurCartesNoble
@@ -372,25 +272,6 @@ JetonData queryJeton(sqlite3* db, int jetonId) {
     return data;
 }
 
-template <typename T>
-T queryJoueurJetonField(sqlite3* db, const std::string& fieldName, int joueurId, int jetonId) {
-    sqlite3_stmt* stmt;
-    std::string query = "SELECT " + fieldName + " FROM JoueurJetons WHERE joueur_id = ? AND jeton_id = ?;";
-    T result = T();
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, joueurId);
-        sqlite3_bind_int(stmt, 2, jetonId);
-
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            result = sqlite3_column_int(stmt, 0);
-        }
-        sqlite3_finalize(stmt);
-    }
-
-    return result;
-}
-
 void insertJoueurJeton(sqlite3* db, int joueurId, int jetonId, int quantite) {
     sqlite3_stmt* stmt;
     std::string query = "INSERT INTO JoueurJetons (joueur_id, jeton_id, quantite) VALUES (?, ?, ?);";
@@ -419,24 +300,6 @@ void updateJoueurJeton(sqlite3* db, int joueurId, int jetonId, int quantite) {
     }
 }
 
-template <typename T>
-T queryPlateauField(sqlite3* db, const std::string& fieldName, int plateauId) {
-    sqlite3_stmt* stmt;
-    std::string query = "SELECT " + fieldName + " FROM Plateau WHERE id = ?;";
-    T result = T();
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, plateauId);
-
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            result = sqlite3_column_int(stmt, 0);
-        }
-        sqlite3_finalize(stmt);
-    }
-
-    return result;
-}
-
 void updatePlateauField(sqlite3* db, const std::string& fieldName, int fieldValue, int plateauId) {
     sqlite3_stmt* stmt;
     std::string query = "UPDATE Plateau SET " + fieldName + " = ? WHERE id = ?;";
@@ -450,28 +313,9 @@ void updatePlateauField(sqlite3* db, const std::string& fieldName, int fieldValu
     }
 }
 
-template <typename T>
-T queryPlateauJetonsField(sqlite3* db, const std::string& fieldName, int plateauId, int jetonId) {
+void updatePlateauJetonsField(sqlite3* db, const std::string& tableName, const std::string& fieldName, int fieldValue, int plateauId, int jetonId) {
     sqlite3_stmt* stmt;
-    std::string query = "SELECT " + fieldName + " FROM PlateauJetons WHERE plateau_id = ? AND jeton_id = ?;";
-    T result = T();
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, plateauId);
-        sqlite3_bind_int(stmt, 2, jetonId);
-
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            result = sqlite3_column_int(stmt, 0);
-        }
-        sqlite3_finalize(stmt);
-    }
-
-    return result;
-}
-
-void updatePlateauJetonsField(sqlite3* db, const std::string& fieldName, int fieldValue, int plateauId, int jetonId) {
-    sqlite3_stmt* stmt;
-    std::string query = "UPDATE PlateauJetons SET " + fieldName + " = ? WHERE plateau_id = ? AND jeton_id = ?;";
+    std::string query = "UPDATE " + tableName + " SET " + fieldName + " = ? WHERE plateau_id = ? AND jeton_id = ?;";
 
     if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
         sqlite3_bind_int(stmt, 1, fieldValue);
@@ -483,9 +327,9 @@ void updatePlateauJetonsField(sqlite3* db, const std::string& fieldName, int fie
     }
 }
 
-void insertIntoPlateauJetons(sqlite3* db, int plateauId, int jetonId, int quantite) {
+void insertIntoPlateauJetons(sqlite3* db, const std::string& tableName, int plateauId, int jetonId, int quantite) {
     sqlite3_stmt* stmt;
-    std::string query = "INSERT INTO PlateauJetons (plateau_id, jeton_id, quantite) VALUES (?, ?, ?);";
+    std::string query = "INSERT INTO " + tableName + " (plateau_id, jeton_id, quantite) VALUES (?, ?, ?);";
 
     if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
         sqlite3_bind_int(stmt, 1, plateauId);
@@ -497,117 +341,22 @@ void insertIntoPlateauJetons(sqlite3* db, int plateauId, int jetonId, int quanti
     }
 }
 
-template <typename T>
-T queryPlateauSelectionCouranteField(sqlite3* db, const std::string& fieldName, int plateauId, int jetonId) {
+std::vector<int> queryPlateauPrivilegesField(sqlite3* db, int plateauId) {
     sqlite3_stmt* stmt;
-    std::string query = "SELECT " + fieldName + " FROM PlateauSelectionCourante WHERE plateau_id = ? AND jeton_id = ?;";
-    T result = T();
+    std::vector<int> privilegeIds;
+    std::string query = "SELECT privilege_id FROM PlateauPrivileges WHERE plateau_id = ?;";
 
     if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
         sqlite3_bind_int(stmt, 1, plateauId);
-        sqlite3_bind_int(stmt, 2, jetonId);
 
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            result = sqlite3_column_int(stmt, 0);
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            int privilegeId = sqlite3_column_int(stmt, 0);
+            privilegeIds.push_back(privilegeId);
         }
         sqlite3_finalize(stmt);
     }
 
-    return result;
-}
-
-void updatePlateauSelectionCouranteField(sqlite3* db, const std::string& fieldName, int fieldValue, int plateauId, int jetonId) {
-    sqlite3_stmt* stmt;
-    std::string query = "UPDATE PlateauSelectionCourante SET " + fieldName + " = ? WHERE plateau_id = ? AND jeton_id = ?;";
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, fieldValue);
-        sqlite3_bind_int(stmt, 2, plateauId);
-        sqlite3_bind_int(stmt, 3, jetonId);
-
-        sqlite3_step(stmt);
-        sqlite3_finalize(stmt);
-    }
-}
-
-void insertIntoPlateauSelectionCourante(sqlite3* db, int plateauId, int jetonId, int posX, int posY) {
-    sqlite3_stmt* stmt;
-    std::string query = "INSERT INTO PlateauSelectionCourante (plateau_id, jeton_id, position_x, position_y) VALUES (?, ?, ?, ?);";
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, plateauId);
-        sqlite3_bind_int(stmt, 2, jetonId);
-        sqlite3_bind_int(stmt, 3, posX);
-        sqlite3_bind_int(stmt, 4, posY);
-
-        sqlite3_step(stmt);
-        sqlite3_finalize(stmt);
-    }
-}
-
-template <typename T>
-T queryPlateauSacField(sqlite3* db, const std::string& fieldName, int plateauId, int jetonId) {
-    sqlite3_stmt* stmt;
-    std::string query = "SELECT " + fieldName + " FROM PlateauSac WHERE plateau_id = ? AND jeton_id = ?;";
-    T result = T();
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, plateauId);
-        sqlite3_bind_int(stmt, 2, jetonId);
-
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            result = sqlite3_column_int(stmt, 0);
-        }
-        sqlite3_finalize(stmt);
-    }
-
-    return result;
-}
-
-void updatePlateauSacField(sqlite3* db, const std::string& fieldName, int fieldValue, int plateauId, int jetonId) {
-    sqlite3_stmt* stmt;
-    std::string query = "UPDATE PlateauSac SET " + fieldName + " = ? WHERE plateau_id = ? AND jeton_id = ?;";
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, fieldValue);
-        sqlite3_bind_int(stmt, 2, plateauId);
-        sqlite3_bind_int(stmt, 3, jetonId);
-
-        sqlite3_step(stmt);
-        sqlite3_finalize(stmt);
-    }
-}
-
-void insertIntoPlateauSac(sqlite3* db, int plateauId, int jetonId) {
-    sqlite3_stmt* stmt;
-    std::string query = "INSERT INTO PlateauSac (plateau_id, jeton_id) VALUES (?, ?);";
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, plateauId);
-        sqlite3_bind_int(stmt, 2, jetonId);
-
-        sqlite3_step(stmt);
-        sqlite3_finalize(stmt);
-    }
-}
-
-template <typename T>
-T queryPlateauPrivilegesField(sqlite3* db, const std::string& fieldName, int plateauId, int privilegeId) {
-    sqlite3_stmt* stmt;
-    std::string query = "SELECT " + fieldName + " FROM PlateauPrivileges WHERE plateau_id = ? AND privilege_id = ?;";
-    T result = T();
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, plateauId);
-        sqlite3_bind_int(stmt, 2, privilegeId);
-
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            result = sqlite3_column_int(stmt, 0);
-        }
-        sqlite3_finalize(stmt);
-    }
-
-    return result;
+    return privilegeIds;
 }
 
 void updatePlateauPrivilegesField(sqlite3* db, const std::string& fieldName, int fieldValue, int plateauId, int privilegeId) {
@@ -637,25 +386,6 @@ void insertIntoPlateauPrivileges(sqlite3* db, int plateauId, int privilegeId) {
     }
 }
 
-template <typename T>
-T queryPlateauCartesNobleField(sqlite3* db, const std::string& fieldName, int plateauId, int carteNobleId) {
-    sqlite3_stmt* stmt;
-    std::string query = "SELECT " + fieldName + " FROM PlateauCartesNoble WHERE plateau_id = ? AND carte_noble_id = ?;";
-    T result = T();
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, plateauId);
-        sqlite3_bind_int(stmt, 2, carteNobleId);
-
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            result = sqlite3_column_int(stmt, 0);
-        }
-        sqlite3_finalize(stmt);
-    }
-
-    return result;
-}
-
 void updatePlateauCartesNobleField(sqlite3* db, const std::string& fieldName, int fieldValue, int plateauId, int carteNobleId) {
     sqlite3_stmt* stmt;
     std::string query = "UPDATE PlateauCartesNoble SET " + fieldName + " = ? WHERE plateau_id = ? AND carte_noble_id = ?;";
@@ -681,25 +411,6 @@ void insertIntoPlateauCartesNoble(sqlite3* db, int plateauId, int carteNobleId) 
         sqlite3_step(stmt);
         sqlite3_finalize(stmt);
     }
-}
-
-// Optionelle et Obligatoire
-template <typename T>
-T queryTableField(sqlite3* db, const std::string& tableName, const std::string& fieldName, int id) {
-    sqlite3_stmt* stmt;
-    std::string query = "SELECT " + fieldName + " FROM " + tableName + " WHERE id = ?;";
-    T result = T();
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_int(stmt, 1, id);
-
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            result = sqlite3_column_int(stmt, 0);
-        }
-        sqlite3_finalize(stmt);
-    }
-
-    return result;
 }
 
 void updateTableField(sqlite3* db, const std::string& tableName, const std::string& fieldName, int fieldValue, int id) {

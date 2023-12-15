@@ -76,18 +76,18 @@ class Plateau {
 
 
 abstract class Joueur {
-    - pseudo: string
-    - nombre_couronnes: int
-    - points_prestige_total: int
-    - points_prestige_couleurs: vector<int>
-    - cartes_reservees: vector<CarteJoaillerie*>
-    - cartes_main: vector<CarteJoaillerie*>
-    - cartes_noble: vector<CarteNoble*>
-    - gemmes_bonus: vector<int>
-    - nb_jeton: vector<int>
-    - privileges: vector<Privilege*>
-    - adversaire: Joueur*
-    - droit_de_rejouer: bool
+    # pseudo: string
+    # nombre_couronnes: int
+    # points_prestige_total: int
+    # points_prestige_couleurs: vector<int>
+    # cartes_reservees: vector<CarteJoaillerie*>
+    # cartes_main: vector<CarteJoaillerie*>
+    # cartes_noble: vector<CarteNoble*>
+    # gemmes_bonus: vector<int>
+    # nb_jeton: vector<int>
+    # privileges: vector<Privilege*>
+    # adversaire: Joueur*
+    # droit_de_rejouer: bool
 
     + Joueur(nom: string const)
     + getPointsPrestigeTotal(): int const
@@ -226,10 +226,8 @@ note left: S'il n'y a pas de pouvoir, alors pouvoirs[index]=rien
 class CarteNoble {
 -couronne{2,3}: int
 -pointPrestige: int
--exigences: map<Couleur, int>
 +getCouronne(): int const;
 +getPointPrestige(): int const;
-+getExigences(): map<Couleur, int> const;
 }
 
 class CarteJoaillerie {

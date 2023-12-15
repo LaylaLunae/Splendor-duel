@@ -108,7 +108,65 @@ public:
     unsigned int getNbJetonsSac() const { return nb_jetons_sac; }
     unsigned int getNbPrivilegeMAX() const { return nb_privileges_MAX; }
     unsigned int getNbPrivileges() const { return nb_privileges; }
+    unsigned int getPointeurCaseLibre() const { return pointeur_case_libre; }
+    unsigned int getNbCarteNoble() const { return nb_carte_noble; }
     bool hasJetonOr(); // Vérifier qu'il y a au moins un jeton or sur le plateau
+    void setNbJetonsSac(int nbJetons) { nb_jetons_sac = nbJetons; }
+    void setNbJetonsPlateau(int nbJetons) { nb_jetons_plateau = nbJetons; }
+    void setPointeurCaseLibre(int nbPointeur) { pointeur_case_libre = nbPointeur; }
+    void setNbPrivileges(int nbPriv) { nb_privileges = nbPriv; }
+    void setNbCarteNoble(int nbCarteNoble) { nb_carte_noble = nbCarteNoble; }
+    void setSac(const std::vector<const Jeton*>& newSac) {
+        delete[] sac;
+        sac = new const Jeton*[newSac.size()];
+        for (size_t i = 0; i < newSac.size(); ++i) { sac[i] = newSac[i]; }
+        nb_jetons_sac = static_cast<unsigned int>(newSac.size());
+    }
+
+    std::vector<const Jeton*> getSac() const {
+        std::vector<const Jeton*> sacCopy;
+        for (unsigned int i = 0; i < nb_jetons_sac; ++i) { sacCopy.push_back(sac[i]); }
+        return sacCopy;
+    }
+
+    void setJetons(const std::vector<const Jeton*>& newJetons) {
+        delete[] jetons;
+        jetons = new const Jeton*[newJetons.size()];
+        for (size_t i = 0; i < newJetons.size(); ++i) { jetons[i] = newJetons[i]; }
+        nb_jetons_plateau = static_cast<unsigned int>(newJetons.size());
+    }
+
+    std::vector<const Jeton*> getJetons() const {
+        std::vector<const Jeton*> jetonsCopy;
+        for (unsigned int i = 0; i < nb_jetons_plateau; ++i) { jetonsCopy.push_back(jetons[i]); }
+        return jetonsCopy;
+    }
+
+    void setCartesNobles(const std::vector<const CarteNoble*>& newCartesNobles) {
+        delete[] cartes_nobles;
+        cartes_nobles = new const CarteNoble*[newCartesNobles.size()];
+        for (size_t i = 0; i < newCartesNobles.size(); ++i) { cartes_nobles[i] = newCartesNobles[i]; }
+        nb_carte_noble = static_cast<unsigned int>(newCartesNobles.size());
+    }
+
+    std::vector<const CarteNoble*> getCartesNobles() const {
+        std::vector<const CarteNoble*> cartesNoblesCopy;
+        for (unsigned int i = 0; i < nb_carte_noble; ++i) { cartesNoblesCopy.push_back(cartes_nobles[i]); }
+        return cartesNoblesCopy;
+    }
+
+    void setPrivileges(const std::vector<const Privilege*>& newPrivileges) {
+        delete[] privileges;
+        privileges = new const Privilege*[newPrivileges.size()];
+        for (size_t i = 0; i < newPrivileges.size(); ++i) { privileges[i] = newPrivileges[i]; }
+        nb_privileges = static_cast<unsigned int>(newPrivileges.size());
+    }
+
+    std::vector<const Privilege*> getPrivileges() const {
+        std::vector<const Privilege*> privilegesCopy;
+        for (unsigned int i = 0; i < nb_privileges; ++i) { privilegesCopy.push_back(privileges[i]); }
+        return privilegesCopy;
+    }
 
     std::vector<std::vector<unsigned  int>>  donnePositionsPossiblesAPartirDe(unsigned int x, unsigned int y);
 };
