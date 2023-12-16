@@ -383,9 +383,15 @@ void clearAndInitializeTables(sqlite3* db) {
         );
     )";
 
+    std::string resetJeton = R"(
+        UPDATE Jeton
+        SET position_x = -1, position_y = -1;
+    )";
+
     executeSQL(db, resetJeu);
     executeSQL(db, resetJoueurs);
     executeSQL(db, resetPlateau);
+    executeSQL(db, resetJeton);
 
     // Directly reset information for tables
 //    std::string resetPrivilege = R"(
