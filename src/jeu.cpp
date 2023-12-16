@@ -399,16 +399,16 @@ void clearAndInitializeTables(sqlite3* db) {
 }
 
 void continuerLaPartie(sqlite3* db,
-                       std::vector<CarteJoaillerie>& cartesJoaillerie,
-                       std::vector<CarteNoble*>& cartesNoble,
+                       std::vector<CarteJoaillerie*>& cartesJoaillerie,
+                       std::vector<const CarteNoble*>& cartesNoble,
                        //std::vector<CarteJoaillerie>& cartesDansPioche,
                        //std::vector<CarteJoaillerie>& cartesDehors,
                        Jeu& jeu,
-                       Joueur& joueur1,
-                       Joueur& joueur2,
-                       std::vector<Pioche>& pioches,
+                       Joueur* joueur1,
+                       Joueur* joueur2,
+                       std::vector<Pioche*>& pioches,
                        Plateau& plateau,
-                       std::vector<Privilege>& privileges) {
+                       std::vector<Privilege*> privileges) {
 
 //    Présentation de deux classes "Humain" et d'une classe "IA" car nous ne pouvons pas être sûrs si le jeu se joue avec deux Humains ou un Humain et un IA
 //
@@ -418,37 +418,37 @@ void continuerLaPartie(sqlite3* db,
         // 1. Obtenir des informations sur CartesDansPioche
 
         // Requête cartes_dans_pioche dans Pioche i
-        std::vector<int> cartesDansPiocheIds = queryCartesInPioche(db, "CartesDansPioche", pioche.getNumeroPioche());
+        std::vector<int> cartesDansPiocheIds = queryCartesInPioche(db, "CartesDansPioche", pioche->getNumeroPioche());
         int cartesDansPiocheCount = 0;
         // Requête cartes_dans_pioche dans Pioche
         for (int id: cartesDansPiocheIds) {
             const CarteJoaillerie *carte = nullptr;
             for (const auto &c: cartesJoaillerie) {
-                if (c.getID() == id) {
-                    carte = &c;
+                if (c->getID() == id) {
+                    carte = c;
                     break;
                 }
             }
             if (carte != nullptr) {
-                pioche.setCartesDansPioche(carte, cartesDansPiocheCount);
+                pioche->setCartesDansPioche(carte, cartesDansPiocheCount);
                 cartesDansPiocheCount++;
             }
         }
 
         // 2. Obtenir des informations CartesDehors
-        std::vector<int> cartesDehorsIds = queryCartesInPioche(db, "CartesDehors", pioche.getNumeroPioche());
+        std::vector<int> cartesDehorsIds = queryCartesInPioche(db, "CartesDehors", pioche->getNumeroPioche());
         int cartesDehorsCount = 0;
         // Requête cartes_dehors dans Pioche
         for (int id: cartesDehorsIds) {
             const CarteJoaillerie *carte = nullptr;
             for (const auto &c: cartesJoaillerie) {
-                if (c.getID() == id) {
-                    carte = &c;
+                if (c->getID() == id) {
+                    carte = c;
                     break;
                 }
             }
             if (carte != nullptr) {
-                pioche.setCartesDehors(carte, cartesDehorsCount);
+                pioche->setCartesDehors(carte, cartesDehorsCount);
                 cartesDehorsCount++;
             }
         }
@@ -484,32 +484,32 @@ void continuerLaPartie(sqlite3* db,
     int difficulteValue = queryJoueurField<int>(db, "difficulte", 1);
     Difficulte difficulte = static_cast<Difficulte>(difficulteValue);
 
-    joueur1.setPseudo(pseudo);
-    joueur1.setNombreCouronnes(nombre_couronnes);
-    joueur1.setPointsPrestigeTotal(points_prestige_total);
-    joueur1.setPointsPrestigeCouleurs(0, points_prestige_couleur1);
-    joueur1.setPointsPrestigeCouleurs(1, points_prestige_couleur2);
-    joueur1.setPointsPrestigeCouleurs(2, points_prestige_couleur3);
-    joueur1.setPointsPrestigeCouleurs(3, points_prestige_couleur4);
-    joueur1.setPointsPrestigeCouleurs(4, points_prestige_couleur5);
-    joueur1.setPointsPrestigeCouleurs(5, points_prestige_couleur6);
-    joueur1.setGemmesBonus(0,gemmes_bonus1);
-    joueur1.setGemmesBonus(1,gemmes_bonus2);
-    joueur1.setGemmesBonus(2,gemmes_bonus3);
-    joueur1.setGemmesBonus(3,gemmes_bonus4);
-    joueur1.setGemmesBonus(4,gemmes_bonus5);
-    joueur1.setGemmesBonus(5,gemmes_bonus6);
-    joueur1.setNbJeton(0, nb_jeton1);
-    joueur1.setNbJeton(1, nb_jeton2);
-    joueur1.setNbJeton(2, nb_jeton3);
-    joueur1.setNbJeton(3, nb_jeton4);
-    joueur1.setNbJeton(4, nb_jeton5);
-    joueur1.setNbJeton(5, nb_jeton6);
-    joueur1.setNbJeton(6, nb_jeton7);
-    joueur1.resetRejouer(droit_de_rejouer);
-    joueur1.setAdversaire(&joueur2);
-    joueur1.setIsIA(isIA);
-    joueur1.setDifficulte(difficulte);
+    joueur1->setPseudo(pseudo);
+    joueur1->setNombreCouronnes(nombre_couronnes);
+    joueur1->setPointsPrestigeTotal(points_prestige_total);
+    joueur1->setPointsPrestigeCouleurs(0, points_prestige_couleur1);
+    joueur1->setPointsPrestigeCouleurs(1, points_prestige_couleur2);
+    joueur1->setPointsPrestigeCouleurs(2, points_prestige_couleur3);
+    joueur1->setPointsPrestigeCouleurs(3, points_prestige_couleur4);
+    joueur1->setPointsPrestigeCouleurs(4, points_prestige_couleur5);
+    joueur1->setPointsPrestigeCouleurs(5, points_prestige_couleur6);
+    joueur1->setGemmesBonus(0,gemmes_bonus1);
+    joueur1->setGemmesBonus(1,gemmes_bonus2);
+    joueur1->setGemmesBonus(2,gemmes_bonus3);
+    joueur1->setGemmesBonus(3,gemmes_bonus4);
+    joueur1->setGemmesBonus(4,gemmes_bonus5);
+    joueur1->setGemmesBonus(5,gemmes_bonus6);
+    joueur1->setNbJeton(0, nb_jeton1);
+    joueur1->setNbJeton(1, nb_jeton2);
+    joueur1->setNbJeton(2, nb_jeton3);
+    joueur1->setNbJeton(3, nb_jeton4);
+    joueur1->setNbJeton(4, nb_jeton5);
+    joueur1->setNbJeton(5, nb_jeton6);
+    joueur1->setNbJeton(6, nb_jeton7);
+    joueur1->resetRejouer(droit_de_rejouer);
+    joueur1->setAdversaire(joueur2);
+    joueur1->setIsIA(isIA);
+    joueur1->setDifficulte(difficulte);
 
     pseudo = queryJoueurField<std::string>(db, "pseudo", 2);
     isIA = queryJoueurField<bool>(db, "is_IA", 2);
@@ -540,32 +540,32 @@ void continuerLaPartie(sqlite3* db,
     difficulteValue = queryJoueurField<int>(db, "difficulte", 2);
     difficulte = static_cast<Difficulte>(difficulteValue);
 
-    joueur2.setPseudo(pseudo);
-    joueur2.setNombreCouronnes(nombre_couronnes);
-    joueur2.setPointsPrestigeTotal(points_prestige_total);
-    joueur2.setPointsPrestigeCouleurs(0, points_prestige_couleur1);
-    joueur2.setPointsPrestigeCouleurs(1, points_prestige_couleur2);
-    joueur2.setPointsPrestigeCouleurs(2, points_prestige_couleur3);
-    joueur2.setPointsPrestigeCouleurs(3, points_prestige_couleur4);
-    joueur2.setPointsPrestigeCouleurs(4, points_prestige_couleur5);
-    joueur2.setPointsPrestigeCouleurs(5, points_prestige_couleur6);
-    joueur2.setGemmesBonus(0,gemmes_bonus1);
-    joueur2.setGemmesBonus(1,gemmes_bonus2);
-    joueur2.setGemmesBonus(2,gemmes_bonus3);
-    joueur2.setGemmesBonus(3,gemmes_bonus4);
-    joueur2.setGemmesBonus(4,gemmes_bonus5);
-    joueur2.setGemmesBonus(5,gemmes_bonus6);
-    joueur2.setNbJeton(0, nb_jeton1);
-    joueur2.setNbJeton(1, nb_jeton2);
-    joueur2.setNbJeton(2, nb_jeton3);
-    joueur2.setNbJeton(3, nb_jeton4);
-    joueur2.setNbJeton(4, nb_jeton5);
-    joueur2.setNbJeton(5, nb_jeton6);
-    joueur2.setNbJeton(6, nb_jeton7);
-    joueur2.resetRejouer(droit_de_rejouer);
-    joueur2.setAdversaire(&joueur1);
-    joueur2.setIsIA(isIA);
-    joueur2.setDifficulte(difficulte);
+    joueur2->setPseudo(pseudo);
+    joueur2->setNombreCouronnes(nombre_couronnes);
+    joueur2->setPointsPrestigeTotal(points_prestige_total);
+    joueur2->setPointsPrestigeCouleurs(0, points_prestige_couleur1);
+    joueur2->setPointsPrestigeCouleurs(1, points_prestige_couleur2);
+    joueur2->setPointsPrestigeCouleurs(2, points_prestige_couleur3);
+    joueur2->setPointsPrestigeCouleurs(3, points_prestige_couleur4);
+    joueur2->setPointsPrestigeCouleurs(4, points_prestige_couleur5);
+    joueur2->setPointsPrestigeCouleurs(5, points_prestige_couleur6);
+    joueur2->setGemmesBonus(0,gemmes_bonus1);
+    joueur2->setGemmesBonus(1,gemmes_bonus2);
+    joueur2->setGemmesBonus(2,gemmes_bonus3);
+    joueur2->setGemmesBonus(3,gemmes_bonus4);
+    joueur2->setGemmesBonus(4,gemmes_bonus5);
+    joueur2->setGemmesBonus(5,gemmes_bonus6);
+    joueur2->setNbJeton(0, nb_jeton1);
+    joueur2->setNbJeton(1, nb_jeton2);
+    joueur2->setNbJeton(2, nb_jeton3);
+    joueur2->setNbJeton(3, nb_jeton4);
+    joueur2->setNbJeton(4, nb_jeton5);
+    joueur2->setNbJeton(5, nb_jeton6);
+    joueur2->setNbJeton(6, nb_jeton7);
+    joueur2->resetRejouer(droit_de_rejouer);
+    joueur2->setAdversaire(joueur1);
+    joueur2->setIsIA(isIA);
+    joueur2->setDifficulte(difficulte);
 
     // 4. Obtenir des informations JoueurCartesMain, JoueurCartesNoble, JoueurCartesReservees, JoueurJetons, JoueurPrivilege
     // 查询玩家的特权和卡片信息
@@ -575,33 +575,33 @@ void continuerLaPartie(sqlite3* db,
     std::vector<int> privilegesIds = queryJoueurPrivileges(db, 1);
 
     for (int carteId : cartesReserveesIds) {
-        for (CarteJoaillerie& carte : cartesJoaillerie) {
-            if (carte.getID() == carteId) {
-                joueur1.ajouterCarteReservee(&carte);
+        for (CarteJoaillerie* carte : cartesJoaillerie) {
+            if (carte->getID() == carteId) {
+                joueur1->ajouterCarteReservee(carte);
                 break;
             }
         }
     }
     for (int carteId : cartesMainIds) {
-        for (CarteJoaillerie& carte : cartesJoaillerie) {
-            if (carte.getID() == carteId) {
-                joueur1.ajouterCarteJoaillerie(carte);
+        for (CarteJoaillerie* carte : cartesJoaillerie) {
+            if (carte->getID() == carteId) {
+                joueur1->ajouterCarteJoaillerie(*carte);
                 break;
             }
         }
     }
     for (int carteId : cartesNobleIds) {
-        for (CarteNoble* carte : cartesNoble) {
+        for (const CarteNoble* carte : cartesNoble) {
             if (carte && carte->getID() == carteId) {
-                joueur1.ajouterCarteNoble(*carte);
+                joueur1->ajouterCarteNoble(*carte);
                 break;
             }
         }
     }
     for (int privilegeId : privilegesIds) {
-        for (Privilege& priv : privileges) {
-            if (priv.getID() == privilegeId) {
-                joueur1.ajouterPrivilege(&priv);
+        for (Privilege* priv : privileges) {
+            if (priv->getID() == privilegeId) {
+                joueur1->ajouterPrivilege(priv);
                 break;
             }
         }
@@ -618,33 +618,33 @@ void continuerLaPartie(sqlite3* db,
     privilegesIds = queryJoueurPrivileges(db, 2);
 
     for (int carteId : cartesReserveesIds) {
-        for (CarteJoaillerie& carte : cartesJoaillerie) {
-            if (carte.getID() == carteId) {
-                joueur1.ajouterCarteReservee(&carte);
+        for (CarteJoaillerie* carte : cartesJoaillerie) {
+            if (carte->getID() == carteId) {
+                joueur1->ajouterCarteReservee(carte);
                 break;
             }
         }
     }
     for (int carteId : cartesMainIds) {
-        for (CarteJoaillerie& carte : cartesJoaillerie) {
-            if (carte.getID() == carteId) {
-                joueur1.ajouterCarteJoaillerie(carte);
+        for (CarteJoaillerie *carte : cartesJoaillerie) {
+            if (carte->getID() == carteId) {
+                joueur1->ajouterCarteJoaillerie(*carte);
                 break;
             }
         }
     }
     for (int carteId : cartesNobleIds) {
-        for (CarteNoble* carte : cartesNoble) {
+        for (const CarteNoble* carte : cartesNoble) {
             if (carte && carte->getID() == carteId) {
-                joueur1.ajouterCarteNoble(*carte);
+                joueur1->ajouterCarteNoble(*carte);
                 break;
             }
         }
     }
     for (int privilegeId : privilegesIds) {
-        for (Privilege& priv : privileges) {
-            if (priv.getID() == privilegeId) {
-                joueur1.ajouterPrivilege(&priv);
+        for (Privilege* priv : privileges) {
+            if (priv->getID() == privilegeId) {
+                joueur1->ajouterPrivilege(priv);
                 break;
             }
         }
@@ -661,14 +661,14 @@ void continuerLaPartie(sqlite3* db,
 //    int plateauId = queryJeuField(db, "Plateau_id", jeuId);
 
     if(joueur1Id == 1) {
-        jeu.setJoueurActuel(&joueur1);
+        jeu.setJoueurActuel(joueur1);
     } else {
-        jeu.setJoueurActuel(&joueur2);
+        jeu.setJoueurActuel(joueur2);
     }
     if(joueur1Id == 1) {
-        jeu.setJoueurGagnant(&joueur1);
+        jeu.setJoueurGagnant(joueur1);
     } else if (joueur1Id == 2){
-        jeu.setJoueurGagnant(&joueur2);
+        jeu.setJoueurGagnant(joueur2);
     } else {
         jeu.setJoueurGagnant(nullptr);
     }
@@ -730,10 +730,10 @@ void continuerLaPartie(sqlite3* db,
     plateau.setSac(newSac);
 
     std::vector<int> privilegeIds = queryPlateauPrivilegesField(db, plateauId);
-    std::vector<const Privilege*> plateauPrivileges;
+    std::vector<Privilege*> plateauPrivileges;
     for (int id : privilegeIds) {
-        for (const Privilege& priv : privileges) {
-            if (priv.getID() == id) { plateauPrivileges.push_back(&priv); break; }
+        for (Privilege* priv : privileges) {
+            if (priv->getID() == id) { plateauPrivileges.push_back(priv); break; }
         }
     }
     plateau.setPrivileges(plateauPrivileges);
@@ -756,7 +756,8 @@ void sauvegarderPartie(sqlite3* db,
     for (Pioche* pioche : pioches) {
         // 存储 cartes_dans_pioche
         for (int i = 0; i < pioche->getMaxCartesPioche(); ++i) {
-            insertCarteInPioche(db, "CartesDansPioche", pioche->getNumeroPioche(), pioche->getCartesDansPioche(i)->getID());
+            if (pioche->getCartesDansPioche(i) != nullptr)
+                insertCarteInPioche(db, "CartesDansPioche", pioche->getNumeroPioche(), pioche->getCartesDansPioche(i)->getID());
         }
         // 存储 cartes_dehors
         for (int i = 0; i < pioche->getMaxCartesRevelees(); ++i) {
@@ -936,8 +937,8 @@ void sauvegarderPartie(sqlite3* db,
 
     auto plateauJetons = plateau.getJetons();
     std::map<int, int> jetonsCount; // Le nombre de Jetons utilisés pour stocker chaque type
-    for (const auto& jeton : plateauJetons) {
-        if (jeton) {
+    for (auto jeton : plateauJetons) {
+        if (jeton != nullptr) {
             int jetonId = static_cast<int>(jeton->getCouleur()) + 1;
             sacCount[jetonId]++;
         }
@@ -947,7 +948,104 @@ void sauvegarderPartie(sqlite3* db,
     // 更新 Privilege 数据 应该用不到
 }
 
+/*
+ *
+ /$$    /$$                                                            /$$$$$
+| $$   | $$                                                              |__  $$
+| $$   | $$       /$$   /$$        /$$$$$$                        | $$        /$$$$$$        /$$     /$$
+|  $$ / $$/      | $$  | $$       /$$__  $$                        | $$       /$$__  $$      | $$      | $$
+ \  $$ $$/       | $$  | $$      | $$$$$$$$             /$$  | $$      | $$$$$$$$      | $$     | $$
+  \  $$$/        | $$  | $$      | $$_____/               | $$  | $$      | $$_____/         | $$      | $$
+   \  $/         |  $$$$$$/      |  $$$$$$$            |  $$$$$$/      |  $$$$$$$      |  $$$$$$/
+    \_/           \______/        \_______/                  \______/        \_______/          \______/
+ */
 
+
+// ----------------------- Partie Vue Jeu --------------------
+VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
+
+    // ---------------------- init bdd  ---------------------
+    if (sqlite3_open("../base.db", &db) != SQLITE_OK) {
+        std::cerr << "Can't open database (from VueJeu constructor: " ;
+        std::cerr<< sqlite3_errmsg(db) << std::endl;
+    }
+
+    // --------------------- init joueurs --------------
+    j1 = new Humain ("Joueur Alex");
+    j2 = new Humain ("Joueur 2");
+    jeu->setJoueurActuel(j1);
+
+    // --------------------- init pioches et cartes -----------------
+    cartesJoaillerie = std::vector<CarteJoaillerie*>(0);
+    pioche1 = new Pioche(1, 5, 30);
+    pioche2 = new Pioche(2, 4, 24);
+    pioche3 = new Pioche(3, 3, 13);
+    pioches  = std::vector<Pioche*>(0);
+    pioches.push_back(pioche1);
+    pioches.push_back(pioche2);
+    pioches.push_back(pioche3);
+
+    // ---------------- init layout ----------------
+    layout_bas = new QHBoxLayout();
+    layout_centre = new QHBoxLayout();
+    layout_main = new QVBoxLayout(this);
+
+    // ------------ init bouton sauvegarder -------------
+    bouton_sauvegarde = new QPushButton("Sauvegarder la partie");
+    QObject::connect(
+            bouton_sauvegarde,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonSauvegardeClick
+            );
+    bouton_sauvegarde->show();
+
+
+    // ------------------ init vuePlateau ------------
+    vue_plateau = new VuePlateau();
+    layout_centre->addWidget(vue_plateau);
+
+
+    // ----------------- Load dernière partie ------------
+    // Récupération des vecteurs cartes nobles et cartes joailleries
+    /*
+    std::vector<const CarteNoble*> cartesNoble = vue_plateau->getPlateau()->getCartesNobles();
+    continuerLaPartie(
+            db,
+            cartesJoaillerie,
+            cartesNoble,
+            //cartesDansPioche, cartesDehors,
+            reinterpret_cast<Jeu &>(jeu), j1, j2, pioches,
+            *vue_plateau->getPlateau(),
+            vue_plateau->getPlateau()->getPrivileges()
+    );
+    */
+
+    // ---------------------- update widgets ------------------
+    /*
+     * Il faudrait mettre à jour tous les affichages après un
+    * chargement depuis la mémoire. POUR L'INSTANT, la fonction
+     * continuerLaPartie ne fonctionne pas (d'où la mise en commentaire
+     * ci-dessus) donc pas besoin de udpate les widgets du jeu(d'où la
+     * mise en commentaire ci-dessous.
+     */
+    //vue_plateau->affichageJetons();
+
+
+    // ------------- connecter les layouts -------------
+    layout_bas->addWidget(bouton_sauvegarde);
+    layout_main->addLayout(layout_centre);
+    layout_main->addLayout(layout_bas);
+    setLayout(layout_main);
+}
+
+void VueJeu::boutonSauvegardeClick() {
+    /*
+     * Méthode appelée pour sauvegarder la partie en cours, quand le bouton
+     * est appuyé.
+     */
+    sauvegarderPartie(db, *jeu, *j1,*j2, pioches, *vue_plateau->getPlateau());
+}
 
 //int main() {
 //    sqlite3* db;
@@ -962,3 +1060,9 @@ void sauvegarderPartie(sqlite3* db,
 //    sqlite3_close(db);
 //    return 0;
 //}
+
+
+
+
+
+

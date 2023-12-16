@@ -83,15 +83,46 @@ void sauvegarderPartie(sqlite3* db,
 
 // Interface de récupération de données pour continuer le jeu
 void continuerLaPartie(sqlite3* db,
-                       std::vector<CarteJoaillerie>& cartesJoaillerie, // Avant de continuer le jeu, vous devez initialiser toutes les cartesJoaillerie
-                       std::vector<CarteNoble*>& cartesNoble, // Avant de continuer le jeu, vous devez initialiser toutes les cartesNoble
+                       std::vector<CarteJoaillerie*>& cartesJoaillerie, // Avant de continuer le jeu, vous devez initialiser toutes les cartesJoaillerie
+                       std::vector<const CarteNoble*>& cartesNoble, // Avant de continuer le jeu, vous devez initialiser toutes les cartesNoble
                        //std::vector<CarteJoaillerie>& cartesDansPioche,
                        //std::vector<CarteJoaillerie>& cartesDehors,
                        Jeu& jeu, // Avant de continuer le jeu, vous devez initialiser un objet vide pour stocker les données lues.
-                       Joueur& joueur1,
-                       Joueur& joueur2,
-                       std::vector<Pioche>& pioches,
+                       Joueur* joueur1,
+                       Joueur* joueur2,
+                       std::vector<Pioche*>& pioches,
                        Plateau& plateau,
-                       std::vector<Privilege>& privileges);
+                       std::vector<Privilege*> privileges);
+
+
+class VueJeu : public QWidget {
+    Q_OBJECT
+public:
+    VueJeu(Jeu* jeu, QWidget *parent = nullptr);
+private:
+
+    Jeu* jeu;
+    Joueur* j1;
+    Joueur* j2;
+    Pioche* pioche1;
+    Pioche* pioche2;
+    Pioche* pioche3;
+    std::vector<Pioche*> pioches;
+    std::vector<CarteJoaillerie*> cartesJoaillerie;
+
+
+    QVBoxLayout* layout_main;
+    QHBoxLayout* layout_centre;
+    QHBoxLayout *layout_bas;
+    VuePlateau* vue_plateau;
+
+    QPushButton*  bouton_sauvegarde;
+
+    sqlite3* db;
+
+   // void sauvegarder();
+private slots:
+    void boutonSauvegardeClick();
+};
 
 #endif //JEU_JEU_H

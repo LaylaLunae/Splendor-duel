@@ -85,8 +85,11 @@ void testes_pour_plateau() {
 Plateau::Plateau(sqlite3** db, VuePlateau* vp):jetons(nullptr),sac(nullptr),privileges(nullptr),
 cartes_nobles(0),nb_jetons_plateau(0),
 nb_jetons_sac(0), selection_courante(nullptr),
-selection_courante_positions(nullptr),nb_carte_noble(nb_cartes_nobles_MAX),
+selection_courante_positions(nullptr),
 nombre_jetons_dans_selection(0), vuePlateau(vp){
+
+    nb_cartes_nobles_MAX = 4;
+    nb_carte_noble = nb_cartes_nobles_MAX;
 
     jetons = new const Jeton*[nb_jetons_plateau_MAX];
     sac = new const Jeton*[nb_jetons_sac_MAX];
@@ -117,23 +120,21 @@ nombre_jetons_dans_selection(0), vuePlateau(vp){
     }
     nb_jetons_sac = nb_jetons_sac_MAX;
 
-    privileges = new const Privilege*[nb_privileges_MAX];
+    privileges = new Privilege*[nb_privileges_MAX];
     for (unsigned int j = 0; j<3; j++) {
-        privileges[j] = new const Privilege(j);
+        privileges[j] = new  Privilege(j);
     }
     nb_privileges = nb_privileges_MAX;
 
+    // --------------- Début init carte Noble -----------------
     cartes_nobles = std::vector<const CarteNoble*>(nb_cartes_nobles_MAX);
     std::map<Couleur, int> c;
     c.insert(std::make_pair(Couleur::rouge, 3));
-
-
-
     sqlite3* dbInstance = nullptr;
     sqlite3** db_ = &dbInstance;
     bool ok = connectToDatabase(db_, "../base.db");
     if (ok) {
-        std::vector<const CarteNoble *> *vec_cartesNobles = new std::vector<const CarteNoble *>(0);
+        std::vector<const CarteNoble *> *vec_cartesNobles = new std::vector<const CarteNoble*>(0);
         initCarteNoble(*db_, vec_cartesNobles);
         for (size_t i = 0; i < vec_cartesNobles->size(); i++) {
             cartes_nobles[i] = vec_cartesNobles->at(i);
@@ -156,6 +157,8 @@ nombre_jetons_dans_selection(0), vuePlateau(vp){
                 0, 3, 0,
                 Pouvoir::pierre_en_plus, Pouvoir::nouveau_tour, 0);
     }
+    // ------------------- FIn carte Noble -----------------------
+
 
     // Le plateau est vide => la première case où mettre le prochain jeton est la 0
     pointeur_case_libre = 0;
@@ -640,7 +643,7 @@ const Privilege* Plateau::prendrePrivilege() {
 }
 
 
-void Plateau::donnePrivilege(const Privilege* p) {
+void Plateau::donnePrivilege(Privilege* p) {
     /*
      * Redonner un privilège au plateau.
      * Appelle VuePlateau pour mettre à jour l'affichage des privilèges.
@@ -902,7 +905,10 @@ void VuePlateau::carteNobleClick_Plateau(VueCarteNoble* vc) {
        Jeu::getJeu().getJoueurActuel()->ajouterCarteNoble(*cn);
    } catch(const char* e) {
        std::cout<<e;
-       plateau->cartes_nobles.push_back(cn);
+       plateau->cartes_nobles.insert(
+               plateau->cartes_nobles.begin() + vc->getNumero(),
+               cn
+               );// push_back(cn);
        plateau->nb_carte_noble++;
    }
    affichageCartes();
@@ -979,7 +985,7 @@ void VuePlateau::validerPlateau() {
 
 
     Jeu& jeu = Jeu::getJeu();
-    std::cout<<"Jetons donnés à  : "<<jeu.getJoueurActuel()->getPseudo();
+    std::cout<<"Jetons donnés à  : "<<jeu.getJoueurActuel()->getPseudo()<<std::endl;
     Obligatoire::ajouterJetonsJoueur(jeu.getJoueurActuel(), main);
 
     affichageJetons();
@@ -1008,14 +1014,7 @@ void VuePlateau::affichageCartes() {
     for (size_t i = 0; i < plateau->nb_cartes_nobles_MAX; i++) {
         const CarteNoble* pt = plateau->cartes_nobles[i];
         if (pt != nullptr) {
-            vuesCartes[i] = new VueCarteNoble(
-                    //plateau->cartes_nobles[i],
-                    i, this);
-//                    new QPushButton(
-//                    QString::fromStdString(
-//                            std::string("Cartes Noble ") + std::to_string(i)
-//                    )
-        //    );
+            vuesCartes[i] = new VueCarteNoble(i, this);
             layout_carte->addWidget(vuesCartes[i], i/2, i%2);
             connect(
                     vuesCartes[i],

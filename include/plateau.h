@@ -43,7 +43,7 @@ struct ReponseValidationSelection {
 
 class Plateau {
     const Jeton** jetons;
-    const Privilege** privileges;
+    Privilege** privileges;
     const Jeton** sac;
     std::vector<const CarteNoble*> cartes_nobles;
     unsigned int nb_jetons_sac;
@@ -99,7 +99,7 @@ public:
     const Jeton* prendreJeton(unsigned int position_x, unsigned int position_y);
 
     const Privilege* prendrePrivilege();
-    void donnePrivilege(const Privilege* p);
+    void donnePrivilege(Privilege* p);
     const CarteNoble* prendreCarteNoble(unsigned int numero);
 
     bool hasJeton(); // Vérifiez s'il y a jeton en plateau
@@ -154,20 +154,23 @@ public:
     }
 
     std::vector<const CarteNoble*> getCartesNobles() const {
-        std::vector<const CarteNoble*> cartesNoblesCopy;
-        for (unsigned int i = 0; i < nb_carte_noble; i++) { cartesNoblesCopy.push_back(cartes_nobles[i]); }
+        std::vector<const CarteNoble*> cartesNoblesCopy(0);
+        for (unsigned int i = 0; i < nb_carte_noble; i++) {
+            const CarteNoble* cn  = cartes_nobles.at(i);
+            cartesNoblesCopy.push_back(cn);
+        }
         return cartesNoblesCopy;
     }
 
-    void setPrivileges(const std::vector<const Privilege*>& newPrivileges) {
+    void setPrivileges(const std::vector<Privilege*>& newPrivileges) {
         delete[] privileges;
-        privileges = new const Privilege*[newPrivileges.size()];
+        privileges = new Privilege*[newPrivileges.size()];
         for (size_t i = 0; i < newPrivileges.size(); ++i) { privileges[i] = newPrivileges[i]; }
         nb_privileges = static_cast<unsigned int>(newPrivileges.size());
     }
 
-    std::vector<const Privilege*> getPrivileges() const {
-        std::vector<const Privilege*> privilegesCopy;
+    std::vector<Privilege*> getPrivileges() const {
+        std::vector<Privilege*> privilegesCopy;
         for (unsigned int i = 0; i < nb_privileges; i++) {
             std::cout<<"privilege ";
             privilegesCopy.push_back(privileges[i]);
@@ -193,8 +196,11 @@ Q_OBJECT
 public:
     explicit VuePlateau(QWidget *parent = nullptr);
     Plateau* getPlateau() {return plateau;}
+
+    void affichageJetons(); // à appeler si chargement mémoire
+
 private:
-    Plateau* plateau = nullptr;
+    Plateau* plateau;
     QGridLayout* layout_bouton;
     QGridLayout* layout_carte;
     QHBoxLayout* layout_info;
@@ -208,7 +214,6 @@ private:
     std::vector<VuePrivilege*> vuesPrivileges;
 
     void miseAJourJetons();
-    void affichageJetons();
     void affichageCartes();
     void affichagePrivileges();
     friend class Plateau;

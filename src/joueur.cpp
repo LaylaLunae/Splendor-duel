@@ -9,7 +9,7 @@ Joueur::Joueur(const std::string nom)
     cartes_reservees.resize(0, nullptr);
     cartes_main.resize(0, nullptr);
     cartes_noble.resize(0, nullptr);
-    gemmes_bonus.resize(0, 0);
+    //gemmes_bonus.resize(0, 0);
     nb_jeton.resize(0, 0);
     privileges.resize(0, nullptr);
     points_prestige_couleurs.resize(5,0);
@@ -327,7 +327,8 @@ void Joueur::setPointsPrestigeCouleurs(int index, int valeur) {
 }
 
 void Joueur::setGemmesBonus(int index, int value) {
-    this->gemmes_bonus[index] = value;
+    if (index < gemmes_bonus.size())
+        this->gemmes_bonus[index] = value;
 }
 
 // Méthode pour vérifier si le joueur a le droit de jouer à nouveau.
