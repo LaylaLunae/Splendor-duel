@@ -1009,7 +1009,17 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
 
     // ------------------ init vuePlateau ------------
     vue_plateau = new VuePlateau();
+
+    // ------------------ init joueurs ---------------
+    vueJoueur1 = new FenetreInformations(j1);
+    vueJoueur2 = new FenetreInformations(j2);
+
+    // ------------------ layout centre --------------
+    layout_centre->addWidget(vueJoueur1);
     layout_centre->addWidget(vue_plateau);
+    layout_centre->addWidget(vueJoueur2);
+
+    // ------------------ cartes nobles --------------
 
 
     // ----------------- Load dernière partie ------------

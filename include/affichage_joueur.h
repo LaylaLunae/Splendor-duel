@@ -15,11 +15,15 @@ class FenetreInformations : public QWidget {
 Q_OBJECT
 
 public:
-    FenetreInformations(QWidget *parent = nullptr) : QWidget(parent), joueur(nullptr) {
+    FenetreInformations(Joueur* j, QWidget *parent = nullptr) : QWidget(parent), joueur(nullptr) {
         setFixedSize(400, 400);
         setWindowTitle("Informations du Joueur");
 
         QVBoxLayout *layout = new QVBoxLayout(this);
+
+        labelNom = new QLabel(QString::fromStdString(j->getPseudo()), this);
+        labelNom->setStyleSheet("QLabel { background-color: white; color: black; }");
+        layout->addWidget(labelNom);
 
         labelPriviliges = new QLabel("Nombre de Privilèges: 0", this);
         labelPriviliges->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
@@ -87,6 +91,7 @@ public slots:
     }
 
 private:
+    QLabel *labelNom;
     QLabel *labelPriviliges;
     QLabel *labelCouronnes;
     QLabel *labelCartesNobles;

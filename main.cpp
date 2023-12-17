@@ -181,7 +181,7 @@ int main(int argc, char *argv[]) {
 
 
     // ZhenyangZhenyangZhenyangZhenyangZhenyangZhenyangZhenyang: test 3 fonctions de BDD
-
+/*
     sqlite3* db;
     if (sqlite3_open("../base.db", &db) != SQLITE_OK) {
         std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
@@ -325,7 +325,7 @@ int main(int argc, char *argv[]) {
 
 //    jeu.setJoueurGagnant(&joueur2);
 
-    sauvegarderPartie(db, jeu, joueur1, joueur2, pioches, *plateau_jeu); // succès
+    sauvegarderPartie(db, jeu, joueur1, joueur2, pioches, *plateau_jeu); // succès*/
 
     // ----------------------------- Gestion BDD ---------------------------
     /*
@@ -345,7 +345,10 @@ int main(int argc, char *argv[]) {
     sqlite3_close(db);
     */
 
-    //return app.exec();
+    QApplication app(argc, argv);
+    VueJeu partie(&Jeu::getJeu());
+    partie.show();
+    return app.exec();
 }
 
 /*

@@ -12,6 +12,7 @@
 #include "pioche.h"
 #include "obligatoire.h"
 #include "joueur.h"
+#include "affichage_joueur.h"
 
 #include <sqlite3.h>
 #include "query.h"
@@ -115,6 +116,9 @@ private:
     QHBoxLayout* layout_centre;
     QHBoxLayout *layout_bas;
     VuePlateau* vue_plateau;
+    FenetreInformations* vueJoueur1;
+    FenetreInformations* vueJoueur2;
+    std::vector<VueCarteNoble*> vuesCartesNobles;
 
     QPushButton*  bouton_sauvegarde;
 
