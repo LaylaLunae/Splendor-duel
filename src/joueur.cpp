@@ -253,17 +253,11 @@ void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
 
     int nombreCouronnesCarte = carte.getCouronne();
 
-    // Vérifier si le joueur a 3 ou 6 couronnes dans son jeu
-    if (nombre_couronnes == 3 || nombre_couronnes == 6) {
-        // Ajouter le nombre de couronnes à la variable nombre_couronnes
-        nombre_couronnes += nombreCouronnesCarte;
+    // Ajouter le nombre de couronnes à la variable nombre_couronnes
+    nombre_couronnes += nombreCouronnesCarte;
 
-        // Ajouter les points de prestige de la carte à la variable points_prestige_total
-        points_prestige_total += carte.getPointPrestige();
-    }
-    else{
-        throw ("Le joueur doit avoir 3 ou 6 couronnes pour ajouter une carte noble.");
-    }
+    // Ajouter les points de prestige de la carte à la variable points_prestige_total
+    points_prestige_total += carte.getPointPrestige();
 }
 void Joueur::ajouterCarteReservee(CarteJoaillerie *carte) {
     if (cartes_reservees.size() < 3) {
