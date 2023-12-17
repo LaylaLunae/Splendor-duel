@@ -1,11 +1,11 @@
 //#include "../include/optionnelle.h"
 #include "../include/jeu.h"
 
-void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau) {
+bool Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau) {
     // Vérifier si le privilège est disponible et qu'il y a au moins un jeton sur le plateau
     if (!joueur->hasPrivilege() or !plateau->hasJeton()) {
         std::cout << "Le joueur ne peut pas depenser de privileges !\n";
-        return;
+        return false;
     }
 
     // Le joueur choisit un jeton non or
@@ -48,19 +48,21 @@ void Optionnelle::depenserPrivilege(Joueur* joueur, Plateau* plateau) {
     auto& privileges = const_cast<std::vector<Privilege*>&>(constPrivileges);
     plateau->donnePrivilege(privileges.back());
     privileges.pop_back();
+
+    return true;
 }
 
-void Optionnelle::remplissagePlateau(Joueur* joueur, Plateau* plateau) {
+bool Optionnelle::remplissagePlateau(Joueur* joueur, Plateau* plateau) {
     // Remplir les cases vides du plateau avec des jetons aléatoires tirés du sac
 
     // Vérifier qu'au moins une case est vide et qu'il y a au moins un jeton dans le sac
     if (plateau->getNbJetonsPlateau() == plateau->getNbJetonsPlateauMAX()) {
         std::cout << "Plateau deja rempli !\n";
-        return;
+        return false;
     }
     if (plateau->getNbJetonsSac() == 0) {
         std::cout << "Sac vide !\n";
-        return;
+        return false;
     }
 
     // On remplit alors le plateau
@@ -68,4 +70,6 @@ void Optionnelle::remplissagePlateau(Joueur* joueur, Plateau* plateau) {
 
     // Et on donne un privilège à l'adversaire
     Obligatoire::donnerPrivilegeAdversaire(joueur, plateau);
+
+    return true;
 }

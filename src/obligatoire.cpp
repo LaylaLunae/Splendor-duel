@@ -1,11 +1,11 @@
 //#include "../include/obligatoire.h"
 #include "../include/jeu.h"
 
-void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
+bool Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
     // Vérifier que le plateau n'est point vide
     if (!plateau->hasJeton()) {
         std::cout << "Plateau vide\n";
-        return;
+        return false;
     }
 
     // Le joueur récupère les jetons
@@ -59,17 +59,19 @@ void Obligatoire::prendreJeton(Joueur* joueur, Plateau* plateau) {
     if (give_privilege) {
         donnerPrivilegeAdversaire(joueur, plateau);
     }
+
+    return true;
 }
 
-void Obligatoire::demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
+bool Obligatoire::demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
     // Vérifier que le plateau a au moins 1 jeton or et que le joueur n'a pas 3 cartes réservées déjà
     if (!plateau->hasJetonOr()) {
         std::cout << "Aucun jeton or de disponible sur le plateau !\n";
-        return;
+        return false;
     }
     if (joueur->getNbCartesReservees() == 3) {
         std::cout << "Le joueur a deja 3 cartes reservees !";
-        return;
+        return false;
     }
 
     // On récupère un jeton or
@@ -145,17 +147,19 @@ void Obligatoire::demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioch
     }
 
     reserverCarte(joueur, plateau, p1, p2, p3, n_pioche, n_carte, carte_revelee);
+
+    return true;
 }
 
-void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3, int n_pioche, int n_carte, bool carte_revelee) {
+bool Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3, int n_pioche, int n_carte, bool carte_revelee) {
     // Vérifier que le plateau a au moins 1 jeton or et que le joueur n'a pas 3 cartes réservées déjà
     if (!plateau->hasJetonOr()) {
         std::cout << "Aucun jeton or de disponible sur le plateau !\n";
-        return;
+        return false;
     }
     if (joueur->getNbCartesReservees() == 3) {
         std::cout << "Le joueur a deja 3 cartes reservees !";
-        return;
+        return false;
     }
 
     Pioche* pioche;
@@ -166,13 +170,13 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
         case 3: pioche = p3; break;
         default: {
             std::cout << "Numero de pioche invalide !\n";
-            return;
+            return false;
         }
     }
     if (carte_revelee) {
         if (n_carte < 1 or n_carte > pioche->getMaxCartesRevelees()) {
             std::cout << "Numero de carte invalide !\n";
-            return;
+            return false;
         }
         int id = pioche->getCartesDehors(n_carte-1)->getID();
         card = const_cast<CarteJoaillerie*>(pioche->joueurPrend(id));
@@ -180,9 +184,11 @@ void Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
         card = const_cast<CarteJoaillerie*>(pioche->joueurPrendPioche());
     }
     joueur->ajouterCarteReservee(card);
+
+    return true;
 }
 
-void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
+bool Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3) {
     // Vérifier où le joueur peut acheter une carte
     // Pioche1?
     bool achat_pioche1_possible = achatPiochePossible(joueur, p1);
@@ -370,7 +376,7 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
             carte = pioche->joueurPrend(id);
         } else {
             std::cout << "Achat impossible!";
-            return;
+            return false;
         }
         // Vérifier achat possible de la carte
         prix = carte->getPrix();
@@ -397,6 +403,8 @@ void Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
 
     auto* carte_non_const = const_cast<CarteJoaillerie*>(carte);
     carte_non_const->actionPouvoir();
+
+    return true;
 }
 
 void Obligatoire::remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, int difference, int prix_elem, int index) {

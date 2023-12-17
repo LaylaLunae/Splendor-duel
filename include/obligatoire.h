@@ -15,10 +15,10 @@ public:
     Obligatoire(const Obligatoire& obligatoire) = delete;
     Obligatoire& operator=(const Obligatoire& obligatoire) = delete;
 
-    static void prendreJeton(Joueur* joueur, Plateau* plateau);
-    static void demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3);
-    static void reserverCarte(Joueur* j, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3, int n_pioche, int n_carte, bool carte_revelee = true);
-    static void acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3);
+    static bool prendreJeton(Joueur* joueur, Plateau* plateau);
+    static bool demanderCarteAReserver(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3);
+    static bool reserverCarte(Joueur* j, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3, int n_pioche, int n_carte, bool carte_revelee = true);
+    static bool acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pioche* p2, Pioche* p3);
 
     static void remettreJetonSac(Joueur* joueur, Plateau* plateau, Couleur c, int difference, int prix_elem, int index);
     static std::vector<int> ajouterJetonsJoueur(Joueur* joueur, std::vector<const Jeton*> selection);

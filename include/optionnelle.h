@@ -14,8 +14,8 @@ public:
     Optionnelle(const Optionnelle& optionnelle) = delete;
     Optionnelle& operator=(const Optionnelle& optionnelle) = delete;
 
-    static void depenserPrivilege(Joueur* joueur, Plateau* plateau);
-    static void remplissagePlateau(Joueur* joueur, Plateau* plateau);
+    static bool depenserPrivilege(Joueur* joueur, Plateau* plateau);
+    static bool remplissagePlateau(Joueur* joueur, Plateau* plateau);
 };
 
 #endif //SPLENDOR_OPTIONNELLE_H
