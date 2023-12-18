@@ -67,7 +67,7 @@ void executeSQL(sqlite3* db, const std::string& sql);
 
 void initCarteJoaillerie(sqlite3* db, std::vector<const CarteJoaillerie*>* cartes);
 void initCarteNoble(sqlite3* db, std::vector<const CarteNoble*>* cartesNoble);
-//void initPrivileges(sqlite3* db, std::vector<const Privilege*>* privileges);
+Jeton* queryJetonById(sqlite3* db, int jetonId);
 
 // Interface de fonction pour initialiser toute la base de données du jeu
 void clearAndInitializeTables(sqlite3* db);

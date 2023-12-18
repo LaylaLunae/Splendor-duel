@@ -325,16 +325,6 @@ void initCarteNoble(sqlite3* db, std::vector<const CarteNoble*>* cartesNoble) {
     }
 }
 
-//void initPrivileges(sqlite3* db, std::vector<const Privilege*>* privileges) {
-//    for (int id = 1; id <= 3; ++id) {
-//        Privilege* privilege = new Privilege();
-//        privilege->setID(id);
-//        //privilege->setStatus(status); // 如果需要设置状态
-//
-//        privileges->push_back(privilege);
-//    }
-//}
-
 Jeton* queryJetonById(sqlite3* db, int jetonId) {
     const char* querySql = "SELECT id, type, couleur, position_x, position_y FROM Jeton WHERE id = ?";
     sqlite3_stmt* stmt;
@@ -417,14 +407,6 @@ void clearAndInitializeTables(sqlite3* db) {
     executeSQL(db, resetJoueurs);
     executeSQL(db, resetPlateau);
     executeSQL(db, resetJeton);
-
-    // Directly reset information for tables
-//    std::string resetPrivilege = R"(
-//        UPDATE Privilege
-//        SET status = 0
-//        WHERE id IN (1, 2, 3);
-//    )";
-//    executeSQL(db, resetPrivilege);
 
     std::cout << "Database tables cleared and initialized successfully." << std::endl;
 }
@@ -732,7 +714,7 @@ void continuerLaPartie(sqlite3* db,
 
     // Pour stocker les Jetons sur le Plateau
     std::vector<const Jeton*> newJetons;
-    // 用于存储 PlateauSac 中的 Jetons
+    // Pour stocker les Jetons sur le sac dans Plateau
     std::vector<const Jeton*> newSac;
 
     std::vector<int> jetonsPlateauIds = queryAllJetonIdsForPlateau(db, "PlateauJetons", 1);
