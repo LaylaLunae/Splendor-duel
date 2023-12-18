@@ -1013,6 +1013,11 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
     // ------------------ init joueurs ---------------
     vueJoueur1 = new FenetreInformations(j1);
     vueJoueur2 = new FenetreInformations(j2);
+    j1->setInfo(vueJoueur1);
+    j2 ->setInfo(vueJoueur2);
+    //vueJoueur1->setJoueur(j1);
+    //vueJoueur2->setJoueur(j2);
+
 
     // ------------------ layout centre --------------
     layout_centre->addWidget(vueJoueur1);

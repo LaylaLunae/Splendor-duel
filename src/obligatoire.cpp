@@ -469,6 +469,7 @@ std::vector<int> Obligatoire::ajouterJetonsJoueur(Joueur* joueur, std::vector<co
             }
         }
     }
+    joueur->getInfo()->miseAJourInformations();
     return nb_couleurs;
 }
 

@@ -10,7 +10,7 @@ Joueur::Joueur(const std::string nom)
     cartes_main.resize(0, nullptr);
     cartes_noble.resize(0, nullptr);
     //gemmes_bonus.resize(0, 0);
-    nb_jeton.resize(0, 0);
+    //nb_jeton.resize(0, 0);
     privileges.resize(0, nullptr);
     points_prestige_couleurs.resize(5,0);
 }
