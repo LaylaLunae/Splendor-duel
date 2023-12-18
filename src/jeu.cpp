@@ -335,6 +335,31 @@ void initCarteNoble(sqlite3* db, std::vector<const CarteNoble*>* cartesNoble) {
 //    }
 //}
 
+Jeton* queryJetonById(sqlite3* db, int jetonId) {
+    const char* querySql = "SELECT id, type, couleur, position_x, position_y FROM Jeton WHERE id = ?";
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, querySql, -1, &stmt, NULL) != SQLITE_OK) {
+        std::cerr << "Error preparing statement: " << sqlite3_errmsg(db) << std::endl;
+        return nullptr;
+    }
+
+    sqlite3_bind_int(stmt, 1, jetonId);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        int id = sqlite3_column_int(stmt, 0);
+        JetonType type = static_cast<JetonType>(sqlite3_column_int(stmt, 1));
+        Couleur couleur = static_cast<Couleur>(sqlite3_column_int(stmt, 2));
+        int positionX = sqlite3_column_int(stmt, 3);
+        int positionY = sqlite3_column_int(stmt, 4);
+
+        sqlite3_finalize(stmt);
+        return new Jeton(id, type, couleur, positionX, positionY);
+    }
+
+    sqlite3_finalize(stmt);
+    return nullptr;
+}
 
 void clearAndInitializeTables(sqlite3* db) {
     // Tables to be cleared
@@ -705,34 +730,29 @@ void continuerLaPartie(sqlite3* db,
     }
     plateau.setCartesNobles(cartesNobles);
 
+    // Pour stocker les Jetons sur le Plateau
     std::vector<const Jeton*> newJetons;
-    for (int jetonId = 1; jetonId <= 7; ++jetonId) {
-        int quantity = queryPlateauJetonsField<int>(db,"PlateauJetons", "quantite", plateauId, jetonId);
-        for (int i = 0; i < quantity; ++i) {
-            if (jetonId == 7) { // jetonId == 7 couleur == rien => jeton or
-                Couleur couleur = static_cast<Couleur>(6);
-                newJetons.push_back(new const Jeton(JetonType::Or, couleur));
-                continue;
-            }
-            Couleur couleur = static_cast<Couleur>(jetonId - 1); // 根据 id 获取对应的 Couleur
-            newJetons.push_back(new const Jeton(JetonType::Gemme, couleur));
+    // 用于存储 PlateauSac 中的 Jetons
+    std::vector<const Jeton*> newSac;
+
+    std::vector<int> jetonsPlateauIds = queryAllJetonIdsForPlateau(db, "PlateauJetons", 1);
+    for (int jetonId : jetonsPlateauIds) {
+        // 根据 Jeton ID 查询 Jeton 表中的记录
+        Jeton* jeton = queryJetonById(db, jetonId);
+        if (jeton != nullptr) {
+            newJetons.push_back(jeton);
+        }
+    }
+
+    std::vector<int> jetonsSacIds = queryAllJetonIdsForPlateau(db, "PlateauSac", 1);
+    for (int jetonId : jetonsSacIds) {
+        // 根据 Jeton ID 查询 Jeton 表中的记录
+        Jeton* jeton = queryJetonById(db, jetonId);
+        if (jeton != nullptr) {
+            newSac.push_back(jeton);
         }
     }
     plateau.setJetons(newJetons);
-
-    std::vector<const Jeton*> newSac;
-    for (int jetonId = 1; jetonId <= 7; ++jetonId) {
-        int quantity = queryPlateauJetonsField<int>(db,"PlateauSac", "quantite", plateauId, jetonId);
-        for (int i = 0; i < quantity; ++i) {
-            if (jetonId == 7) { // jetonId == 7 couleur == rien => jeton or
-                Couleur couleur = static_cast<Couleur>(6);
-                newJetons.push_back(new const Jeton(JetonType::Or, couleur));
-            } else {
-                Couleur couleur = static_cast<Couleur>(jetonId - 1);
-                newJetons.push_back(new const Jeton(JetonType::Gemme, couleur));
-            }
-        }
-    }
     plateau.setSac(newSac);
 
     std::vector<int> privilegeIds = queryPlateauPrivilegesField(db, plateauId);
@@ -931,27 +951,93 @@ void sauvegarderPartie(sqlite3* db,
         }
     }
 
-    auto plateauSac = plateau.getSac();
-    std::map<int, int> sacCount; // Le nombre de Jetons utilisés pour stocker chaque type
-    for (const auto& jeton : plateauSac) {
-        if (jeton) {
-            int jetonId = static_cast<int>(jeton->getCouleur()) + 1;
-            sacCount[jetonId]++;
-        }
-    }
-    for (const auto& entry : sacCount) { insertIntoPlateauJetons(db, "PlateauSac", 1, entry.first, entry.second); }
-
-    auto plateauJetons = plateau.getJetons();
-    std::map<int, int> jetonsCount; // Le nombre de Jetons utilisés pour stocker chaque type
-    for (auto jeton : plateauJetons) {
+    // Stockage des données Jeton dans PlateauSac et dans Jeton
+    for (auto jeton : plateau.getSac()) {
         if (jeton != nullptr) {
-            int jetonId = static_cast<int>(jeton->getCouleur()) + 1;
-            sacCount[jetonId]++;
+            std::string updateJetonSql = R"(UPDATE Jeton SET position_x = ?, position_y = ? WHERE id = ?;)";
+
+            sqlite3_stmt* stmtJeton;
+            if (sqlite3_prepare_v2(db, updateJetonSql.c_str(), -1, &stmtJeton, NULL) != SQLITE_OK) {
+                std::cerr << "Error preparing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
+                return;
+            }
+
+            sqlite3_bind_int(stmtJeton, 1, -1);
+            sqlite3_bind_int(stmtJeton, 2, -1);
+            sqlite3_bind_int(stmtJeton, 3, jeton->getID());
+
+            if (sqlite3_step(stmtJeton) != SQLITE_DONE) {
+                std::cerr << "Error executing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
+            }
+
+            sqlite3_finalize(stmtJeton);
         }
     }
-    for (const auto& entry : sacCount) { insertIntoPlateauJetons(db, "PlateauJetons", 1, entry.first, entry.second); }
 
-    // 更新 Privilege 数据 应该用不到
+    for (auto jeton : plateau.getJetons()) {
+        if (jeton != nullptr) {
+            std::string updateOrInsertSql = R"(REPLACE INTO PlateauSac (plateau_id, jeton_id) VALUES (?, ?);)";
+
+            sqlite3_stmt* stmtPlateauJeton;
+            if (sqlite3_prepare_v2(db, updateOrInsertSql.c_str(), -1, &stmtPlateauJeton, NULL) != SQLITE_OK) {
+                std::cerr << "Error preparing statement for PlateauJetons: " << sqlite3_errmsg(db) << std::endl;
+                return;
+            }
+
+            sqlite3_bind_int(stmtPlateauJeton, 1, 1); // 假设 Plateau ID 总是 1
+            sqlite3_bind_int(stmtPlateauJeton, 2, jeton->getID());
+
+            if (sqlite3_step(stmtPlateauJeton) != SQLITE_DONE) {
+                std::cerr << "Error executing statement for PlateauJetons: " << sqlite3_errmsg(db) << std::endl;
+            }
+
+            sqlite3_finalize(stmtPlateauJeton);
+        }
+    }
+
+    // Obtenez tous les jetons du Plateau et enregistrez leurs coordonnées
+    for (auto jeton : plateau.getJetons()) {
+        if (jeton != nullptr) {
+            std::string updateJetonSql = R"(UPDATE Jeton SET position_x = ?, position_y = ? WHERE id = ?;)";
+
+            sqlite3_stmt* stmtJeton;
+            if (sqlite3_prepare_v2(db, updateJetonSql.c_str(), -1, &stmtJeton, NULL) != SQLITE_OK) {
+                std::cerr << "Error preparing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
+                return;
+            }
+
+            sqlite3_bind_int(stmtJeton, 1, jeton->getX());
+            sqlite3_bind_int(stmtJeton, 2, jeton->getY());
+            sqlite3_bind_int(stmtJeton, 3, jeton->getID());
+
+            if (sqlite3_step(stmtJeton) != SQLITE_DONE) {
+                std::cerr << "Error executing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
+            }
+
+            sqlite3_finalize(stmtJeton);
+        }
+    }
+
+    for (auto jeton : plateau.getJetons()) {
+        if (jeton != nullptr) {
+            std::string updateOrInsertSql = R"(REPLACE INTO PlateauJetons (plateau_id, jeton_id) VALUES (?, ?);)";
+
+            sqlite3_stmt* stmtPlateauJeton;
+            if (sqlite3_prepare_v2(db, updateOrInsertSql.c_str(), -1, &stmtPlateauJeton, NULL) != SQLITE_OK) {
+                std::cerr << "Error preparing statement for PlateauJetons: " << sqlite3_errmsg(db) << std::endl;
+                return;
+            }
+
+            sqlite3_bind_int(stmtPlateauJeton, 1, 1);
+            sqlite3_bind_int(stmtPlateauJeton, 2, jeton->getID());
+
+            if (sqlite3_step(stmtPlateauJeton) != SQLITE_DONE) {
+                std::cerr << "Error executing statement for PlateauJetons: " << sqlite3_errmsg(db) << std::endl;
+            }
+
+            sqlite3_finalize(stmtPlateauJeton);
+        }
+    }
 }
 
 /*
