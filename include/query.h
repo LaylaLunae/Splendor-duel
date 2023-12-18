@@ -113,6 +113,8 @@ void updateTableField(sqlite3* db, const std::string& tableName, const std::stri
 
 void insertIntoTable(sqlite3* db, const std::string& tableName, int id, int plateauId);
 
+std::vector<int> queryAllJetonIdsForPlateau(sqlite3* db, const std::string& tableName, int plateauId);
+
 template <typename T>
 T queryJoueurField(sqlite3* db, const std::string& fieldName, int joueurId) {
     sqlite3_stmt* stmt;

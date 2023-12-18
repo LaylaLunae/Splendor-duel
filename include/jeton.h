@@ -18,24 +18,28 @@ enum class JetonType {
 
 class Jeton {
 private:
+    unsigned int id;
     JetonType type;
     Couleur couleur; // Utilisé uniquement lorsque type = Gemme
     std::string chemin_vers_image;
     unsigned int positionX, positionY;
 public:
-    Jeton(JetonType t, Couleur c = Couleur::rien,
+    Jeton(unsigned int i, JetonType t, Couleur c = Couleur::rien,
           unsigned int x=0,
           unsigned int y=0) :
-          type(t), couleur(c), positionX(x), positionY(y) {}
+          id(i), type(t), couleur(c), positionX(x), positionY(y) {}
     ~Jeton() {}
 
     void afficher() const;
     std::string getCouleurString() const;
     Couleur getCouleur() const;
     JetonType getType() const { return type; }
+
+    unsigned int getID() const {return id;}
     unsigned int getX() const {return positionX;}
     unsigned int getY() const {return positionY;}
 
+    void setID (unsigned int i) {id = i;}
     void setX (unsigned int x) {positionX=x;}
     void setY (unsigned int y) {positionY=y;}
 
