@@ -24,7 +24,7 @@ private:
     std::string chemin_vers_image;
     unsigned int positionX, positionY;
 public:
-    Jeton(unsigned int i, JetonType t, Couleur c = Couleur::rien,
+    Jeton(JetonType t , Couleur c = Couleur::rien,unsigned int i=0,
           unsigned int x=0,
           unsigned int y=0) :
           id(i), type(t), couleur(c), positionX(x), positionY(y) {}
