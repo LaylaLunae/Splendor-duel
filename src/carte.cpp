@@ -17,6 +17,10 @@ int Carte::getCourronnes() {
     return courronnes;
 }
 
+std::string Carte::getCheminVersImage() const {
+    return chemin_vers_image;
+}
+
 // un pointeur sur plateau et un pointeur sur joueur
 void Carte::actionPouvoir(Plateau* plateau, Joueur* joueur) {
     for (const auto& pouvoir : pouvoirs) {

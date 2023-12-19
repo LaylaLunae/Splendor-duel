@@ -44,8 +44,8 @@ add_executable(Splendor main.cpp
         include/affichage_joueur.h
         include/plateau.h
         include/jeton.h
-        affichage/affichage_carte.h
-        affichage/affichage_carte.cpp
+#        affichage/affichage_carte.h
+#        affichage/affichage_carte.cpp
         include/affichage_joueur.h
         include/query.h
         src/query.cpp

@@ -38,4 +38,71 @@ public:
     int getNombrePierre() const;
 };
 
+class VueCarteJoaillerie : public QPushButton {
+Q_OBJECT
+
+public:
+    explicit VueCarteJoaillerie(unsigned int id, const std::vector<const CarteJoaillerie*>& cartes, QWidget* parent = nullptr)
+            : QPushButton(parent), carteJoaillerieId(id) {
+        setFixedSize(100, 150);
+        const CarteJoaillerie* carte = findCarteById(id, cartes);
+        if (carte) {
+            QString cheminImage = QString::fromStdString(carte->getCheminVersImage());
+            setStyleSheet("QPushButton { border-image: url(" + cheminImage + "); }");
+        }
+        connect(this, SIGNAL(clicked()), this, SLOT(clickedEvent()));
+    }
+
+    unsigned int getCarteJoaillerieId() const {
+        return carteJoaillerieId;
+    }
+
+private slots:
+    void clickedEvent() {
+        // Implémenter la fonction lorsque le bouton est cliqué
+        // Les fonctions mises en œuvre par les membres de l'équipe pourront être ajoutées ici à l'avenir.
+    }
+
+private:
+    unsigned int carteJoaillerieId;
+
+    const CarteJoaillerie* findCarteById(unsigned int id, const std::vector<const CarteJoaillerie*>& cartes) const {
+        for (const auto& carte : cartes) {
+            if (carte && carte->getID() == id) {
+                return carte;
+            }
+        }
+        return nullptr;
+    }
+};
+
+// code pour tester QT de CarteJoaillerie
+/*
+int main(int argc, char *argv[]) {
+
+    sqlite3* db;
+    if (sqlite3_open("../base.db", &db) != SQLITE_OK) {
+        std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
+        return -1;
+    }
+
+    QApplication app(argc, argv);
+
+    std::vector<const CarteJoaillerie*> cartesJoaillerie;
+    initCarteJoaillerie(db, &cartesJoaillerie);
+
+    QWidget window;
+    window.setWindowTitle("Test VueCarteJoaillerie");
+
+    VueCarteJoaillerie* vueCarte = new VueCarteJoaillerie(1, cartesJoaillerie, &window);
+
+    QVBoxLayout* layout = new QVBoxLayout();
+    layout->addWidget(vueCarte);
+
+    window.setLayout(layout);
+    window.show();
+    return app.exec();
+}
+ */
+
 #endif // CARTEJOAILLERIE_H

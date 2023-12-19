@@ -344,7 +344,7 @@ Jeton* queryJetonById(sqlite3* db, int jetonId) {
         int positionY = sqlite3_column_int(stmt, 4);
 
         sqlite3_finalize(stmt);
-        return new Jeton(id, type, couleur, positionX, positionY);
+        return new Jeton(type, couleur, positionX, positionY);
     }
 
     sqlite3_finalize(stmt);

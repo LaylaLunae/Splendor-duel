@@ -42,6 +42,7 @@ public:
     void actionPouvoir(Plateau* plateau, Joueur* joueur);
     int getPointsPrestige();
     int getCourronnes();
+    std::string getCheminVersImage() const;
     std::array<Pouvoir, 2> existancePouvoir();
 
 };
