@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include "../include/jeu.h"
+#include <QMessageBox>
 
 /* Jeu& Jeu::getJeu(){
     if (handler.instance == nullptr)
@@ -252,15 +253,15 @@ void Jeu::verifGagnant(Joueur * j1, Joueur * j2) {
         else
             auSuivant(j1, j2);
     }
-    int choix = -1;
-    std::cout << "On continue ? 1 - oui, 0 - non :";
-    std::cin >> choix;
-    if (choix == 0) {
-        vainqueur(joueur_actuel);
-    }
-    else {
-        auSuivant(j1, j2);
-    }
+//    int choix = -1;
+//    std::cout << "On continue ? 1 - oui, 0 - non :";
+//    std::cin >> choix;
+//    if (choix == 0) {
+//        vainqueur(joueur_actuel);
+//    }
+//    else {
+//        auSuivant(j1, j2);
+//    }
 }
 
 void Jeu::validationAction() {
@@ -356,7 +357,7 @@ void clearAndInitializeTables(sqlite3* db) {
     std::vector<std::string> tablesToClear = {
             "CartesDansPioche", "CartesDehors", "JoueurCartesMain", "JoueurCartesNoble",
             "JoueurCartesReservees", "JoueurJetons", "JoueurPrivilege", "PlateauCartesNoble",
-            "PlateauJetons", "PlateauPrivileges", "PlateauSac", "Jeu", "Joueur", "Plateau"
+            "PlateauJetons", "PlateauPrivileges", "PlateauSac", "PlateauJetonsColors", "Jeu", "Joueur", "Plateau"
     };
 
     // Clear tables
@@ -726,16 +727,25 @@ void continuerLaPartie(sqlite3* db,
         }
     }
 
-    std::vector<int> jetonsSacIds = queryAllJetonIdsForPlateau(db, "PlateauSac", 1);
-    for (int jetonId : jetonsSacIds) {
-        // 根据 Jeton ID 查询 Jeton 表中的记录
-        Jeton* jeton = queryJetonById(db, jetonId);
-        if (jeton != nullptr) {
-            newSac.push_back(jeton);
-        }
-    }
-    plateau.setJetons(newJetons);
-    plateau.setSac(newSac);
+//    std::vector<int> jetonsSacIds = queryAllJetonIdsForPlateau(db, "PlateauSac", 1);
+//    for (int jetonId : jetonsSacIds) {
+//        // 根据 Jeton ID 查询 Jeton 表中的记录
+//        Jeton* jeton = queryJetonById(db, jetonId);
+//        if (jeton != nullptr) {
+//            newSac.push_back(jeton);
+//        }
+//    }
+//    plateau.setJetons(newJetons);
+//    plateau.setSac(newSac);
+//
+//    std::vector<int> privilegeIds = queryPlateauPrivilegesField(db, plateauId);
+//    std::vector<Privilege*> plateauPrivileges;
+//    for (int id : privilegeIds) {
+//        for (Privilege* priv : privileges) {
+//            if (priv->getID() == id) { plateauPrivileges.push_back(priv); break; }
+//        }
+//    }
+//    plateau.setPrivileges(plateauPrivileges);
 
     std::vector<int> privilegeIds = queryPlateauPrivilegesField(db, plateauId);
     std::vector<Privilege*> plateauPrivileges;
@@ -745,7 +755,7 @@ void continuerLaPartie(sqlite3* db,
         }
     }
     plateau.setPrivileges(plateauPrivileges);
-
+    std::vector<const char*> jc = queryAllJetonColorsForPlateau(db, "PlateauJetonsColors", 1);
 }
 
 void sauvegarderPartie(sqlite3* db,
@@ -933,32 +943,76 @@ void sauvegarderPartie(sqlite3* db,
         }
     }
 
-    // Stockage des données Jeton dans PlateauSac et dans Jeton
-    for (auto jeton : plateau.getSac()) {
-        if (jeton != nullptr) {
-            std::string updateJetonSql = R"(UPDATE Jeton SET position_x = ?, position_y = ? WHERE id = ?;)";
+//    // Stockage des données Jeton dans PlateauSac et dans Jeton
+//    for (auto jeton : plateau.getSac()) {
+//        if (jeton != nullptr) {
+//            std::string updateJetonSql = R"(UPDATE Jeton SET position_x = ?, position_y = ? WHERE id = ?;)";
+//
+//            sqlite3_stmt* stmtJeton;
+//            if (sqlite3_prepare_v2(db, updateJetonSql.c_str(), -1, &stmtJeton, NULL) != SQLITE_OK) {
+//                std::cerr << "Error preparing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
+//                return;
+//            }
+//
+//            sqlite3_bind_int(stmtJeton, 1, -1);
+//            sqlite3_bind_int(stmtJeton, 2, -1);
+//            sqlite3_bind_int(stmtJeton, 3, jeton->getID());
+//
+//            if (sqlite3_step(stmtJeton) != SQLITE_DONE) {
+//                std::cerr << "Error executing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
+//            }
+//
+//            sqlite3_finalize(stmtJeton);
+//        }
+//    }
 
-            sqlite3_stmt* stmtJeton;
-            if (sqlite3_prepare_v2(db, updateJetonSql.c_str(), -1, &stmtJeton, NULL) != SQLITE_OK) {
-                std::cerr << "Error preparing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
-                return;
-            }
+//    for (auto jeton : plateau.getJetons()) {
+//        if (jeton != nullptr) {
+//            std::string updateOrInsertSql = R"(REPLACE INTO PlateauSac (plateau_id, jeton_id) VALUES (?, ?);)";
+//
+//            sqlite3_stmt* stmtPlateauJeton;
+//            if (sqlite3_prepare_v2(db, updateOrInsertSql.c_str(), -1, &stmtPlateauJeton, NULL) != SQLITE_OK) {
+//                std::cerr << "Error preparing statement for PlateauJetons: " << sqlite3_errmsg(db) << std::endl;
+//                return;
+//            }
+//
+//            sqlite3_bind_int(stmtPlateauJeton, 1, 1); // 假设 Plateau ID 总是 1
+//            sqlite3_bind_int(stmtPlateauJeton, 2, jeton->getID());
+//
+//            if (sqlite3_step(stmtPlateauJeton) != SQLITE_DONE) {
+//                std::cerr << "Error executing statement for PlateauJetons: " << sqlite3_errmsg(db) << std::endl;
+//            }
+//
+//            sqlite3_finalize(stmtPlateauJeton);
+//        }
+//    }
 
-            sqlite3_bind_int(stmtJeton, 1, -1);
-            sqlite3_bind_int(stmtJeton, 2, -1);
-            sqlite3_bind_int(stmtJeton, 3, jeton->getID());
-
-            if (sqlite3_step(stmtJeton) != SQLITE_DONE) {
-                std::cerr << "Error executing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
-            }
-
-            sqlite3_finalize(stmtJeton);
-        }
-    }
-
+//    // Obtenez tous les jetons du Plateau et enregistrez leurs coordonnées
+//    for (auto jeton : plateau.getJetons()) {
+//        if (jeton != nullptr) {
+//            std::string updateJetonSql = R"(UPDATE Jeton SET position_x = ?, position_y = ? WHERE id = ?;)";
+//
+//            sqlite3_stmt* stmtJeton;
+//            if (sqlite3_prepare_v2(db, updateJetonSql.c_str(), -1, &stmtJeton, NULL) != SQLITE_OK) {
+//                std::cerr << "Error preparing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
+//                return;
+//            }
+//
+//            sqlite3_bind_int(stmtJeton, 1, jeton->getX());
+//            sqlite3_bind_int(stmtJeton, 2, jeton->getY());
+//            sqlite3_bind_int(stmtJeton, 3, jeton->getID());
+//
+//            if (sqlite3_step(stmtJeton) != SQLITE_DONE) {
+//                std::cerr << "Error executing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
+//            }
+//
+//            sqlite3_finalize(stmtJeton);
+//        }
+//    }
     for (auto jeton : plateau.getJetons()) {
         if (jeton != nullptr) {
             std::string updateOrInsertSql = R"(REPLACE INTO PlateauSac (plateau_id, jeton_id) VALUES (?, ?);)";
+
 
             sqlite3_stmt* stmtPlateauJeton;
             if (sqlite3_prepare_v2(db, updateOrInsertSql.c_str(), -1, &stmtPlateauJeton, NULL) != SQLITE_OK) {
@@ -1040,7 +1094,7 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
 
     // ---------------------- init bdd  ---------------------
     if (sqlite3_open("../base.db", &db) != SQLITE_OK) {
-        std::cerr << "Can't open database (from VueJeu constructor: " ;
+        std::cerr << "Can't open database, from VueJeu constructor: " ;
         std::cerr<< sqlite3_errmsg(db) << std::endl;
     }
 
@@ -1048,6 +1102,7 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
     j1 = new Humain ("Joueur Alex");
     j2 = new Humain ("Joueur 2");
     jeu->setJoueurActuel(j1);
+    jeu->setVueJeu(this);
 
     // --------------------- init pioches et cartes -----------------
     cartesJoaillerie = std::vector<CarteJoaillerie*>(0);
@@ -1063,7 +1118,37 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
     layout_bas = new QHBoxLayout();
     layout_centre = new QHBoxLayout();
     layout_main = new QVBoxLayout(this);
+    layout_jeu = new QVBoxLayout();
+    layout_menu = new QVBoxLayout();
 
+
+
+    // --------------- menu --------------------
+    bouton_nouvelle_partie = new QPushButton("Nouvelle partie");
+    QObject::connect(
+            bouton_nouvelle_partie,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonNouvellePartie
+    );
+    bouton_nouvelle_partie->show();
+    bouton_charger_partie = new QPushButton("Charger partie en cours");
+    QObject::connect(
+            bouton_charger_partie,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonChargerPartie
+    );
+    bouton_charger_partie->show();
+    layout_menu->addWidget(bouton_nouvelle_partie);
+    layout_menu->addWidget(bouton_charger_partie);
+
+    layout_main->addLayout(layout_menu);
+
+    setLayout(layout_main);
+}
+
+void VueJeu::dessinerPartie() {
     // ------------ init bouton sauvegarder -------------
     bouton_sauvegarde = new QPushButton("Sauvegarder la partie");
     QObject::connect(
@@ -1071,12 +1156,12 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
             &QPushButton::clicked,
             this,
             &VueJeu::boutonSauvegardeClick
-            );
+    );
     bouton_sauvegarde->show();
 
 
     // ------------------ init vuePlateau ------------
-    vue_plateau = new VuePlateau();
+    vue_plateau = new VuePlateau(this);
 
     // ------------------ init joueurs ---------------
     vueJoueur1 = new FenetreInformations(j1);
@@ -1092,23 +1177,6 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
     layout_centre->addWidget(vue_plateau);
     layout_centre->addWidget(vueJoueur2);
 
-    // ------------------ cartes nobles --------------
-
-
-    // ----------------- Load dernière partie ------------
-    // Récupération des vecteurs cartes nobles et cartes joailleries
-    /*
-    std::vector<const CarteNoble*> cartesNoble = vue_plateau->getPlateau()->getCartesNobles();
-    continuerLaPartie(
-            db,
-            cartesJoaillerie,
-            cartesNoble,
-            //cartesDansPioche, cartesDehors,
-            reinterpret_cast<Jeu &>(jeu), j1, j2, pioches,
-            *vue_plateau->getPlateau(),
-            vue_plateau->getPlateau()->getPrivileges()
-    );
-    */
 
     // ---------------------- update widgets ------------------
     /*
@@ -1120,12 +1188,132 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
      */
     //vue_plateau->affichageJetons();
 
+    // ---------------- Layout Choix Action ---------------
+    layout_top = new QHBoxLayout();
 
     // ------------- connecter les layouts -------------
     layout_bas->addWidget(bouton_sauvegarde);
-    layout_main->addLayout(layout_centre);
-    layout_main->addLayout(layout_bas);
+
+
+    afficherChoix();
+    layout_jeu->addLayout(layout_top);
+    layout_jeu->addLayout(layout_centre);
+    layout_jeu->addLayout(layout_bas);
+
+}
+
+void VueJeu::afficherChoix() {
+    bouton_depenser_privilege = new QPushButton("Dépenser Privilege");
+    bouton_prendre_jeton = new QPushButton("Prendre jeton");
+    bouton_acheter_carte = new QPushButton("Acheter carte");
+    bouton_reserver_carte = new QPushButton("Réserver carte");
+    bouton_remplir_plateau = new QPushButton("Remplir plateau");
+
+    // connect
+    QObject::connect(
+            bouton_depenser_privilege,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonActionPrivilege
+    );
+    QObject::connect(
+            bouton_prendre_jeton,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonPrendreJeton
+    );
+
+    QObject::connect(
+            bouton_remplir_plateau,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonRemplirPlateau
+    );
+    QObject::connect(
+            bouton_acheter_carte,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonAcheterCarte
+    );
+    QObject::connect(
+            bouton_reserver_carte,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonReserverCarte
+    );
+    //
+
+    bouton_depenser_privilege->show();
+    bouton_prendre_jeton->show();
+    bouton_acheter_carte->show();
+    bouton_reserver_carte->show();
+    bouton_remplir_plateau->show();
+
+    setEtatBoutonPrivilege();
+
+    layout_top->addWidget(bouton_depenser_privilege);
+    layout_top->addWidget(bouton_prendre_jeton);
+    layout_top->addWidget(bouton_acheter_carte);
+    layout_top->addWidget(bouton_reserver_carte);
+    layout_top->addWidget(bouton_remplir_plateau);
+}
+
+void VueJeu::setEtatBoutonPrivilege() {
+    if (jeu->getJoueurActuel()->hasPrivilege()) {
+        bouton_depenser_privilege->setEnabled(true);
+    } else {
+        bouton_depenser_privilege->setEnabled(false);
+    }
+}
+
+void VueJeu::deleteLayout(QLayout* layout) {
+    while (QLayoutItem *item = layout->takeAt(0)) {
+        if (QLayout*layout= item->layout()) {
+            while (QLayoutItem *itemL = layout->takeAt(0)) {
+                if (QWidget *widget = itemL->widget()) {
+                    widget->deleteLater();
+                }
+                delete itemL;
+            }
+            layout->deleteLater();
+        }
+        delete item;
+    }
+}
+
+void VueJeu::boutonNouvellePartie() {
+
+    deleteLayout(layout_main);
+
+    std::cout<<"Layout détuit";
+    this->dessinerPartie();
+    layout_main->addLayout(layout_jeu);
     setLayout(layout_main);
+    repaint();
+}
+
+void VueJeu::boutonChargerPartie() {
+    // ----------------- Load dernière partie ------------
+    // Récupération des vecteurs cartes nobles et cartes joailleries
+    //std::vector<const CarteNoble*> cartesNoble = vue_plateau->getPlateau()->getCartesNobles();
+
+    deleteLayout(layout_main);
+
+    // Load partie
+//    continuerLaPartie(
+//            db,
+//            cartesJoaillerie,
+//            cartesNoble,
+//            //cartesDansPioche, cartesDehors,
+//            reinterpret_cast<Jeu &>(jeu), j1, j2, pioches,
+//            *vue_plateau->getPlateau(),
+//            vue_plateau->getPlateau()->getPrivileges()
+//    );
+
+    this->dessinerPartie();
+    layout_main->addLayout(layout_jeu);
+    setLayout(layout_main);
+    repaint();
 }
 
 void VueJeu::boutonSauvegardeClick() {
@@ -1134,6 +1322,94 @@ void VueJeu::boutonSauvegardeClick() {
      * est appuyé.
      */
     sauvegarderPartie(db, *jeu, *j1,*j2, pioches, *vue_plateau->getPlateau());
+}
+
+void VueJeu::boutonActionPrivilege() {
+    if (checkPlateau()) return;
+    desactiverOuActiverBouton(false);
+    Plateau* p = vue_plateau->getPlateau();
+    vue_plateau->getPlateau()->setMaxSelectionPossible(1, false, false) ;
+    vue_plateau->affichageJetons(true);
+    finiAction(0);
+}
+
+void VueJeu::boutonRemplirPlateau() {
+    if (checkPlateau()) return;
+   if (vue_plateau->getPlateau()->remplissagePlateau()) {
+       desactiverOuActiverBouton(false);
+        bouton_depenser_privilege->setEnabled(false);
+    }
+    finiAction(1);
+}
+
+void VueJeu::boutonAcheterCarte() {
+    desactiverOuActiverBouton(false);
+    vue_plateau->affichageJetons(false);
+    finiAction(3);
+}
+
+void VueJeu::boutonReserverCarte() {
+    if (checkPlateau()) return;
+    desactiverOuActiverBouton(false);
+    vue_plateau->getPlateau()->setMaxSelectionPossible(1, true) ;
+    vue_plateau->affichageJetons(true);
+    //finiAction(4);
+}
+
+void VueJeu::boutonPrendreJeton() {
+    desactiverOuActiverBouton(false);
+    if (checkPlateau()) return;
+    Plateau* p = vue_plateau->getPlateau();
+    p->setMaxSelectionPossible(3, false);
+    vue_plateau->affichageJetons(true);
+    finiAction(2);
+}
+
+void VueJeu::desactiverOuActiverBouton(bool etat) {
+    bouton_depenser_privilege->setEnabled(etat);
+    bouton_acheter_carte->setEnabled(etat);
+    bouton_remplir_plateau->setEnabled(etat);
+    bouton_reserver_carte->setEnabled(etat);
+    bouton_prendre_jeton->setEnabled(etat);
+}
+
+void VueJeu::finiAction(int action) {
+    /**
+     * 0 = dépenser privilège
+     * 1 = remplissage plateau
+     * 2 = prendre jeton
+     * 3 = acheter carte
+     * 4 = réservation
+     * 5 utilisé également pour forcer la fin du tour
+     */
+    if (action == 0) {
+        compteur_action_optionelles--;
+        if (compteur_action_optionelles==0) {
+            finiAction(5);
+        }
+    }else   if (action == 1) {
+        a_fini_optionnelles = true;
+    } else if (action >2) {
+        a_fini_optionnelles = true;
+        a_fini_obligatoires = true;
+        desactiverOuActiverBouton(true);
+        // Remise à défaut des paramètres de choix plateau :
+        vue_plateau->getPlateau()->setMaxSelectionPossible(3,false) ;
+        jeu->verifGagnant(j1, j2);
+
+        if (jeu->getJoueurGagnant() == nullptr) {
+            setEtatBoutonPrivilege();
+        } else {
+            // ----------------Popup pour gagnat ici ! ----------------
+            //
+        }
+
+    }
+
+}
+
+void VueJeu::message(const char  title[], const char  texte[]) {
+    QMessageBox::warning(nullptr, title, texte);
 }
 
 //int main() {

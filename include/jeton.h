@@ -54,15 +54,7 @@ public:
     QPushButton(parent), parent(parent) {
         setFixedSize(50,50);
         connect(this,SIGNAL(clicked()),this,SLOT(clickedEvent()));
-        //setCheckable(false);
-    };
-    explicit VueJeton(QWidget *parent = nullptr):QPushButton(parent){
-        setBackgroundRole(QPalette::Base);
-        setAutoFillBackground(true);
-        setFixedSize(50, 50);
-        connect(this, SIGNAL(clicked()), this, SLOT(clickedEvent()));
-        setCheckable(false);
-    };
+};
 
     const Jeton* getJeton() const {
         return jeton;

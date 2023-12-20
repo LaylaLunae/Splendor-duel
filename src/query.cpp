@@ -459,6 +459,25 @@ std::vector<int> queryAllJetonIdsForPlateau(sqlite3* db, const std::string& tabl
 }
 
 
+std::vector<const char*> queryAllJetonColorsForPlateau(sqlite3* db, const std::string& tableName, int plateauId) {
+    std::vector<const char*> jetonIds;
+    sqlite3_stmt* stmt;
+    std::string query = "SELECT colors FROM " + tableName + " WHERE plateau_id = ?;";
+
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
+        sqlite3_bind_int(stmt, 1, plateauId);
+
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            std::cout<<sqlite3_column_text(stmt, 0);
+            //int jetonId = sqlite3_column_int(stmt, 0);
+            //jetonIds.push_back(jetonId);
+        }
+
+        sqlite3_finalize(stmt);
+    }
+
+    return jetonIds;
+}
 
 // Exemples d'utilisation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //int main() {

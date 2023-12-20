@@ -240,7 +240,10 @@ std::string Plateau::etatPlateau() {
 }
 
 
-void Plateau::remplissagePlateau(bool avecAffichage) {
+bool Plateau::remplissagePlateau(bool avecAffichage) {
+    /**
+     * Retourne faux si le remplissage ne peut pas se faire.
+     */
 
     // Initialisation de la première case libre du plateau = là où le premier jeton sera distribué.
     // Cette case n'est pas forcément la première : un joueur peut décider de remplir le plateau même s'il
@@ -249,9 +252,11 @@ void Plateau::remplissagePlateau(bool avecAffichage) {
     while (pointeur_case_libre < nb_jetons_plateau_MAX && jetons[pointeur_case_libre] != nullptr) {
         pointeur_case_libre++;
     }
-    if (pointeur_case_libre == nb_jetons_plateau_MAX)
+    if (pointeur_case_libre == nb_jetons_plateau_MAX) {
         // throwPlateauException("Tous les jetons sont déjà sur le plateau ! ¯\\_(^^')_/¯");
-        std::cout<<"Tous les jetons sont deja sur le plateau !  \"\\_(^^')_/\"\n";
+        std::cout << "Tous les jetons sont deja sur le plateau !  \"\\_(^^')_/\"\n";
+        return false;
+    }
 
 
     // Tant qu'il reste des jetons dans le sac : on pioche et on dépose sur le plateau
@@ -296,6 +301,7 @@ void Plateau::remplissagePlateau(bool avecAffichage) {
 
         i++;
     }
+    return true;
 }
 
 
@@ -465,6 +471,33 @@ int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
         return 1;
     }
 
+    // Utile pour la réservation de carte !
+    if (ne_peut_selectionner_que_or &&
+        jetons[position_dans_plateau]->getCouleurString() != "Or") {
+        std::cerr<<"Vous devez choisir un jeton or !";
+        VueJeu* vj = Jeu::getJeu().getVueJeu();
+        if (vj != nullptr) {
+            vj->message("Mauvais choix de jeton",
+                        "Pour réserver une carte, choisissez un jeton or.\n");
+        } else {
+            std::cerr<<"VueJeu null lors de la sélection jeton \n";
+        }
+        return 7; //code non correspondant.
+    }
+
+    if (! peut_selectionner_un_or &&
+            jetons[position_dans_plateau]->getCouleurString() == "Or") {
+            VueJeu* vj = Jeu::getJeu().getVueJeu();
+            if (vj != nullptr) {
+                vj->message("Mauvais choix de jeton",
+                            "Vous ne pouvez pas réserver un jeton or avec un privilège.\n");
+            } else {
+                std::cerr<<"VueJeu null lors de la sélection jeton \n";
+            }
+            return 7; //code non correspondant.
+    }
+
+
     std::cout<<"\nLe joueur a indique le jeton de valeur : "<<jetons[position_dans_plateau]->getCouleurString()<<"\n";
 
     // Déselectionner le jeton s'il existe déjà
@@ -498,11 +531,13 @@ int Plateau::selectionJeton(unsigned int position_x, unsigned int position_y) {
     // Sinon, on vérifie la légalité de l'opération et si c'est ok on l'ajoute
     if (!deselection) {
 
-        if (nombre_jetons_dans_selection >=3) {
+        if (nombre_jetons_dans_selection >= max_selection_possible) {
             //throw PlateauException("\nImpossible de choisir plus de jetons!  <('o'<)");
             std::cout << "\nImpossible de choisir plus de jetons!  <('o'<)"<<"\n";
             return 5;
         }
+
+
 
         // Vérification sur l'or:
         // La sélection est invalise si j'ai déjà des jetons dans la sélection
@@ -872,7 +907,7 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent),
             &VuePlateau::remplirPlateau
     );
 
-    boutonRemplissage->show();
+    //boutonRemplissage->show();
     layout_info->addWidget(boutonRemplissage);
 
 
@@ -929,10 +964,13 @@ void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
 }
 
 void VuePlateau::privilegeClick_Plateau(VuePrivilege *vp) {
-    const Privilege* p = plateau->prendrePrivilege();
-    if (p != nullptr) {
-        affichagePrivileges();
-    }
+    /*
+     * Ne fait plus rien : le premier privilège est pris, on ne choisit pas.
+     */
+//    const Privilege* p = plateau->prendrePrivilege();
+//    if (p != nullptr) {
+//        affichagePrivileges();
+//    }
 }
 
 void VuePlateau::affichagePrivileges() {
@@ -983,12 +1021,15 @@ void VuePlateau::validerPlateau() {
     // Décommenter la ligne suivant pour pouvoir tester le remplissage
     //for (auto j : main) {plateau->ajouterSac(j);}
 
-
-    Jeu& jeu = Jeu::getJeu();
-    std::cout<<"Jetons donnés à  : "<<jeu.getJoueurActuel()->getPseudo()<<std::endl;
-    Obligatoire::ajouterJetonsJoueur(jeu.getJoueurActuel(), main);
-
-    affichageJetons();
+    Jeu &jeu = Jeu::getJeu();
+    if (main.size() > 0) {
+        std::cout << "Jetons donnés à  : " << jeu.getJoueurActuel()->getPseudo() << std::endl;
+        Obligatoire::ajouterJetonsJoueur(jeu.getJoueurActuel(), main);
+        affichageJetons();
+        jeu.getVueJeu()->finiAction(4);
+    } else {
+        jeu.getVueJeu()->message("Action incorrecte", "Votre sélection est vide... ne soyez pas timide!");
+    }
 }
 
 void VuePlateau::remplirPlateau() {
@@ -1027,7 +1068,7 @@ void VuePlateau::affichageCartes() {
     repaint();
 }
 
-void VuePlateau::affichageJetons() {
+void VuePlateau::affichageJetons(bool etat_actif) {
     /*
      * Appelée pour mettre à jour l'affichage des jetons sur le plateau.
      * Est fait en fonction des jetons contenus dans le tableau de pointeurs
@@ -1041,6 +1082,7 @@ void VuePlateau::affichageJetons() {
     }
 
     vuesJetons.clear();
+    vuesJetons = std::vector<VueJeton*>(25, nullptr);
 
     unsigned int index;
     for(unsigned int i=0; i < 5;i++) {
@@ -1052,7 +1094,7 @@ void VuePlateau::affichageJetons() {
                         j, i,
                         this
                 );
-
+                vuesJetons[5*i+j]->setEnabled(etat_actif);
                 layout_bouton->addWidget(vuesJetons[5 * i + j], i, j);
                 connect(
                         vuesJetons[5 * i + j],

@@ -18,6 +18,8 @@
 #include "query.h"
 
 
+class VueJeu;
+
 class Jeu {
 private:
     /*struct Handler {
@@ -27,6 +29,7 @@ private:
     static Handler handler;*/
 
     static Jeu* instance;
+    VueJeu* vue_jeu;
 
     Joueur* joueur_actuel;
     Joueur* joueur_gagnant;
@@ -41,10 +44,12 @@ public:
     static Jeu& getJeu();
     static void libereJeu();
 
+    VueJeu* getVueJeu() {return vue_jeu;}
     Joueur* getJoueurActuel() const {return joueur_actuel;}
     Joueur* getJoueurGagnant() const {return joueur_gagnant;}
     void setJoueurActuel(Joueur* joueur) {joueur_actuel = joueur;}
     void setJoueurGagnant(Joueur* joueur) {joueur_gagnant = joueur;}
+    void setVueJeu(VueJeu* vj) {vue_jeu=vj;}
 
     void validationAction();
 
@@ -100,7 +105,17 @@ class VueJeu : public QWidget {
     Q_OBJECT
 public:
     VueJeu(Jeu* jeu, QWidget *parent = nullptr);
+
+    void finiAction(int action);
+
+    void message(const char title[], const char texte[]);
+
 private:
+
+
+    int compteur_action_optionelles= 2;
+    bool a_fini_optionnelles = false;
+    bool a_fini_obligatoires = false;
 
     Jeu* jeu;
     Joueur* j1;
@@ -113,20 +128,55 @@ private:
 
 
     QVBoxLayout* layout_main;
+    QVBoxLayout* layout_menu;
+    QVBoxLayout* layout_jeu;
     QHBoxLayout* layout_centre;
+    QHBoxLayout* layout_top;
     QHBoxLayout *layout_bas;
     VuePlateau* vue_plateau;
     FenetreInformations* vueJoueur1;
     FenetreInformations* vueJoueur2;
     std::vector<VueCarteNoble*> vuesCartesNobles;
 
+    QPushButton* bouton_nouvelle_partie;
+    QPushButton* bouton_charger_partie;
     QPushButton*  bouton_sauvegarde;
+
+    // ---------- Choix actions ---------------
+    QPushButton* bouton_depenser_privilege;
+    QPushButton* bouton_prendre_jeton;
+    QPushButton* bouton_acheter_carte;
+    QPushButton* bouton_reserver_carte;
+    QPushButton* bouton_remplir_plateau;
 
     sqlite3* db;
 
    // void sauvegarder();
+   void dessinerPartie();
+   void deleteLayout(QLayout* layout);
+   void afficherChoix();
+    void desactiverOuActiverBouton(bool etat);
+    void setEtatBoutonPrivilege();
+
+   // Ecrit un message console si le plateau n'est pas définie
+   bool checkPlateau() {
+       bool b =  vue_plateau== nullptr ||
+                  (vue_plateau != nullptr && vue_plateau->getPlateau()== nullptr);
+       if (b) {
+           std::cerr<<"Plateau ou VuePlateau non définie dans VueJeu !";
+       }
+       return b;
+   }
+
 private slots:
     void boutonSauvegardeClick();
+    void boutonNouvellePartie();
+    void boutonChargerPartie();
+    void boutonActionPrivilege();
+    void boutonPrendreJeton();
+    void boutonRemplirPlateau();
+    void boutonAcheterCarte();
+    void boutonReserverCarte();
 };
 
 #endif //JEU_JEU_H

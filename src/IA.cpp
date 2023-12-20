@@ -59,7 +59,7 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
         }
     }
     joueur.ajouterCarteJoaillerie(*derniereCarte);
-    carte.actionPouvoir();
+    //carte.actionPouvoir();
     return derniereCarte;
 }
 

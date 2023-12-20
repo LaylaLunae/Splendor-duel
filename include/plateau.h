@@ -56,6 +56,10 @@ class Plateau {
     const Jeton** selection_courante;
     int* selection_courante_positions;
     unsigned int nombre_jetons_dans_selection = 0;
+    bool ne_peut_selectionner_que_or = false; // pour la réservation de cartes
+    bool peut_selectionner_un_or=true; //pour dépenser privilège.
+
+    unsigned  int max_selection_possible = 3;
 
     // Constantes
     unsigned int nombre_jetons_par_cote_de_plateau = 5;
@@ -90,10 +94,15 @@ public:
     Plateau(sqlite3** db= nullptr, VuePlateau* vp = nullptr);
     friend class Jeu;
 
-    void remplissagePlateau(bool avecAffichage = false);
+    bool remplissagePlateau(bool avecAffichage = false);
     std::string etatPlateau();
     void ajouterSac(const Jeton *j);
 
+    void setMaxSelectionPossible(unsigned int n, bool force_or=false, bool peut_or=true) {
+        max_selection_possible=n;
+        ne_peut_selectionner_que_or=force_or;
+        peut_selectionner_un_or=peut_or;
+    }
     int selectionJeton(unsigned int position_x, unsigned int position_y);
     std::vector<const Jeton*> validerSelectionEtPrendreJetons();
     const Jeton* prendreJeton(unsigned int position_x, unsigned int position_y);
@@ -197,9 +206,19 @@ public:
     explicit VuePlateau(QWidget *parent = nullptr);
     Plateau* getPlateau() {return plateau;}
 
-    void affichageJetons(); // à appeler si chargement mémoire
+    void affichageJetons(bool  etat_actif=false); // à appeler si chargement mémoire
+
+    void desactiverOuActiverLesJetons(bool nouvel_etat) {
+        for (auto j : vuesJetons) {
+            //j->setCliquable(nouvel_etat);
+            j->setEnabled(nouvel_etat);
+            j->repaint();
+        }
+        repaint();
+    }
 
 private:
+    friend class Plateau;
     Plateau* plateau;
     QGridLayout* layout_bouton;
     QGridLayout* layout_carte;
@@ -216,7 +235,8 @@ private:
     void miseAJourJetons();
     void affichageCartes();
     void affichagePrivileges();
-    friend class Plateau;
+
+
 
 private slots:
     void jetonClick_Plateau(VueJeton*) ;//{ std::cout<<"Clicked!\n"; }

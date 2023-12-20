@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <QPainter>
+#include <QRegion>
 #include "../include/jeu.h"
 
 void VueJeton::paintEvent(QPaintEvent*  event) {
@@ -47,15 +48,29 @@ void VueJeton::paintEvent(QPaintEvent*  event) {
         bg_color.setAlpha(128);
     }
     // Texte contenant la position du bouton à afficher
-    std::string texte = std::to_string(pos_x);
-    texte.append(",");
-    texte.append(std::to_string(pos_y));
-    QString buttonText = QString::fromStdString(texte);
-    this->setText(buttonText);
-    painter.drawText(0, 0, buttonText);
-    QPushButton::paintEvent(event);
+//    std::string texte = std::to_string(pos_x);
+//    texte.append(",");
+//    texte.append(std::to_string(pos_y));
+//    QString buttonText = QString::fromStdString(texte);
+//    this->setText(buttonText);
+//    painter.drawText(0, 0, buttonText);
 
     setButtonColors(bg_color,Qt::black);
+    int h, s, v;
+    bg_color.getHsv(&h, &s, &v);
+    setStyleSheet(QString("QPushButton {"
+                          "    border-radius: 25px;"
+                          "    background-color: %1;" // Set background color dynamically
+                          "    color: white;" // Set text color
+                          "}"
+                          "QPushButton:hover {"
+                          "    background-color:%2;" // Change color on hover
+                          "}").arg(bg_color.name(), QColor::fromHsv(h, s, qMin(255, v + 20)).name()));
+    setFixedSize(70,70);
+    QRect rect(0,0,40,40);
+    QRegion region(rect, QRegion::Ellipse);
+    setMask(region);
+    QPushButton::paintEvent(event);
 }
 
 void VueJeton::setSelected(bool s) {
