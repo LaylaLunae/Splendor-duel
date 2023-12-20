@@ -208,12 +208,23 @@ public slots:
                 labelJetonsParCouleur[couleur]->setStyleSheet(QString("QLabel { background-color: grey; color: %1; }").arg(getCouleurTexte(couleur)));
             }
         }
+        if (joueurCourant != nullptr && joueur == joueurCourant) {
+            labelNom->setStyleSheet("QLabel { background-color: white; color: red; }");
+        }
+        else {
+            labelNom->setStyleSheet("QLabel { background-color: white; color: black; }");
+        }
         // il faut faire repaint pour pouvoir mettre à jour
          repaint();
     }
     // permet de mettre à jour le joueur
     void setJoueur(Joueur* j) {
         joueur = j;
+        miseAJourInformations();
+    }
+
+    void setJoueurCourrant(Joueur *courant) {
+        joueurCourant = courant;
         miseAJourInformations();
     }
 
@@ -227,6 +238,7 @@ private:
     QLabel *labelJetons;
     QLabel *labelJetonsParCouleur[7];
     Joueur *joueur;
+    Joueur * joueurCourant;
     // permet d'avoir les noms de pierre précieuses
     QString getNomCouleur(int couleur) const {
         switch (couleur) {
@@ -254,4 +266,6 @@ private:
         }
     }
 };
+
+
 #endif // JOUEUR_H
