@@ -148,7 +148,7 @@ public:
 
     virtual std::vector<CarteJoaillerie*> getCartesAchetable(const Pioche& pioche) const ;
 //    virtual bool peutAcheterCarte(const CarteJoaillerie& carte) const;
-    virtual CarteJoaillerie* melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur,Plateau& plateau, Carte& carte);
+    virtual CarteJoaillerie* melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur,Plateau& plateau);
     //void activerPouvoir(Joueur& joueur, CarteJoaillerie& carte, Plateau& plateau);
 
     virtual std::vector<std::pair<const Jeton*, const Jeton*>> genererCombinaisonsDeuxJetons(Plateau* plateau);
@@ -194,29 +194,29 @@ public:
         layout->addWidget(labelNom);
 
         labelPriviliges = new QLabel("Nombre de Privilèges: 0", this);
-        labelPriviliges->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
+        labelPriviliges->setStyleSheet("QLabel { background-color: grey; color: white; }");
         layout->addWidget(labelPriviliges);
 
         labelCouronnes = new QLabel("Nombre de Couronnes: 0", this);
-        labelCouronnes->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
+        labelCouronnes->setStyleSheet("QLabel { background-color: grey; color: white; }");
         layout->addWidget(labelCouronnes);
 
         labelCartesNobles = new QLabel("Nombre de Cartes Nobles: 0", this);
-        labelCartesNobles->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
+        labelCartesNobles->setStyleSheet("QLabel { background-color: grey; color: white; }");
         layout->addWidget(labelCartesNobles);
 
         labelCartesReservees = new QLabel("Nombre de Cartes Réservées: 0", this);
-        labelCartesReservees->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
+        labelCartesReservees->setStyleSheet("QLabel { background-color: grey; color: white; }");
         layout->addWidget(labelCartesReservees);
 
         labelJetons = new QLabel("Nombre de Jetons: 0", this);
-        labelJetons->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
+        labelJetons->setStyleSheet("QLabel { background-color: grey; color: white; }");
         layout->addWidget(labelJetons);
 
         // Labels pour le nombre de jetons par couleur
         for (int couleur = 0; couleur < 7; couleur++) {
             labelJetonsParCouleur[couleur] = new QLabel(QString("Nombre de %1 : 0").arg(getNomCouleur(couleur)), this);
-            labelJetonsParCouleur[couleur]->setStyleSheet("QLabel { background-color: darkblue; color: white; }");
+            labelJetonsParCouleur[couleur]->setStyleSheet("QLabel { background-color: grey; color: white; }");
             layout->addWidget(labelJetonsParCouleur[couleur]);
         }
 
@@ -246,7 +246,7 @@ public slots:
 
                 // Ajoutez une feuille de style pour changer la couleur du texte
                 labelJetonsParCouleur[couleur]->setStyleSheet(
-                        QString("QLabel { background-color: darkblue; color: %1; }").arg(getCouleurTexte(couleur))
+                        QString("QLabel { background-color: grey; color: %1; }").arg(getCouleurTexte(couleur))
                 );
             }
         }
@@ -290,7 +290,7 @@ private:
             case 2: return "red";
             case 3: return "white";
             case 4: return "black";
-            case 5: return "silver";
+            case 5: return "pink";
             case 6: return "gold";
             default: return "white";
         }
