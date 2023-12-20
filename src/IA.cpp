@@ -38,7 +38,7 @@ std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const
     return cartesAchetable;
 }
 
-CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur, Plateau& plateau, Carte& carte) {
+CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur, Plateau& plateau) {
     if (pioche.getMaxCartesRevelees() == 0 || pioche.getCartesDehors(0) == nullptr) {
         return nullptr;
     }
@@ -59,7 +59,10 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
         }
     }
     joueur.ajouterCarteJoaillerie(*derniereCarte);
-    //carte.actionPouvoir();
+
+    auto* carte_non_const = const_cast<CarteJoaillerie*>(derniereCarte);
+    carte_non_const->actionPouvoir(&plateau, &joueur);
+
     return derniereCarte;
 }
 

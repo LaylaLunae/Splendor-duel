@@ -402,7 +402,7 @@ bool Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
     }
 
     auto* carte_non_const = const_cast<CarteJoaillerie*>(carte);
-    //carte_non_const->actionPouvoir();
+    carte_non_const->actionPouvoir(plateau, joueur);
 
     return true;
 }

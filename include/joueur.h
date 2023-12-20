@@ -148,7 +148,7 @@ public:
 
     virtual std::vector<CarteJoaillerie*> getCartesAchetable(const Pioche& pioche) const ;
 //    virtual bool peutAcheterCarte(const CarteJoaillerie& carte) const;
-    virtual CarteJoaillerie* melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur,Plateau& plateau, Carte& carte);
+    virtual CarteJoaillerie* melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur,Plateau& plateau);
     //void activerPouvoir(Joueur& joueur, CarteJoaillerie& carte, Plateau& plateau);
 
     virtual std::vector<std::pair<const Jeton*, const Jeton*>> genererCombinaisonsDeuxJetons(Plateau* plateau);
