@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QWidget>
 #include <QPen>
+#include <QIcon>
 
 #include "couleur.h" // safe
 #include "carte.h"
@@ -33,12 +34,23 @@ public:
 class VueCarteNoble : public QPushButton {
     Q_OBJECT
 public:
-    explicit VueCarteNoble (unsigned int n, QWidget* parent= nullptr):
+    explicit VueCarteNoble (unsigned int n, VuePlateau* vp, QWidget* parent= nullptr):
             QPushButton(parent), parent(parent), numero(n) {
-        //carte = c;
-        setFixedSize(50,50);
+        /*
+         * L'attribut numéro sert également pour l'ID bdd.
+         */
+        setFixedSize(100,150);
+        vue_plateau = vp;
+        QString chemin_image = QString::fromStdString("../images/" + std::to_string(numero+68) + ".png");
+        setStyleSheet("QPushButton { border-image: url(" + chemin_image + "); }");
         connect(this,SIGNAL(clicked()),this,SLOT(clickedEvent()));
-        //update();
+        QPixmap pixmap(chemin_image);
+        pixmap.scaled(50, 50);
+        QIcon icon (pixmap);
+        this->setIcon(icon);
+        this->setIconSize(this->size());
+        //setIconSize(pixmap.rect().size());
+        //setFixedSize(pixmap.rect().size());
     };
 
     //const CarteNoble* getCarte() const {return carte;}
@@ -48,10 +60,11 @@ public:
 
 
 protected:
-    void paintEvent(QPaintEvent *event) override;
+//    void paintEvent(QPaintEvent *event) override;
 private:
-    //const CarteNoble* carte = nullptr;
-    unsigned int numero;
+    VuePlateau* vue_plateau;
+    const CarteNoble* carte = nullptr;
+    unsigned int numero; // est utilisé comme id bdd.
     QWidget* parent;
     signals:
             void carteClick(VueCarteNoble*);

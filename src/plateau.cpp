@@ -997,7 +997,7 @@ void VuePlateau::affichageCartes() {
     for (size_t i = 0; i < plateau->nb_cartes_nobles_MAX; i++) {
         const CarteNoble* pt = plateau->cartes_nobles[i];
         if (pt != nullptr) {
-            vuesCartes[i] = new VueCarteNoble(i, this);
+            vuesCartes[i] = new VueCarteNoble(i, this, this);
             layout_carte->addWidget(vuesCartes[i], i/2, i%2);
             connect(
                     vuesCartes[i],
