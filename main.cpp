@@ -10,8 +10,8 @@
 
 #include "./include/jeu.h"
 #include "./include/plateau.h"
-#include "affichage/affichage_carte.h"
-#include "./include/affichage_joueur.h"
+//#include "affichage/affichage_carte.h"
+//#include "./include/affichage_joueur.h"
 
 class Plateau;
 class Pioche;
