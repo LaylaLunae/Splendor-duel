@@ -308,6 +308,6 @@ T queryTableField(sqlite3* db, const std::string& tableName, const std::string& 
     return result;
 }
 
-std::vector<const char*> queryAllJetonColorsForPlateau(sqlite3* db, const std::string& tableName, int plateauId);
+std::vector<const char*> queryAllJetonColorsForPlateau(sqlite3* db, const std::string& tableName);
 
 #endif //SPLENDOR_QUERY_H

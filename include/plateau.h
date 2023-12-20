@@ -69,12 +69,19 @@ class Plateau {
     unsigned int nb_jetons_plateau_MAX = 25;
     unsigned int nb_cartes_nobles_MAX = 4;
 
-    int matrix[5][5] = {25, 10, 11, 12, 13,
-                        24, 9, 2, 3, 14,
-                        23, 8, 1, 4, 15,
-                        22, 7, 6, 5, 16,
-                        21, 20, 19, 18, 17};
+//    int matrix[5][5] = {25, 10, 11, 12, 13,
+//                        24, 9, 2, 3, 14,
+//                        23, 8, 1, 4, 15,
+//                        22, 7, 6, 5, 16,
+//                        21, 20, 19, 18, 17};
 
+    std::vector<std::vector<int>> matrix = {
+            {25, 10, 11, 12, 13,},
+            {24, 9, 2, 3, 14,},
+            {23, 8, 1, 4, 15,},
+            {22, 7, 6, 5, 16,},
+            {21, 20, 19, 18, 17}
+    };
 
     // VuePlateau utilisé pour mettre à jour l'affichage du plateau
     VuePlateau* vuePlateau;
@@ -123,6 +130,7 @@ public:
     unsigned int getNbPrivileges() const { return nb_privileges; }
     unsigned int getPointeurCaseLibre() const { return pointeur_case_libre; }
     unsigned int getNbCarteNoble() const { return nb_carte_noble; }
+    std::vector<std::vector<int>> getMatrix() {return matrix;}
     bool hasJetonOr(); // Vérifier qu'il y a au moins un jeton or sur le plateau
     void setNbJetonsSac(int nbJetons) { nb_jetons_sac = nbJetons; }
     void setNbJetonsPlateau(int nbJetons) { nb_jetons_plateau = nbJetons; }
@@ -149,9 +157,29 @@ public:
         nb_jetons_plateau = static_cast<unsigned int>(newJetons.size());
     }
 
+    void setJetonsByColor(const char* color, unsigned  int index) {
+        /*
+         * index doit être compris entre [0, 24]
+         */
+        delete jetons[index];
+        if (std::strcmp("", color) == 0) {
+            jetons[index] = nullptr;
+            return;
+        }
+
+        JetonType jt;
+        if (std::strcmp( "Or",color) == 0) {
+            // equals
+            jt = JetonType::Or;
+        } else {jt = JetonType::Gemme;}
+        Couleur c = couleurMapFirstCap.find(*(new std::string(color)))->second;
+        std::cout<<"Recu "<<color<<" - "<<std::endl;
+        jetons[index] =new const Jeton(jt,  c, 0, index%5+1, index*5+1);
+    }
+
     std::vector<const Jeton*> getJetons() const {
         std::vector<const Jeton*> jetonsCopy;
-        for (unsigned int i = 0; i < nb_jetons_plateau; ++i) { jetonsCopy.push_back(jetons[i]); }
+        for (unsigned int i = 0; i < nb_jetons_plateau_MAX; ++i) { jetonsCopy.push_back(jetons[i]); }
         return jetonsCopy;
     }
 
@@ -193,7 +221,6 @@ public:
 
 std::tuple<int, int> choisir_jeton();
 
-void testes_pour_plateau();
 
 
 

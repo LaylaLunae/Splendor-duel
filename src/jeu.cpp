@@ -417,7 +417,7 @@ void continuerLaPartie(sqlite3* db,
                        std::vector<const CarteNoble*>& cartesNoble,
                        //std::vector<CarteJoaillerie>& cartesDansPioche,
                        //std::vector<CarteJoaillerie>& cartesDehors,
-                       Jeu& jeu,
+                       Jeu* jeu,
                        Joueur* joueur1,
                        Joueur* joueur2,
                        std::vector<Pioche*>& pioches,
@@ -634,7 +634,7 @@ void continuerLaPartie(sqlite3* db,
     for (int carteId : cartesReserveesIds) {
         for (CarteJoaillerie* carte : cartesJoaillerie) {
             if (carte->getID() == carteId) {
-                joueur1->ajouterCarteReservee(carte);
+                joueur2->ajouterCarteReservee(carte);
                 break;
             }
         }
@@ -642,7 +642,7 @@ void continuerLaPartie(sqlite3* db,
     for (int carteId : cartesMainIds) {
         for (CarteJoaillerie *carte : cartesJoaillerie) {
             if (carte->getID() == carteId) {
-                joueur1->ajouterCarteJoaillerie(*carte);
+                joueur2->ajouterCarteJoaillerie(*carte);
                 break;
             }
         }
@@ -650,7 +650,7 @@ void continuerLaPartie(sqlite3* db,
     for (int carteId : cartesNobleIds) {
         for (const CarteNoble* carte : cartesNoble) {
             if (carte && carte->getID() == carteId) {
-                joueur1->ajouterCarteNoble(*carte);
+                joueur2->ajouterCarteNoble(*carte);
                 break;
             }
         }
@@ -658,7 +658,7 @@ void continuerLaPartie(sqlite3* db,
     for (int privilegeId : privilegesIds) {
         for (Privilege* priv : privileges) {
             if (priv->getID() == privilegeId) {
-                joueur1->ajouterPrivilege(priv);
+                joueur2->ajouterPrivilege(priv);
                 break;
             }
         }
@@ -675,16 +675,16 @@ void continuerLaPartie(sqlite3* db,
 //    int plateauId = queryJeuField(db, "Plateau_id", jeuId);
 
     if(joueur1Id == 1) {
-        jeu.setJoueurActuel(joueur1);
+        jeu->setJoueurActuel(joueur1);
     } else {
-        jeu.setJoueurActuel(joueur2);
+        jeu->setJoueurActuel(joueur2);
     }
     if(joueur1Id == 1) {
-        jeu.setJoueurGagnant(joueur1);
+        jeu->setJoueurGagnant(joueur1);
     } else if (joueur1Id == 2){
-        jeu.setJoueurGagnant(joueur2);
+        jeu->setJoueurGagnant(joueur2);
     } else {
-        jeu.setJoueurGagnant(nullptr);
+        jeu->setJoueurGagnant(nullptr);
     }
 
     // 6. obtenir des informations Plateau
@@ -713,19 +713,19 @@ void continuerLaPartie(sqlite3* db,
     }
     plateau.setCartesNobles(cartesNobles);
 
-    // Pour stocker les Jetons sur le Plateau
-    std::vector<const Jeton*> newJetons;
-    // Pour stocker les Jetons sur le sac dans Plateau
-    std::vector<const Jeton*> newSac;
-
-    std::vector<int> jetonsPlateauIds = queryAllJetonIdsForPlateau(db, "PlateauJetons", 1);
-    for (int jetonId : jetonsPlateauIds) {
-        // 根据 Jeton ID 查询 Jeton 表中的记录
-        Jeton* jeton = queryJetonById(db, jetonId);
-        if (jeton != nullptr) {
-            newJetons.push_back(jeton);
-        }
-    }
+//    // Pour stocker les Jetons sur le Plateau
+//    std::vector<const Jeton*> newJetons;
+//    // Pour stocker les Jetons sur le sac dans Plateau
+//    std::vector<const Jeton*> newSac;
+//
+//    std::vector<int> jetonsPlateauIds = queryAllJetonIdsForPlateau(db, "PlateauJetons", 1);
+//    for (int jetonId : jetonsPlateauIds) {
+//        // 根据 Jeton ID 查询 Jeton 表中的记录
+//        Jeton* jeton = queryJetonById(db, jetonId);
+//        if (jeton != nullptr) {
+//            newJetons.push_back(jeton);
+//        }
+//    }
 
 //    std::vector<int> jetonsSacIds = queryAllJetonIdsForPlateau(db, "PlateauSac", 1);
 //    for (int jetonId : jetonsSacIds) {
@@ -755,7 +755,17 @@ void continuerLaPartie(sqlite3* db,
         }
     }
     plateau.setPrivileges(plateauPrivileges);
-    std::vector<const char*> jc = queryAllJetonColorsForPlateau(db, "PlateauJetonsColors", 1);
+
+    std::vector<const char*> jc = queryAllJetonColorsForPlateau(db, "PlateauJetonsColors");
+    unsigned int index = 0;
+    std::vector<std::vector<int>> matrix = plateau.getMatrix();
+    for (auto color : jc) {
+        std::cout<<"index : "<<matrix[index%5][index/5]-1<<" : "<<color<<std::endl;
+
+        //plateau.setJetonsByColor(color, plateau.getMatrix()[index%5][index/5]-1);
+        plateau.setJetonsByColor(color, index);
+        index++;
+    }
 }
 
 void sauvegarderPartie(sqlite3* db,
@@ -804,7 +814,7 @@ void sauvegarderPartie(sqlite3* db,
         difficulte = ? WHERE id = ?;)";
 
     sqlite3_stmt* stmt;
-    if (sqlite3_prepare_v2(db, updateSql.c_str(), -1, &stmt, NULL) != SQLITE_OK) { std::cerr << "Error preparing update statement: " << sqlite3_errmsg(db) << std::endl; return; }
+    if (sqlite3_prepare_v2(db, updateSql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) { std::cerr << "Error preparing update statement: " << sqlite3_errmsg(db) << std::endl; return; }
 
     // 绑定 Joueur 类的属性到 SQL 语句
     sqlite3_bind_int(stmt, 1, joueur1.getIsIA() ? 1 : 0); // 假设 isIA 是 bool 类型
@@ -824,7 +834,7 @@ void sauvegarderPartie(sqlite3* db,
     // 执行更新语句
     if (sqlite3_step(stmt) != SQLITE_DONE) { std::cerr << "Error executing update statement: " << sqlite3_errmsg(db) << std::endl; }
 
-    if (sqlite3_prepare_v2(db, updateSql.c_str(), -1, &stmt, NULL) != SQLITE_OK) { std::cerr << "Error preparing update statement: " << sqlite3_errmsg(db) << std::endl; return; }
+    if (sqlite3_prepare_v2(db, updateSql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) { std::cerr << "Error preparing update statement: " << sqlite3_errmsg(db) << std::endl; return; }
 
     // 绑定 Joueur 类的属性到 SQL 语句
     sqlite3_bind_int(stmt, 1, joueur2.getIsIA() ? 1 : 0); // 假设 isIA 是 bool 类型
@@ -1072,6 +1082,39 @@ void sauvegarderPartie(sqlite3* db,
             }
 
             sqlite3_finalize(stmtPlateauJeton);
+
+            // ---------------- Utilisation de la table PlateauJetonsColors --------------------
+            std::string updateOrInsertColor = R"(INSERT INTO PlateauJetonsColors(colors) VALUES (?);)";
+            sqlite3_stmt* stmtPlateauJetonColors;
+            if (sqlite3_prepare_v2(db, updateOrInsertColor.c_str(), -1, &stmtPlateauJetonColors, nullptr) != SQLITE_OK) {
+                std::cerr << "Error preparing statement for PlateauJetonsColors: " << sqlite3_errmsg(db) << std::endl;
+                return;
+            }
+
+            sqlite3_bind_text(stmtPlateauJetonColors, 1, jeton->getCouleurString().c_str(), -1, SQLITE_STATIC);
+
+            if (sqlite3_step(stmtPlateauJetonColors) != SQLITE_DONE) {
+                std::cerr << "Error executing statement for PlateauJetonsColors: " << sqlite3_errmsg(db) << std::endl;
+            }
+
+            sqlite3_finalize(stmtPlateauJetonColors);
+
+        } else {
+            // ---------------- Utilisation de la table PlateauJetonsColors --------------------
+            std::string updateOrInsertColor = R"(INSERT INTO PlateauJetonsColors(colors) VALUES (?);)";
+            sqlite3_stmt* stmtPlateauJetonColors;
+            if (sqlite3_prepare_v2(db, updateOrInsertColor.c_str(), -1, &stmtPlateauJetonColors, nullptr) != SQLITE_OK) {
+                std::cerr << "Error preparing statement for PlateauJetonsColors: " << sqlite3_errmsg(db) << std::endl;
+                return;
+            }
+
+            sqlite3_bind_text(stmtPlateauJetonColors, 1, "", -1, SQLITE_STATIC);
+
+            if (sqlite3_step(stmtPlateauJetonColors) != SQLITE_DONE) {
+                std::cerr << "Error executing statement for PlateauJetonsColors: " << sqlite3_errmsg(db) << std::endl;
+            }
+
+            sqlite3_finalize(stmtPlateauJetonColors);
         }
     }
 }
@@ -1103,6 +1146,10 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
     j2 = new Humain ("Joueur 2");
     jeu->setJoueurActuel(j1);
     jeu->setVueJeu(this);
+    vueJoueur1 = new FenetreInformations(j1);
+    vueJoueur2 = new FenetreInformations(j2);
+    j1->setInfo(vueJoueur1);
+    j2 ->setInfo(vueJoueur2);
 
     // --------------------- init pioches et cartes -----------------
     cartesJoaillerie = std::vector<CarteJoaillerie*>(0);
@@ -1113,6 +1160,11 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
     pioches.push_back(pioche1);
     pioches.push_back(pioche2);
     pioches.push_back(pioche3);
+
+
+    // ------------------ init vuePlateau ------------
+    vue_plateau = new VuePlateau(this);
+
 
     // ---------------- init layout ----------------
     layout_bas = new QHBoxLayout();
@@ -1158,19 +1210,6 @@ void VueJeu::dessinerPartie() {
             &VueJeu::boutonSauvegardeClick
     );
     bouton_sauvegarde->show();
-
-
-    // ------------------ init vuePlateau ------------
-    vue_plateau = new VuePlateau(this);
-
-    // ------------------ init joueurs ---------------
-    vueJoueur1 = new FenetreInformations(j1);
-    vueJoueur2 = new FenetreInformations(j2);
-    j1->setInfo(vueJoueur1);
-    j2 ->setInfo(vueJoueur2);
-    //vueJoueur1->setJoueur(j1);
-    //vueJoueur2->setJoueur(j2);
-
 
     // ------------------ layout centre --------------
     layout_centre->addWidget(vueJoueur1);
@@ -1285,7 +1324,6 @@ void VueJeu::boutonNouvellePartie() {
 
     deleteLayout(layout_main);
 
-    std::cout<<"Layout détuit";
     this->dessinerPartie();
     layout_main->addLayout(layout_jeu);
     setLayout(layout_main);
@@ -1295,20 +1333,25 @@ void VueJeu::boutonNouvellePartie() {
 void VueJeu::boutonChargerPartie() {
     // ----------------- Load dernière partie ------------
     // Récupération des vecteurs cartes nobles et cartes joailleries
-    //std::vector<const CarteNoble*> cartesNoble = vue_plateau->getPlateau()->getCartesNobles();
+    std::vector<const CarteNoble*> cartesNoble = vue_plateau->getPlateau()->getCartesNobles();
 
     deleteLayout(layout_main);
 
     // Load partie
-//    continuerLaPartie(
-//            db,
-//            cartesJoaillerie,
-//            cartesNoble,
-//            //cartesDansPioche, cartesDehors,
-//            reinterpret_cast<Jeu &>(jeu), j1, j2, pioches,
-//            *vue_plateau->getPlateau(),
-//            vue_plateau->getPlateau()->getPrivileges()
-//    );
+    continuerLaPartie(
+            db,
+            cartesJoaillerie,
+            cartesNoble,
+            //cartesDansPioche, cartesDehors,
+            jeu, j1, j2, pioches,
+            *vue_plateau->getPlateau(),
+            vue_plateau->getPlateau()->getPrivileges()
+    );
+
+    // ---------- MIse a jour  des composants------------
+    vue_plateau->affichageJetons(false);
+    vueJoueur1->miseAJourInformations();
+    vueJoueur2->miseAJourInformations();
 
     this->dessinerPartie();
     layout_main->addLayout(layout_jeu);

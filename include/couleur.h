@@ -19,4 +19,15 @@ inline std::map<std::string, Couleur> couleurMap = {
         {"choix_utilisateur", Couleur::choix_utilisateur}
 };
 
+inline std::map<std::string, Couleur> couleurMapFirstCap = {
+        {"Bleu", Couleur::bleu},
+        {"Vert", Couleur::vert},
+        {"Rouge", Couleur::rouge},
+        {"Blanc", Couleur::blanc},
+        {"Noir", Couleur::noir},
+        {"Rose", Couleur::rose},
+        {"Rien", Couleur::rien},
+        {"choix_utilisateur", Couleur::choix_utilisateur}
+};
+
 #endif // COULEUR_H

@@ -11,8 +11,6 @@
 //#include "./../include/jeton.h"
 //#include "./../include/carte.h"
 //#include "./../include/carteNoble.h"
-
-
 std::tuple<int, int> choisir_jeton() {
     std::cout<<"\n\nVous pouvez choisir un jeton. Les positions vont de (1,1) a (5,5) : ";
     std::string sx, sy;
@@ -23,62 +21,6 @@ std::tuple<int, int> choisir_jeton() {
     int x = std::stoi(sx);
     int y = std::stoi(sy);
     return std::make_tuple(x, y);
-}
-
-
-void testes_pour_plateau() {
-    /**
-     * Fonction pour tester le plateau.
-     * On peut choisir des jetons sur le plateau.
-     * Et ensuite la première carte noble est prise automatiquement.
-     * Puis on remet ces jetons dans le sac, et on reremplit le plateau.
-     * On verra que les jetons pris apparaissent sur le tableau avec un
-     *      autre ordre! (distribution aléatoire)
-     */
-    Plateau* p = new Plateau();
-    std::cout<<p->etatPlateau();
-
-    int x, y;
-    int valider_selection = 0;
-    try {
-        while (valider_selection != 1) {
-            std::tie(x, y) = choisir_jeton();
-            p->selectionJeton(x, y);
-
-            std::cout<<"\n\nVoulez vous valider la selection ? 1:oui ; 0:non";
-            std::string reponse;
-            std::cin >> reponse;
-            valider_selection = std::stoi(reponse);
-        }
-
-        std::vector<const Jeton*> reponse = p->validerSelectionEtPrendreJetons();
-
-        std::cout<<"\nVous avez en main les jetons de valeurs : ";
-        for (const Jeton* j : reponse) {
-            std::cout<<j->getCouleurString()<<",";
-        }
-
-        const CarteNoble* c = p->prendreCarteNoble(0);
-        std::cout<<"\nLa carte noble 0 a ete prise. Son nombre de couronnes : "<<c->getCouronne();
-
-        std::cout<<p->etatPlateau();
-
-        std::cout<<"\nRemise dans le sac des jetons...";
-        for (const Jeton* j : reponse) {
-            p->ajouterSac(j);
-        }
-        std::cout<<" ...fini.";
-
-        std::cout<<p->etatPlateau();
-
-        std::cout<<"\nRemplissage du plateau...";
-        p->remplissagePlateau();
-        std::cout<<" ...fini.";
-
-        std::cout<<p->etatPlateau();
-
-    }
-    catch (PlateauException exc) {std::cout<<exc.get_info();}
 }
 
 
@@ -116,7 +58,7 @@ nombre_jetons_dans_selection(0), vuePlateau(vp){
             jt = JetonType::Gemme; couleur=Couleur::noir;
         }
 
-        ajouterSac(new const Jeton(jt, couleur, i%5+1, i/5+1));
+        ajouterSac(new const Jeton(jt, couleur, 0, i%5+1, i/5+1));
     }
     nb_jetons_sac = nb_jetons_sac_MAX;
 

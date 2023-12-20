@@ -93,7 +93,7 @@ void continuerLaPartie(sqlite3* db,
                        std::vector<const CarteNoble*>& cartesNoble, // Avant de continuer le jeu, vous devez initialiser toutes les cartesNoble
                        //std::vector<CarteJoaillerie>& cartesDansPioche,
                        //std::vector<CarteJoaillerie>& cartesDehors,
-                       Jeu& jeu, // Avant de continuer le jeu, vous devez initialiser un objet vide pour stocker les données lues.
+                       Jeu* jeu, // Avant de continuer le jeu, vous devez initialiser un objet vide pour stocker les données lues.
                        Joueur* joueur1,
                        Joueur* joueur2,
                        std::vector<Pioche*>& pioches,
