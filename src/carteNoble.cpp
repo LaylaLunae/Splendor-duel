@@ -22,9 +22,9 @@ const int CarteNoble::getID() const {
 }
 
 
-void VueCarteNoble::paintEvent(QPaintEvent *event) {
-    QPalette palette = this->palette();
-    palette.setColor(QPalette::Button, Qt::yellow);
-    setPalette(palette);
-    QPushButton::paintEvent(event);
-}
+//void VueCarteNoble::paintEvent(QPaintEvent *event) {
+//    QPalette palette = this->palette();
+//    palette.setColor(QPalette::Button, Qt::yellow);
+//    setPalette(palette);
+//    QPushButton::paintEvent(event);
+//}
