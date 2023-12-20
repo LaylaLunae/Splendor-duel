@@ -130,7 +130,6 @@ public:
 
     virtual int choisirChoix(int min, int max) override;
 
-
     virtual std::vector<CarteJoaillerie*> getCartesAchetable(const Pioche& pioche) const ;
     virtual CarteJoaillerie* melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur,Plateau& plateau);
 
