@@ -9,9 +9,6 @@
 class Plateau;
 
 int IA::choisirChoix(int min, int max) {
-
-    //std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
     int choix = rand() % max + 1;
 
     if (choix < min || choix > max) {
@@ -19,7 +16,6 @@ int IA::choisirChoix(int min, int max) {
     }
     return choix;
 }
-
 
 std::vector<CarteJoaillerie*> IA::getCartesAchetable(const Pioche& pioche) const {
     std::vector<CarteJoaillerie*> cartesAchetable;
@@ -42,7 +38,6 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
     if (pioche.getMaxCartesRevelees() == 0 || pioche.getCartesDehors(0) == nullptr) {
         return nullptr;
     }
-
     std::random_device rd;
     std::default_random_engine generator(rd());
 
@@ -66,71 +61,6 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
     return derniereCarte;
 }
 
-
-
-/*
-CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joueur, Plateau& plateau, Carte& carte) {
-    if (pioche.getMaxCartesRevelees() == 0) {
-        return nullptr;
-    }
-    std::vector<CarteJoaillerie*> cartesAchetable = getCartesAchetable(pioche);
-
-    std::default_random_engine generator;
-    std::shuffle(cartesAchetable.begin(), cartesAchetable.end(), generator);
-// ici que ca bug
-    std::cout<<"dkj";
-    CarteJoaillerie* derniereCarte = cartesAchetable.back();
-    std::cout<<"dede";
-    // Remettre les jetons dans le sac
-    for (const auto& cout : derniereCarte->getPrix()) {
-        if (cout.second > 0) {
-            Obligatoire::remettreJetonSac(&joueur, &plateau, cout.first, joueur.getNbJeton((int) cout.first) - cout.second, cout.second,(int) cout.first);
-        }
-    }
-    joueur.ajouterCarteJoaillerie(*derniereCarte);
-    carte.actionPouvoir();
-    return derniereCarte;
-}
-*/
-/*
-// Implémentation de la fonction activerPouvoir dans la classe IA
-void IA::activerPouvoir(Joueur& joueur, CarteJoaillerie& carte, Plateau & plateau) {
-    for (const auto& pouvoir : carte.existancePouvoir()) {
-        switch (pouvoir) {
-            case Pouvoir::nouveau_tour: {
-
-                break;
-            }
-
-            case Pouvoir::bonus_pierre: {
-                int choix = choisirChoix(1,5);
-                joueur.ajouterGemmeBonus(choix);
-                break;
-            }
-
-            case Pouvoir::pierre_en_plus: {
-                //choisirJetonSurPlateau(plateau);
-                break;
-            }
-
-            case Pouvoir::privilege_en_plus: {
-                const Privilege* nouveauPrivilege = plateau.prendrePrivilege();
-                joueur.ajouterPrivilege(const_cast<Privilege *>(nouveauPrivilege));
-                break;
-            }
-            case Pouvoir::vol_pierre: {
-                //
-                break;
-            }
-            default:
-                //pas de pouvoir.
-                break;
-        }
-    }
-}
-
-*/
-
 std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJetons(Plateau* plateau) {
     std::vector<std::pair<const Jeton*, const Jeton*>> combinaisons;
 
@@ -146,7 +76,6 @@ std::vector<std::pair<const Jeton*, const Jeton*>> IA::genererCombinaisonsDeuxJe
         for (auto vec : plateau->donnePositionsPossiblesAPartirDe(x, y)) {
             positionsPossibles.push_back(vec);
         }
-
         // Insérer les positions possibles dans un vecteur
         std::vector<std::pair<unsigned int, unsigned int>> positions;
         for (const auto& pos : positionsPossibles) {
@@ -193,7 +122,6 @@ std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCom
         for (auto vec: plateau->donnePositionsPossiblesAPartirDe(x, y)) {
             positionsPossibles.push_back(vec);
         }
-
         // Insérer les positions possibles dans un vecteur
         std::vector<std::pair<unsigned int, unsigned int>> positions;
         for (const auto &pos: positionsPossibles) {
@@ -232,14 +160,12 @@ std::vector<std::tuple<const Jeton*, const Jeton*, const Jeton*>> IA::genererCom
     return combinaisons;
 }
 
-
 void IA::prendreJetons(Plateau* plateau) {
     if (!plateau->hasJeton()) {
         Optionnelle::remplissagePlateau(this, plateau);
     }
     // Calculer le nombre actuel de jetons
     int nombreJetonsActuel = std::accumulate(nb_jeton.begin(), nb_jeton.end(), 0);
-
     int choix;
 
     if (nombreJetonsActuel == 9) {
@@ -271,7 +197,6 @@ void IA::prendreJetons(Plateau* plateau) {
         }
     }
 }
-
 
 void IA::choisirJetonSurPlateau(Plateau* plateau) {
     int positionX = rand() % 5 ;

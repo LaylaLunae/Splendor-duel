@@ -2,8 +2,7 @@
 #include <utility>
 #include "../include/jeu.h"
 
-Joueur::Joueur(const std::string nom)
-        : pseudo(nom), nombre_couronnes(0), points_prestige_total(0), droitDeRejouer(false), adversaire(nullptr){
+Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_prestige_total(0), droitDeRejouer(false), adversaire(nullptr){
 
     // Utilisation de vecteurs au lieu de tableaux statiques
     cartes_reservees.resize(0, nullptr);
@@ -37,7 +36,6 @@ Joueur::~Joueur() {
     }
     privileges.clear();
 }
-
 
 // Constructeur de recopie
 Joueur::Joueur(const Joueur& autre)
@@ -76,15 +74,12 @@ Joueur& Joueur::operator=(const Joueur& autre) {
         for (const auto& carte : autre.cartes_reservees) {
             cartes_reservees.push_back(new CarteJoaillerie(*carte));
         }
-
         for (const auto& carte : autre.cartes_main) {
             cartes_main.push_back(new CarteJoaillerie(*carte));
         }
-
         for (const auto& carte : autre.cartes_noble) {
             cartes_noble.push_back(new CarteNoble(*carte));
         }
-
         for (const auto& privilege : autre.privileges) {
             privileges.push_back(new Privilege(*privilege));
         }
@@ -155,7 +150,6 @@ int Joueur::getGemmesBonus(int index) const {
     return 0;
 }
 
-
 int Joueur::getNbJetonTotal() const {
     int totalJetons = 0;
     for (int i = 0; i < nb_jeton.size(); ++i) {
@@ -163,7 +157,6 @@ int Joueur::getNbJetonTotal() const {
     }
     return totalJetons;
 }
-
 
 int Joueur::getNbJetonsParCouleur(int couleur) const {
     int totalJetonsCouleur = 0;
@@ -177,18 +170,17 @@ int Joueur::getNbJetonsParCouleur(int couleur) const {
 
 bool Joueur::getDroitDeRejouer() const { return droitDeRejouer; }
 
-std::vector<CarteJoaillerie*> Joueur::getCartesReservees() const { return cartes_reservees; }
-std::vector<CarteJoaillerie*> Joueur::getCartesMain() const { return cartes_main; }
-std::vector<CarteNoble*> Joueur::getCartesNoble() const{ return cartes_noble; }
-
-/*
-Privilege* Joueur::getPrivilege(int index) const {
-    if (index >= 0 && index < 3) {
-        return privileges[index];
-    }
-    return nullptr;
+std::vector<CarteJoaillerie*> Joueur::getCartesReservees() const {
+    return cartes_reservees;
 }
-*/
+
+std::vector<CarteJoaillerie*> Joueur::getCartesMain() const {
+    return cartes_main;
+}
+
+std::vector<CarteNoble*> Joueur::getCartesNoble() const{
+    return cartes_noble;
+}
 
 const std::vector<Privilege *>& Joueur::getPrivileges() const {
     return privileges;
@@ -226,17 +218,14 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {
     if (Couleur::rien!= couleurBijou) {
         points_prestige_couleurs[static_cast<int>(couleurBijou)] += nombrePointsCarte;
     }
-
     // Ajouter le nombre de couronnes si la carte en a
     if (nombreCouronnesCarte > 0) {
         nombre_couronnes += nombreCouronnesCarte;
     }
-
     if(carte.getTypePierre()!=Couleur::choix_utilisateur){
         int j = static_cast<int>(carte.getTypePierre());
         gemmes_bonus[j]++;
     }
-
     // Ajouter le nombre de bonus (gemme) si la carte en a
     if(carte.getTypePierre()!=Couleur::rien){
         if(carte.getNombrePierre()==1) {
@@ -244,13 +233,11 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {
             gemmes_bonus[i]+=carte.getNombrePierre();
         }
     }
-
     CarteJoaillerie* temp = &carte;
     cartes_main.push_back(const_cast<CarteJoaillerie*>(temp));
 }
 
 void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
-
     int nombreCouronnesCarte = carte.getCouronne();
 
     // Ajouter le nombre de couronnes à la variable nombre_couronnes
@@ -259,10 +246,12 @@ void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
     // Ajouter les points de prestige de la carte à la variable points_prestige_total
     points_prestige_total += carte.getPointPrestige();
 }
+
 void Joueur::ajouterCarteReservee(CarteJoaillerie *carte) {
     if (cartes_reservees.size() < 3) {
         cartes_reservees.push_back(carte);
-    } else {
+    }
+    else {
         throw std::runtime_error("Le joueur ne peut pas réserver plus de 3 cartes.");
     }
 }
@@ -275,13 +264,6 @@ void Joueur::ajouterPrivilege(Privilege *privilege) {
         throw std::runtime_error("Le joueur ne peut pas avoir plus de 3 privilèges.");
     }
 }
-/*
-void Joueur::ajouterGemmeBonus(int index) {
-    if (index >= 0 && index < gemmes_bonus.size()) {
-        gemmes_bonus[index]++;
-    }
-}
-*/
 
 // Définir l'adversaire
 void Joueur::setAdversaire(Joueur *adv) {
@@ -298,7 +280,6 @@ Joueur* Joueur::getAdversaire() {
 bool Joueur::hasPrivilege() {
     return !privileges.empty();
 }
-
 
 Privilege Joueur::removePrivilege() {
     for (int i = 0; i < MAX_PRIVILEGES; i++) {
@@ -338,15 +319,25 @@ void Joueur::resetRejouer() {
         droitDeRejouer = true;
 }
 
-void Joueur::resetRejouer(bool reset) {droitDeRejouer = reset;}
+void Joueur::resetRejouer(bool reset) {
+    droitDeRejouer = reset;
+}
 
-bool Joueur::getIsIA() const {return isIA;}
+bool Joueur::getIsIA() const {
+    return isIA;
+}
 
-void Joueur::setIsIA(bool isia) {isIA = isia;}
+void Joueur::setIsIA(bool isia) {
+    isIA = isia;
+}
 
-Difficulte Joueur::getDifficulte() const {return diff;}
+Difficulte Joueur::getDifficulte() const {
+    return diff;
+}
 
-void IA::setDifficulte(Difficulte diff) {difficulte = diff;}
+void IA::setDifficulte(Difficulte diff) {
+    difficulte = diff;
+}
 
 // Flux ostream
 std::ostream& operator<<(std::ostream& os, const Joueur& joueur) {
@@ -374,15 +365,12 @@ std::ostream& operator<<(std::ostream& os, const Joueur& joueur) {
     return os;
 }
 
-
 // tests
 void Joueur::initialiserJoueur() {
-
     for (int i = 0; i < 10; ++i) {
         CarteJoaillerie* carte = new CarteJoaillerie();
         cartes_main.push_back(carte);
     }
-
     for (int i = 0; i < 7; ++i) {
         nb_jeton[i] = 10;
     }
