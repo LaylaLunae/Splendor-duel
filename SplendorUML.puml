@@ -88,60 +88,101 @@ abstract class Joueur {
     # privileges: vector<Privilege*>
     # adversaire: Joueur*
     # droit_de_rejouer: bool
+    # info: FenetreInformations*
+    # isIA: bool
+    # diff: Difficulte
 
-    + Joueur(nom: string const)
+
+    - Joueur(nom: const string )
+    - ~Joueur() : virtuelle
+    - Joueur(autre : const Joueur&)
+    - operator=(autre const Joueur&) : Joueur&
+    + setInfo(f FenetreInformations*) : void
+    + getInfo() : int sont
     + getPointsPrestigeTotal(): int const
     + getPseudo(): string const
     + getNombreCouronnes(): int const
     + getPointsPrestigeCouleurs(index: int): int const
-    + getCarteReservee(index: int): CarteJoaillerie const
+    + getCarteReservee(index: int): const CarteJoaillerie* const
+    + getCarteMain(index : int) : CarteJoaillerie * const
     + getCarteNoble(index: int): CarteNoble const
     + getGemmesBonus(index: int): int const
-    + getPrivilege(index: int): Privilege const
+    + getCartesReservees(): std::vector<CarteJoaillerie*> const
+    + getCartesMain(): std::vector<CarteJoaillerie*> const
+    + getCartesNoble(): std::vector<CarteNoble*> const
+    + getPrivileges(): const std::vector<Privilege*>& const
     + ajouterCarteJoaillerie(carte: CarteJoaillerie): void
     + ajouterCarteNoble(carte: const CarteNoble&): void
     + ajouterCarteReservee(carte: const CarteJoaillerie&): void
     + ajouterPrivilege(privilege: const Privilege&): void
     + setPointsPrestigeCouleurs(index: int, valeur: int): void
     + setGemmesBonus(index: int, value: int): void
+    + setNombreCouronnes(nbCour: int): void
+    + setPseudo(pse: std::string): void
+    + setPointsPrestigeTotal(pointP: int): void
     + getAdversaire(): Joueur*
     + setAdversaire(adv: Joueur*): void
     + hasPrivilege(): bool
     + removePrivilege(): Privilege
     + peutRejouer(): bool
     + resetRejouer(reset: bool): void
-    + getNbJeton(index: int): int
+    + getNombreDePrivileges(): int const
+    + getNbCartesReservees(): int const
+    + getNombreCartesNobles() : int const
+    + getNbJeton(index: int): int const
+    + getNbJetonsParCouleur(couleur : int) : int const
     + setNbJeton(index: int, value: int): void
-    + getNombreDePrivileges(): int
-    + getNbCartesReservees(): int
+    + getDroitDeRejouer(): bool const
+    + getIsIA(): bool const
+    + setIsIA(isia: bool): void const
+    + getDifficulte(): Difficulte const
+    + setDifficulte(difficulte: Difficulte): void
+    + initialiserJoueur(): void
     + choisirChoix(min: int, max: int): int virtuelle
 }
 
 class IA {
-    - difficulte: Difficulte
+      # difficulte: Difficulte
 
       + IA(pseudo: string, diff: Difficulte)
+      +~IA()
       + choisirChoix(min: int, max: int): int override
-      + templateMethod(): void {abstract}
-      + operationPrimaire(): void override
-      + operationSpecifique(): void override
-
-      {abstract} + choisirJetonSurPlateau(plateau: Plateau): void
-      {abstract} + prendreJetons(plateau: Plateau): void
-      {abstract} + genererCombinaisonsDeuxJetons(plateau: Plateau): vector<pair<const Jeton*, const Jeton*>>
-      {abstract} + genererCombinaisonsTroisJetons(plateau: Plateau): vector<tuple<const Jeton*, const Jeton*, const Jeton*>>
-      {abstract} + melangerEtObtenirDerniereCarte(pioche: Pioche, joueur: Joueur): CarteJoaillerie*
-      {abstract} + getCartesAchetable(pioche: Pioche): vector<CarteJoaillerie*>
-
+      +setDifficulte(Diff : difficulte) : void
+      {abstract} + choisirJetonSurPlateau(plateau: Plateau*): void
+      {abstract} + prendreJetons(plateau: Plateau*): void
+      {abstract} + genererCombinaisonsDeuxJetons(plateau: Plateau*): vector<pair<const Jeton*, const Jeton*>>
+      {abstract} + genererCombinaisonsTroisJetons(plateau: Plateau*): vector<tuple<const Jeton*, const Jeton*, const Jeton*>>
+      {abstract} + melangerEtObtenirDerniereCarte(pioche: Pioche&, joueur: Joueur&, plateau : Plateau&): CarteJoaillerie*
+      {abstract} + getCartesAchetable(pioche: const Pioche&): vector<CarteJoaillerie*> const
 }
 
 class Humain {
     + Humain(pseudo: string)
+    +~Humain()
     + choisirChoix(min: int, max: int): int override
 }
 
 
+class FenetreInformations{
+  +labelNom: QLabel*
+  +labelPriviliges: QLabel*
+  +labelCouronnes: QLabel*
+  +labelCartesNobles: QLabel*
+  +labelCartesReservees: QLabel*
+  +labelJetons: QLabel*
+  +labelJetonsParCouleur[7]: QLabel*
+  -joueur: Joueur*
+
+  +FenetreInformations(j: Joueur*, parent: QWidget* = nullptr)
+  +miseAJourInformations(): void
+  +setJoueur(j: Joueur*): void
+  -getNomCouleur(couleur: int): QString const
+  -getCouleurTexte(couleur: int): QString const
+
+}
+
 enum Difficulte <<enumeration>> {
+ aleatoire
  facile
  moyen
  difficile
@@ -276,6 +317,7 @@ class Obligatoire {
 
 Joueur <|-- IA
 Joueur <|-- Humain
+Joueur *-- FenetreInformations
 
 Jeu <.. Handler
 
