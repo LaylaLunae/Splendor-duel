@@ -1388,7 +1388,6 @@ void VueJeu::initJoueurs(bool j1EstHumain, bool j2EstHumain) {
     jeu->setVueJeu(this);
     vueJoueur1 = new FenetreInformations(j1);
     vueJoueur2 = new FenetreInformations(j2);
-    std::cout << "test4";
     j1->setInfo(vueJoueur1);
     j2 ->setInfo(vueJoueur2);
 }
