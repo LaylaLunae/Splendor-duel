@@ -135,6 +135,7 @@ private:
 
     QVBoxLayout* layout_main;
     QVBoxLayout* layout_menu;
+    QVBoxLayout* layout_choix_joueurs;
     QVBoxLayout* layout_jeu;
     QHBoxLayout* layout_centre;
     QHBoxLayout* layout_top;
@@ -148,6 +149,10 @@ private:
     QPushButton* bouton_charger_partie;
     QPushButton*  bouton_sauvegarde;
 
+    QPushButton*  bouton_joueur_joueur;
+    QPushButton*  bouton_joueur_IA;
+    QPushButton*  bouton_IA_IA;
+
     // ---------- Choix actions ---------------
     QPushButton* bouton_depenser_privilege;
     QPushButton* bouton_prendre_jeton;
@@ -159,6 +164,8 @@ private:
 
    // void sauvegarder();
    void dessinerPartie();
+   void choixDesJoueurs();
+   void initJoueurs(bool j1EstHumain, bool j2EstHumain);
    void deleteLayout(QLayout* layout);
    void afficherChoix();
     void desactiverOuActiverBouton(bool etat);
@@ -184,6 +191,9 @@ private slots:
     void boutonRemplirPlateau();
     void boutonAcheterCarte();
     void boutonReserverCarte();
+    void boutonJoueurJoueur();
+    void boutonJoueurIA();
+    void boutonIAIA();
 };
 
 #endif //JEU_JEU_H

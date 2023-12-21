@@ -41,12 +41,12 @@ add_executable(Splendor main.cpp
         src/humain.cpp
         src/humain.cpp
         src/jeu.cpp
-        include/affichage_joueur.h
+#        include/affichage_joueur.h
         include/plateau.h
         include/jeton.h
 #        affichage/affichage_carte.h
 #        affichage/affichage_carte.cpp
-        include/affichage_joueur.h
+#        include/affichage_joueur.h
         include/query.h
         src/query.cpp
         #vcpkg.json

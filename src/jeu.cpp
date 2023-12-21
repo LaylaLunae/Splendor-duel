@@ -1143,16 +1143,6 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
         std::cerr<< sqlite3_errmsg(db) << std::endl;
     }
 
-    // --------------------- init joueurs --------------
-    j1 = new Humain ("Joueur Alex");
-    j2 = new Humain ("Joueur 2");
-    jeu->setJoueurActuel(j1);
-    jeu->setVueJeu(this);
-    vueJoueur1 = new FenetreInformations(j1);
-    vueJoueur2 = new FenetreInformations(j2);
-    j1->setInfo(vueJoueur1);
-    j2 ->setInfo(vueJoueur2);
-
     // --------------------- init pioches et cartes -----------------
     cartesJoaillerie = std::vector<CarteJoaillerie*>(0);
     pioche1 = new Pioche(1, 5, 30);
@@ -1240,6 +1230,40 @@ void VueJeu::dessinerPartie() {
 
 }
 
+void VueJeu::choixDesJoueurs() {
+    bouton_joueur_joueur = new QPushButton("Joueur VS Joueur");
+    QObject::connect(
+            bouton_joueur_joueur,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonJoueurJoueur
+    );
+    bouton_joueur_joueur->show();
+
+    bouton_joueur_IA = new QPushButton("Joueur VS IA");
+    QObject::connect(
+            bouton_joueur_IA,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonJoueurIA
+    );
+    bouton_joueur_IA->show();
+
+    bouton_IA_IA = new QPushButton("IA VS IA");
+    QObject::connect(
+            bouton_IA_IA,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonIAIA
+    );
+    bouton_IA_IA->show();
+
+    layout_choix_joueurs = new QVBoxLayout();
+    layout_choix_joueurs->addWidget(bouton_joueur_joueur);
+    layout_choix_joueurs->addWidget(bouton_joueur_IA);
+    layout_choix_joueurs->addWidget(bouton_IA_IA);
+}
+
 void VueJeu::afficherChoix() {
     bouton_depenser_privilege = new QPushButton("Dépenser Privilege");
     bouton_prendre_jeton = new QPushButton("Prendre jeton");
@@ -1320,13 +1344,53 @@ void VueJeu::deleteLayout(QLayout* layout) {
 }
 
 void VueJeu::boutonNouvellePartie() {
-
     deleteLayout(layout_main);
+    this->choixDesJoueurs();
+    layout_main->addLayout(layout_choix_joueurs);
+    setLayout(layout_main);
+    repaint();
+}
 
+void VueJeu::boutonJoueurJoueur() {
+    this->initJoueurs(true, true);
+    deleteLayout(layout_main);
     this->dessinerPartie();
     layout_main->addLayout(layout_jeu);
     setLayout(layout_main);
     repaint();
+}
+
+void VueJeu::boutonJoueurIA() {
+    this->initJoueurs(true, false);
+    deleteLayout(layout_main);
+    this->dessinerPartie();
+    layout_main->addLayout(layout_jeu);
+    setLayout(layout_main);
+    repaint();
+}
+
+void VueJeu::boutonIAIA() {
+    this->initJoueurs(false, false);
+    deleteLayout(layout_main);
+    this->dessinerPartie();
+    layout_main->addLayout(layout_jeu);
+    setLayout(layout_main);
+    repaint();
+}
+
+void VueJeu::initJoueurs(bool j1EstHumain, bool j2EstHumain) {
+    // --------------------- init joueurs --------------
+    if (j1EstHumain) j1 = new Humain("Joueur 1 Humain");
+    else j1 = new IA("Joueur 1 IA", Difficulte::aleatoire);
+    if (j2EstHumain) j2 = new Humain("Joueur 2 Humain");
+    else j2 = new IA("Joueur 2 IA", Difficulte::aleatoire);
+    jeu->setJoueurActuel(j1);
+    jeu->setVueJeu(this);
+    vueJoueur1 = new FenetreInformations(j1);
+    vueJoueur2 = new FenetreInformations(j2);
+    std::cout << "test4";
+    j1->setInfo(vueJoueur1);
+    j2 ->setInfo(vueJoueur2);
 }
 
 void VueJeu::boutonChargerPartie() {
