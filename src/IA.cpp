@@ -7,6 +7,11 @@
 #include <random>
 
 class Plateau;
+// setter déclarer dans la classe IA.
+void IA::setDifficulte(Difficulte diff) {
+    difficulte = diff;
+}
+
 // cette fonction permet à l'IA de faire tous ces choix de manière aléatoire
 int IA::choisirChoix(int min, int max) {
     int choix = rand() % max + 1;

@@ -48,15 +48,12 @@ Joueur::Joueur(const Joueur& autre)
     for (const auto& carte : autre.cartes_reservees) {
         cartes_reservees.push_back(new CarteJoaillerie(*carte));
     }
-
     for (const auto& carte : autre.cartes_main) {
         cartes_main.push_back(new CarteJoaillerie(*carte));
     }
-
     for (const auto& carte : autre.cartes_noble) {
         cartes_noble.push_back(new CarteNoble(*carte));
     }
-
     for (const auto& privilege : autre.privileges) {
         privileges.push_back(new Privilege(*privilege));
     }
@@ -88,32 +85,62 @@ Joueur& Joueur::operator=(const Joueur& autre) {
     return *this;
 }
 
+// Les Getters et setter associés :
+
 int Joueur::getPointsPrestigeTotal() const{
     return points_prestige_total;
 }
-
 void Joueur::setPointsPrestigeTotal(int pointP) {
     points_prestige_total = pointP;
 }
 
+
 std::string Joueur::getPseudo() const {
     return pseudo;
 }
-
 void Joueur::setPseudo(std::string pse) {
     pseudo = std::move(pse);
 }
 
+
 int Joueur::getNombreCouronnes()const {
     return nombre_couronnes;
 }
-
 void Joueur::setNombreCouronnes(int nbCour) {
     nombre_couronnes = nbCour;
 }
 
+
+Difficulte Joueur::getDifficulte() const {
+    return diff;
+}
 void Joueur::setDifficulte(Difficulte difficulte) {
     diff = difficulte;
+}
+
+int Joueur::getNbJeton(int index) const{
+    return nb_jeton[index];
+}
+void Joueur::setNbJeton(int index, int value){
+    nb_jeton[index] = value;
+}
+
+Joueur* Joueur::getAdversaire() {
+    return adversaire;
+}
+// Définir l'adversaire
+void Joueur::setAdversaire(Joueur *adv) {
+    adversaire = adv;
+    if (adv->adversaire == nullptr) { // Assurez-vous que l'adversaire désigne également le joueur actuel comme adversaire
+        adv->setAdversaire(this);
+    }
+}
+
+bool Joueur::getIsIA() const {
+    return isIA;
+}
+void Joueur::setIsIA(bool isia) {
+    isIA = isia;
 }
 
 int Joueur:: getPointsPrestigeCouleurs(int index) const {
@@ -121,6 +148,25 @@ int Joueur:: getPointsPrestigeCouleurs(int index) const {
         return points_prestige_couleurs[index];
     }
     return 0;
+}
+void Joueur::setPointsPrestigeCouleurs(int index, int valeur) {
+    if (index >= 0 && index < 6) { // Assurez-vous que l'indice est dans la plage valide
+        points_prestige_couleurs[index] = valeur;
+    } else {
+        std::cerr << "L'indice est hors limites." << std::endl;
+    }
+}
+
+
+int Joueur::getGemmesBonus(int index) const {
+    if (index >= 0 && index < 6) {
+        return gemmes_bonus[index];
+    }
+    return 0;
+}
+void Joueur::setGemmesBonus(int index, int value) {
+    if (index < gemmes_bonus.size())
+        this->gemmes_bonus[index] = value;
 }
 
 const CarteJoaillerie * Joueur::getCarteReservee(int index) const {
@@ -144,13 +190,6 @@ const CarteNoble * Joueur::getCarteNoble(int index) const {
     return nullptr;
 }
 
-int Joueur::getGemmesBonus(int index) const {
-    if (index >= 0 && index < 6) {
-        return gemmes_bonus[index];
-    }
-    return 0;
-}
-
 int Joueur::getNbJetonTotal() const {
     int totalJetons = 0;
     for (int i = 0; i < nb_jeton.size(); ++i) {
@@ -169,7 +208,9 @@ int Joueur::getNbJetonsParCouleur(int couleur) const {
     return totalJetonsCouleur;
 }
 
-bool Joueur::getDroitDeRejouer() const { return droitDeRejouer; }
+bool Joueur::getDroitDeRejouer() const {
+    return droitDeRejouer;
+}
 
 std::vector<CarteJoaillerie*> Joueur::getCartesReservees() const {
     return cartes_reservees;
@@ -188,11 +229,6 @@ const std::vector<Privilege *>& Joueur::getPrivileges() const {
 }
 
 int Joueur::getNombreDePrivileges() const {
-    // Count the number of non-nullptr items using std::count_if and a lambda function
-//    std::size_t countNonNullPtrs = std::count_if(privileges.begin(), privileges.end(),
-//                                                 [](Privilege* ptr) { return ptr != nullptr; });
-//    return countNonNullPtrs;
-
     return privileges.size();
 }
 
@@ -204,12 +240,7 @@ int Joueur::getNombreCartesNobles() const {
     return cartes_noble.size();
 }
 
-int Joueur::getNbJeton(int index) const{
-    return nb_jeton[index];
-}
-void Joueur::setNbJeton(int index, int value){
-    nb_jeton[index] = value;
-}
+// Les maéthodes d'ajouts :
 
 void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {
     int nombrePointsCarte = carte.getPointsPrestige();
@@ -244,11 +275,6 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {
 }
 
 void Joueur::ajouterCarteNoble(const CarteNoble* carte) {
-    int nombreCouronnesCarte = carte->getCouronne();
-
-    // Ajouter le nombre de couronnes à la variable nombre_couronnes
-    // Alexandre : NON ! La carte noble ne donne QUE du prestige/pouvoir.
-    //nombre_couronnes += nombreCouronnesCarte;
     cartes_noble.push_back(carte);
     // Ajouter les points de prestige de la carte à la variable points_prestige_total
     points_prestige_total += carte->getPointPrestige();
@@ -273,22 +299,11 @@ void Joueur::ajouterPrivilege(Privilege *privilege) {
     }
 }
 
-// Définir l'adversaire
-void Joueur::setAdversaire(Joueur *adv) {
-    adversaire = adv;
-    if (adv->adversaire == nullptr) { // Assurez-vous que l'adversaire désigne également le joueur actuel comme adversaire
-        adv->setAdversaire(this);
-    }
-}
-
-Joueur* Joueur::getAdversaire() {
-    return adversaire;
-}
-
+// méhotdes pour savoir si un joueur possède un privilège
 bool Joueur::hasPrivilege() {
     return !privileges.empty();
 }
-
+// méthode pour enlever un privilège d'un joueur
 Privilege Joueur::removePrivilege() {
     for (int i = 0; i < MAX_PRIVILEGES; i++) {
         if (privileges[i]->getStatus() != PrivilegeStatus::NONE) {
@@ -300,19 +315,10 @@ Privilege Joueur::removePrivilege() {
     throw std::runtime_error("No privilege to remove");
 }
 
-// Ajouter une méthode setter à la classe Joueur
-void Joueur::setPointsPrestigeCouleurs(int index, int valeur) {
-    if (index >= 0 && index < 6) { // Assurez-vous que l'indice est dans la plage valide
-        points_prestige_couleurs[index] = valeur;
-    } else {
-        std::cerr << "L'indice est hors limites." << std::endl;
-    }
-}
 
-void Joueur::setGemmesBonus(int index, int value) {
-    if (index < gemmes_bonus.size())
-        this->gemmes_bonus[index] = value;
-}
+
+
+
 
 // Méthode pour vérifier si le joueur a le droit de jouer à nouveau.
 bool Joueur::peutRejouer() const {
@@ -331,23 +337,8 @@ void Joueur::resetRejouer(bool reset) {
     droitDeRejouer = reset;
 }
 
-bool Joueur::getIsIA() const {
-    return isIA;
-}
 
-void Joueur::setIsIA(bool isia) {
-    isIA = isia;
-}
-
-Difficulte Joueur::getDifficulte() const {
-    return diff;
-}
-
-void IA::setDifficulte(Difficulte diff) {
-    difficulte = diff;
-}
-
-// Flux ostream
+// Flux ostream qui peremt de tout afficher.
 std::ostream& operator<<(std::ostream& os, const Joueur& joueur) {
     os << "Pseudo: " << joueur.getPseudo() << "\n";
     os << "Nombre de couronnes: " << joueur.getNombreCouronnes() << "\n";
@@ -384,23 +375,23 @@ void Joueur::initialiserJoueur() {
     }
 }
 
-void FenetreInformations::displayCartes(Joueur* j) {
 
+
+
+// fonction necessaire pour l'interface graphique avec QT.
+void FenetreInformations::displayCartes(Joueur* j) {
     while (QLayoutItem *item = layout()->takeAt(0)) {
         if (QWidget *widget = item->widget()) {
             widget->deleteLater();
         }
         delete item;
     }
-
     const std::vector<CarteJoaillerie *> cartesJoueur = j->getCartesMain();
     for (const CarteJoaillerie *carte: cartesJoueur) {
         //QPushButton *vueCarte = new QPushButton(this);
         VueCarteJoaillerie *vueCarte = new VueCarteJoaillerie(carte, cartesJoueur, this);
         layout()->addWidget(vueCarte);
     }
-
-
     while (QLayoutItem *item = layout()->takeAt(0)) {
         if (QWidget *widget = item->widget()) {
             widget->deleteLater();
