@@ -19,23 +19,111 @@ void Jeu::libereJeu() {
     instance = nullptr;
 }
 
-//création de la nouvelle partie
-void Jeu::nouvellePartie() {
-    Plateau * plateau_jeu = new Plateau();
-    std::string sortie = plateau_jeu->etatPlateau();
-    std::cout << sortie << "\n";
+//pour le test de Jeu sans la bdd
+void Jeu::initCarteJoa(Pioche * p1, Pioche * p2, Pioche * p3, Plateau * p){
+    std::map<Couleur,int> prix1;
+    prix1[Couleur::bleu] = 1;
 
+    std::map<Couleur,int> prix2;
+    prix2[Couleur::rose] = 1;
+
+    std::map<Couleur,int> prix3;
+    prix3[Couleur::noir] = 1;
+
+    std::map<Couleur,int> prix4;
+    prix4[Couleur::vert] = 1;
+
+    std::array<Couleur, 2> pierre1 = {Couleur::blanc,Couleur::rien};
+    std::array<Couleur, 2> pierre2 = {Couleur::vert,Couleur::rien};
+    std::array<Couleur, 2> pierre3 = {Couleur::bleu,Couleur::rien};
+    std::array<Couleur, 2> pierre4 = {Couleur::rouge,Couleur::rien};
+    std::array<Couleur, 2> pierre5 = {Couleur::noir,Couleur::rien};
+
+    for (int i = 0; i<p1->getMaxCartesPioche(); i += 4) {
+        const CarteJoaillerie * c1 = new const CarteJoaillerie(p,nullptr,1,3,pierre1,prix1,"rien",2,Pouvoir::rien,Pouvoir::rien,i);
+        p1->setCartesDansPioche(c1,i);
+        if ((i+1) < p1->getMaxCartesPioche()) {
+            const CarteJoaillerie *c2 = new const CarteJoaillerie(p, nullptr, 1, 3, pierre2, prix2, "rien", 2,
+                                                                  Pouvoir::rien, Pouvoir::rien, i + 1);
+            p1->setCartesDansPioche(c2, i + 1);
+        }
+        if ((i+2) < p1->getMaxCartesPioche()) {
+            const CarteJoaillerie *c3 = new const CarteJoaillerie(p, nullptr, 1, 3, pierre3, prix3, "rien", 2,
+                                                                  Pouvoir::rien, Pouvoir::rien, i + 2);
+            p1->setCartesDansPioche(c3, i + 2);
+        }
+        if ((i+3) < p1->getMaxCartesPioche()) {
+            const CarteJoaillerie *c4 = new const CarteJoaillerie(p, nullptr, 1, 3, pierre4, prix4, "rien", 2,
+                                                                  Pouvoir::rien, Pouvoir::rien, i + 3);
+            p1->setCartesDansPioche(c4, i + 3);
+        }
+    }
+    for (int i = 0; i<p2->getMaxCartesPioche(); i += 4) {
+        const CarteJoaillerie * c1 = new const CarteJoaillerie(p,nullptr,2,3,pierre5,prix1,"rien",3,Pouvoir::rien,Pouvoir::rien,i);
+        p2->setCartesDansPioche(c1,i);
+        if ((i+1) < p2->getMaxCartesPioche()) {
+            const CarteJoaillerie *c2 = new const CarteJoaillerie(p, nullptr, 2, 3, pierre4, prix2, "rien", 3,
+                                                                  Pouvoir::rien, Pouvoir::rien, i + 1);
+            p2->setCartesDansPioche(c2, i + 1);
+        }
+        if ((i+2) < p2->getMaxCartesPioche()) {
+            const CarteJoaillerie *c3 = new const CarteJoaillerie(p, nullptr, 2, 3, pierre2, prix3, "rien", 3,
+                                                                  Pouvoir::rien, Pouvoir::rien, i + 2);
+            p2->setCartesDansPioche(c3, i + 2);
+        }
+        if ((i+3) < p2->getMaxCartesPioche()) {
+            const CarteJoaillerie *c4 = new const CarteJoaillerie(p, nullptr, 2, 3, pierre3, prix4, "rien", 3,
+                                                                  Pouvoir::rien, Pouvoir::rien, i + 3);
+            p2->setCartesDansPioche(c4, i + 3);
+        }
+    }
+
+    for (int i = 0; i<p3->getMaxCartesPioche(); i += 4) {
+        const CarteJoaillerie * c1 = new const CarteJoaillerie(p,nullptr,3,3,pierre2,prix4,"rien",4,Pouvoir::rien,Pouvoir::rien,i);
+        p3->setCartesDansPioche(c1,i);
+        if ((i+1) < p3->getMaxCartesPioche()) {
+            const CarteJoaillerie *c2 = new const CarteJoaillerie(p, nullptr, 3, 3, pierre5, prix2, "rien", 4,
+                                                                  Pouvoir::rien, Pouvoir::rien, i + 1);
+            p3->setCartesDansPioche(c2, i + 1);
+        }
+        if ((i+2) < p3->getMaxCartesPioche()) {
+            const CarteJoaillerie *c3 = new const CarteJoaillerie(p, nullptr, 3, 3, pierre1, prix3, "rien", 4,
+                                                                  Pouvoir::rien, Pouvoir::rien, i + 2);
+            p3->setCartesDansPioche(c3, i + 2);
+        }
+        if ((i+3) < p3->getMaxCartesPioche()) {
+            const CarteJoaillerie *c4 = new const CarteJoaillerie(p, nullptr, 3, 3, pierre4, prix1, "rien", 4,
+                                                                  Pouvoir::rien, Pouvoir::rien, i + 3);
+            p3->setCartesDansPioche(c4, i + 3);
+        }
+    }
+}
+
+//création d'une nouvelle partie
+void Jeu::nouvellePartie() {
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    //création de plateau
+    Plateau * plateau_jeu = new Plateau();
+
+    // création des pioches
     Pioche * pioche1 = new Pioche(1,5,30);
     Pioche * pioche2 = new Pioche(2,4,24);
     Pioche * pioche3 = new Pioche(3,3,13);
 
-    /*pioche1->distribution();
-    pioche2->distribution();
-    pioche3->distribution();*/
+    // à retirer
+    initCarteJoa(pioche1, pioche2, pioche3, plateau_jeu);
 
+    //distribution des pioches
+    pioche1->distribution();
+    pioche2->distribution();
+    pioche3->distribution();
+
+    // création des instances des actions
     Optionnelle * act_opt = new Optionnelle();
     Obligatoire * act_obl = new Obligatoire();
 
+    //Choix des joueurs
     std::cout << "Choix des joueurs :\n" << "0 - Joueur vs joueur\n";
     std::cout << "1 - Joueur vs IA\n" << "2 - IA vs IA\n";
     int choix;
@@ -44,6 +132,7 @@ void Jeu::nouvellePartie() {
 
     switch (choix) {
         case 0: {
+            //Joueur vs joueur
             std::cout << "Nom du joueur 1 : ";
             std::string nom1;
             std::cin >> nom1;
@@ -54,17 +143,21 @@ void Jeu::nouvellePartie() {
             std::cin >> nom2;
             Humain *joueur2 = new Humain(nom2);
 
+            //initialisation des adversaires
+            joueur1->setAdversaire(joueur2);
+            joueur2->setAdversaire(joueur1);
+
+            //joueur_actuel pour le tour
             joueur_actuel = joueur1;
 
+            //début de la partie
             manche(plateau_jeu, pioche1, pioche2, pioche3, joueur1, joueur2, act_obl, act_opt);
-            /*joueur_actuel->nombre_couronnes = 3;
-            std::cout << "Nb carte noble : " << joueur_actuel->cartes_noble.size() << "\n";
-            verifCarteNoble(joueur_actuel,plateau_jeu);*/
 
             break;
         }
 
         case 1: {
+            //IA vs Joueur
             std::cout << "Nom du joueur : ";
             std::string nom4;
             std::cin >> nom4;
@@ -75,6 +168,9 @@ void Jeu::nouvellePartie() {
             std::cin >> nom3;
             IA *ia = new IA(nom3, facile);
 
+            humain->setAdversaire(ia);
+            ia->setAdversaire(humain);
+
             joueur_actuel = humain;
 
             manche(plateau_jeu, pioche1, pioche2, pioche3, humain, ia, act_obl, act_opt);
@@ -83,6 +179,7 @@ void Jeu::nouvellePartie() {
         }
 
         case 2: {
+            //IA vs IA
             std::cout << "Nom de l'IA 1 : ";
             std::string nom5;
             std::cin >> nom5;
@@ -92,6 +189,9 @@ void Jeu::nouvellePartie() {
             std::string nom6;
             std::cin >> nom6;
             IA *ia2 = new IA(nom6, facile);
+
+            ia1->setAdversaire(ia2);
+            ia2->setAdversaire(ia1);
 
             joueur_actuel = ia1;
 
@@ -106,89 +206,131 @@ void Jeu::nouvellePartie() {
     }
 }
 
+//Partie
 void Jeu::manche(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j1, Joueur * j2, Obligatoire * obl, Optionnelle * opt) {
-    while(joueur_gagnant == nullptr) {
-        tour(p, p1, p2, p3, joueur_actuel, obl, opt);
-        verifCarteNoble(joueur_actuel, p);
-        verifGagnant(j1, j2);
+   while(joueur_gagnant == nullptr) { //tant qu'on n'a pas de gagnant
+        tour(p, p1, p2, p3, joueur_actuel, obl, opt); //tour du joueur
+        verifCarteNoble(joueur_actuel, p); //le joueur reçoit-il une carte noble ?
+        verifGagnant(j1, j2); //le joueur a-t-il gagné ?
     }
     std::cout << "Bravo " << joueur_gagnant->getPseudo() << " ! Tu as gagne !\n";
     std::cout << "Fin de la partie\n";
 }
 
+//Actions du joueur actuel
 void Jeu::tour(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j, Obligatoire * obl, Optionnelle * opt){
-    int choix_opt = -1;
-    int stop = 0;
-    IA * test_ia = dynamic_cast<IA *>(j);
-    while (choix_opt != 0 && stop != 10){
-        if (!(p->hasJeton())){
+    std::string sortie = p->etatPlateau(); //affichage plateau en console
+    std::cout << sortie << "\n";
+    p1->afficherCartesRevelees(); //affichage des pioches en console
+    p2->afficherCartesRevelees();
+    p3->afficherCartesRevelees();
+    int choix_opt = -1; //initialisation du choix des actions optionnellese
+    int stop = 0; //sert à arrêter l'IA si elle ne passe pas à la suite au bout de 10 appels
+    IA * test_ia = dynamic_cast<IA *>(j); //pour tester si c'est une IA, si ce n'est pas le cas, alors l'attribut est à nullptr
+    while (choix_opt != 1 && stop != 10){
+        if (!(p->hasJeton())){ //obligation de remplir le plateau s'il n'a plus de jeton
             std::cout << "Vous devez remplir le plateau.\n";
             opt->remplissagePlateau(j,p);
         }
-        else {
-            std::cout << "Actions optionnelles :\n" << "0 - Aucune action\n";
-            std::cout << "1 - Remplir le plateau\n" << "2 - Utiliser un privilege\n";
+        else { //choix de l'action optionnelle en console
+            std::cout << "Actions optionnelles :\n" << "1 - Aucune action\n";
+            std::cout << "2 - Remplir le plateau\n" << "3 - Utiliser un privilege\n";
 
-            if (test_ia) {
-                choix_opt = j->choisirChoix(0,2);
+            if (test_ia) { //choix de l'action pour l'IA
+                choix_opt = j->choisirChoix(1,3);
                 std::cout << "l'IA choisit l'action" << choix_opt << "\n";
                 stop++;
             }
-            else {
+            else { //choix de l'action pour l'Humain
                 std::cout << "Votre choix : ";
                 std::cin >> choix_opt;
             }
 
             switch (choix_opt) {
-                case 1: {
-                    //opt->remplissagePlateau(j);
+                case 2: {
                     std::cout << "Remplissage du plateau.\n";
                     opt->remplissagePlateau(j,p);
                     break;
                 }
 
-                case 2: {
-                    //p->depenserPrivilege(j,p); //Je peux pas passer le deuxième paramètre
+                case 3: {
                     std::cout << "Dépense d'un privilege.\n";
                     opt->depenserPrivilege(j,p);
                     break;
                 }
 
                 default: {
-                    if (choix_opt != 0)
-                        std::cout << "Tu t'es trompe de chiffre banane !\n";
+                    if (choix_opt != 1)
+                            std::cout << "Tu t'es trompe de chiffre banane !\n";
                     break;
                 }
             }
         }
     }
 
-    int choix_obl;
-    std::cout << "Actions obligatoires :\n" << "0 - Prendre des jetons\n";
-    std::cout << "1 - Acheter une carte\n" << "2 - Reserver une carte\n";
+    int choix_obl; //choix obligatoire
+    std::cout << "Actions obligatoires :\n" << "1 - Prendre des jetons\n";
+    std::cout << "2 - Acheter une carte\n" << "3 - Reserver une carte\n";
 
-    if (test_ia) {
-        choix_obl = j->choisirChoix(0,2);
+    if (test_ia) { //si IA
+        choix_obl = j->choisirChoix(1,3);
+        //choix_obl = 3;
         std::cout << "l'IA choisit l'action" << choix_obl << "\n";
     }
-    else {
+    else { //si Humain
         std::cout << "Votre choix : ";
         std::cin >> choix_obl;
     }
+    /* Les actions de IA ne sont pas les mêmes que celles d'un joueur
+    On traite donc chacun des cas */
     switch(choix_obl){
-        case 0:
-            std::cout << "Prendre un jeton.\n";
-            obl->prendreJeton(j,p);
-            break;
-
         case 1:
-            std::cout << "Acheter une carte.\n";
-            obl->acheterCarte(j,p,p1,p2,p3);
+            std::cout << "Prendre un jeton.\n";
+            if (test_ia) {
+                test_ia->prendreJetons(p);
+            }
+            else {
+                obl->prendreJeton(j,p);
+            }
             break;
 
         case 2:
+            std::cout << "Acheter une carte.\n";
+            if (test_ia) {
+                int np = test_ia->choisirChoix(1,3); //choisit la pioche où acheter la carte
+                if (np == 1)
+                    test_ia->melangerEtObtenirDerniereCarte(*p1,*test_ia,*p);
+                else if (np==2)
+                    test_ia->melangerEtObtenirDerniereCarte(*p2,*test_ia,*p);
+                else
+                    test_ia->melangerEtObtenirDerniereCarte(*p3,*test_ia,*p);
+            }
+            else {
+                obl->acheterCarte(j,p,p1,p2,p3);
+            }
+            break;
+
+        case 3:
             std::cout << "Reserve une carte.\n";
-            obl->demanderCarteAReserver(j,p,p1,p2,p3);
+            if (test_ia) {
+                int np = test_ia->choisirChoix(1,3); //choisit la pioche où réserver
+                int choix_bool = test_ia->choisirChoix(1,2);
+                bool booleen; //sert à savoir si l'IA réserve une carte du plateau ou de la pioche
+                if (choix_bool == 1)
+                    booleen = true;
+                else
+                    booleen = false;
+                int nc = 0;
+                if (np == 1)
+                    nc = test_ia->choisirChoix(1,p1->getMaxCartesRevelees());
+                else if (np==2)
+                    nc = test_ia->choisirChoix(1,p2->getMaxCartesRevelees());
+                else
+                    nc = test_ia->choisirChoix(1,p3->getMaxCartesRevelees());
+                obl->reserverCarte(joueur_actuel,p,p1,p2,p3,np, nc, booleen);
+            }
+            else
+                obl->demanderCarteAReserver(j,p,p1,p2,p3);
             break;
 
         default:
@@ -197,10 +339,12 @@ void Jeu::tour(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j, O
     }
 }
 
+//Désigne le gagnant
 void Jeu::vainqueur(Joueur * j){
     joueur_gagnant = j;
 }
 
+//Passe la main au joueur suivant
 void Jeu::auSuivant(Joueur * j1, Joueur * j2){
     if (joueur_actuel->getPseudo() == j1->getPseudo()) {
         std::cout << joueur_actuel->getPseudo() << " passe la main a " << j2->getPseudo() << "\n";
@@ -212,51 +356,60 @@ void Jeu::auSuivant(Joueur * j1, Joueur * j2){
     }
 }
 
+//Pour savoir si le joueur reçoit une carte noble
 void Jeu::verifCarteNoble(Joueur * j, Plateau * p) {
+    //conditions de réception d'une carte : >=3 couronnes et 0 carte ou >=6 couronnes et 1 carte
     if ((j->getNombreCouronnes() >= 3 && j->getNombreCartesNobles()==0) || (j->getNombreCartesNobles() == 1 && j->getNombreCouronnes() >= 6)) {
-        if (p->nb_carte_noble > 0) {
+        if (p->nb_carte_noble > 0) { //s'il reste des cartes nobles
+            std::cout << "Joueur : " << j->getPseudo() << ", couronnes : " << j->getNombreCouronnes() << "\n";
+            std::cout << "Cartes nobles : " << j->getNombreCartesNobles() << "\n";
             int choix;
             std::cout << "Cartes noble\n";
-            for (int i = 0; i < p->nb_carte_noble; i++){
+            for (int i = 0; i < p->nb_carte_noble; i++){ //affichage des cartes nobles disponibles
                 if (p->cartes_nobles[i] != nullptr)
-                    std::cout << "noble " << i << "\t";
+                    std::cout << "noble " << i + 1 << "\t";
             }
             std::cout << "\n\n";
-            std::cout << "Choix de la carte noble : ";
-            //std::cin >> choix;
-            vue_jeu->message("Action", "Vous pouvez prendre une carte noble !");
-            vue_jeu->choixCarteNoble(true);
-            //(p->prendreCarteNoble(choix));
-            //j->ajouterCarteNoble();
-            //souci avec ajouterCarteNoble
+            IA * test_ia = dynamic_cast<IA *>(j); //dans le cas d'une IA, elle choisit aléatoirement
+            if (test_ia) {
+                int verif = 0;
+                do { //elle doit choisir une carte qui n'a pas été prise
+                    choix = test_ia->choisirChoix(1,4);
+                    if (p->cartes_nobles[choix-1] != nullptr) {
+                        verif = 1;
+                    }
+                } while(verif != 1);
+                std::cout << "Choix de la carte noble : " << choix << "\n";
+            }
+            else { //cas pour un humain
+                std::cout << "Choix de la carte noble : ";
+                std::cin >> choix;
+            }
+            const CarteNoble * carte = p->prendreCarteNoble(choix-1);
+            j->ajouterCarteNoble(*carte); //attribution de la carte
+            auto* carte_non_const = const_cast<CarteNoble*>(carte);
+            carte_non_const->actionPouvoir(p, j); //activation des pouvoirs si elle en a
         }
     }
 }
 
+//vérification du gagnant
 void Jeu::verifGagnant(Joueur * j1, Joueur * j2) {
-    if (joueur_actuel->getNombreCouronnes() >= 10)
+    if (joueur_actuel->getNombreCouronnes() >= 10) //si le joueur a 10 couronnes
         vainqueur(joueur_actuel);
-    else if (joueur_actuel->getPointsPrestigeTotal() >= 20)
+    else if (joueur_actuel->getPointsPrestigeTotal() >= 20) //si le joueur a 20 points de prestige
         vainqueur(joueur_actuel);
     else {
         bool gagnant = false;
-        for (int i = 0; i<5; i++)
+        for (int i = 0; i<5; i++) { //si le joueur a 10 points de prestige dans une couleur
             if (joueur_actuel->getPointsPrestigeCouleurs(i) >= 10)
                 gagnant = true;
-        if (gagnant)
+        }
+        if (gagnant) //si l'une des conditions est valide -> appel de vainqueur
             vainqueur(joueur_actuel);
         else
-            auSuivant(j1, j2);
+            auSuivant(j1, j2); //sinon au suivant
     }
-//    int choix = -1;
-//    std::cout << "On continue ? 1 - oui, 0 - non :";
-//    std::cin >> choix;
-//    if (choix == 0) {
-//        vainqueur(joueur_actuel);
-//    }
-//    else {
-//        auSuivant(j1, j2);
-//    }
 }
 
 void Jeu::validationAction() {
