@@ -23,12 +23,7 @@ class VueJeu;
 
 class Jeu {
 private:
-    /*struct Handler {
-        Jeu * instance = nullptr;
-        ~Handler() { delete instance; instance = nullptr;}
-    };
-    static Handler handler;*/
-
+    //singleton Jeu
     static Jeu* instance;
     VueJeu* vue_jeu;
 
@@ -54,11 +49,7 @@ public:
 
     void validationAction();
 
-    //pour l'instant dans public
-    void nouvellePartie(); // faut bdd
-    //void reprendrePartie(); //faut bdd
-    //void verifAnciennePartie(); //faut bdd  Zhenyang: pas necessaire
-    //void sauvegarderPartie(); //faut bdd
+    void nouvellePartie();
     void verifGagnant(Joueur * j1, Joueur * j2);
     void vainqueur(Joueur * j);
     void auSuivant(Joueur * j1, Joueur * j2);
