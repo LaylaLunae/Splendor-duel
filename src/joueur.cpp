@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <utility>
 #include "../include/jeu.h"
 
@@ -10,7 +11,7 @@ Joueur::Joueur(const std::string nom): pseudo(nom), nombre_couronnes(0), points_
     cartes_noble.resize(0, nullptr);
     //gemmes_bonus.resize(0, 0);
     //nb_jeton.resize(0, 0);
-    privileges.resize(0, nullptr);
+    //privileges.resize(0, nullptr);
     points_prestige_couleurs.resize(5,0);
 }
 
@@ -26,7 +27,7 @@ Joueur::~Joueur() {
     }
     cartes_main.clear();
 
-    for (CarteNoble* carte : cartes_noble) {
+    for (const CarteNoble* carte : cartes_noble) {
         delete carte;
     }
     cartes_noble.clear();
@@ -136,7 +137,7 @@ CarteJoaillerie * Joueur::getCarteMain(int index) const {
     return nullptr;
 }
 
-CarteNoble * Joueur::getCarteNoble(int index) const {
+const CarteNoble * Joueur::getCarteNoble(int index) const {
     if (index >= 0 && index < 3) {
         return (cartes_noble[index]);
     }
@@ -178,7 +179,7 @@ std::vector<CarteJoaillerie*> Joueur::getCartesMain() const {
     return cartes_main;
 }
 
-std::vector<CarteNoble*> Joueur::getCartesNoble() const{
+std::vector<const CarteNoble*> Joueur::getCartesNoble() const{
     return cartes_noble;
 }
 
@@ -187,6 +188,11 @@ const std::vector<Privilege *>& Joueur::getPrivileges() const {
 }
 
 int Joueur::getNombreDePrivileges() const {
+    // Count the number of non-nullptr items using std::count_if and a lambda function
+//    std::size_t countNonNullPtrs = std::count_if(privileges.begin(), privileges.end(),
+//                                                 [](Privilege* ptr) { return ptr != nullptr; });
+//    return countNonNullPtrs;
+
     return privileges.size();
 }
 
@@ -237,14 +243,16 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {
     cartes_main.push_back(const_cast<CarteJoaillerie*>(temp));
 }
 
-void Joueur::ajouterCarteNoble(const CarteNoble& carte) {
-    int nombreCouronnesCarte = carte.getCouronne();
+void Joueur::ajouterCarteNoble(const CarteNoble* carte) {
+    int nombreCouronnesCarte = carte->getCouronne();
 
     // Ajouter le nombre de couronnes à la variable nombre_couronnes
-    nombre_couronnes += nombreCouronnesCarte;
-
+    // Alexandre : NON ! La carte noble ne donne QUE du prestige/pouvoir.
+    //nombre_couronnes += nombreCouronnesCarte;
+    cartes_noble.push_back(carte);
     // Ajouter les points de prestige de la carte à la variable points_prestige_total
-    points_prestige_total += carte.getPointPrestige();
+    points_prestige_total += carte->getPointPrestige();
+    info->miseAJourInformations();
 }
 
 void Joueur::ajouterCarteReservee(CarteJoaillerie *carte) {
@@ -373,5 +381,35 @@ void Joueur::initialiserJoueur() {
     }
     for (int i = 0; i < 7; ++i) {
         nb_jeton[i] = 10;
+    }
+}
+
+void FenetreInformations::displayCartes(Joueur* j) {
+
+    while (QLayoutItem *item = layout()->takeAt(0)) {
+        if (QWidget *widget = item->widget()) {
+            widget->deleteLater();
+        }
+        delete item;
+    }
+
+    const std::vector<CarteJoaillerie *> cartesJoueur = j->getCartesMain();
+    for (const CarteJoaillerie *carte: cartesJoueur) {
+        //QPushButton *vueCarte = new QPushButton(this);
+        VueCarteJoaillerie *vueCarte = new VueCarteJoaillerie(carte, cartesJoueur, this);
+        layout()->addWidget(vueCarte);
+    }
+
+
+    while (QLayoutItem *item = layout()->takeAt(0)) {
+        if (QWidget *widget = item->widget()) {
+            widget->deleteLater();
+        }
+        delete item;
+    }
+    const std::vector<const CarteNoble*> cartesNobles = j->getCartesNoble();
+    for (const CarteNoble* cn : cartesNobles) {
+        VueCarteNoble* vc = new VueCarteNoble(cn->getID(), Jeu::getJeu().getVueJeu()->getVuePlateau(), this);
+        layout()->addWidget(vc);
     }
 }

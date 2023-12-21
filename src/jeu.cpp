@@ -230,7 +230,9 @@ void Jeu::verifCarteNoble(Joueur * j, Plateau * p) {
             }
             std::cout << "\n\n";
             std::cout << "Choix de la carte noble : ";
-            std::cin >> choix;
+            //std::cin >> choix;
+            vue_jeu->message("Action", "Vous pouvez prendre une carte noble !");
+            vue_jeu->choixCarteNoble(true);
             //(p->prendreCarteNoble(choix));
             //j->ajouterCarteNoble();
             //souci avec ajouterCarteNoble
@@ -607,7 +609,7 @@ void continuerLaPartie(sqlite3* db,
     for (int carteId : cartesNobleIds) {
         for (const CarteNoble* carte : cartesNoble) {
             if (carte && carte->getID() == carteId) {
-                joueur1->ajouterCarteNoble(*carte);
+                joueur1->ajouterCarteNoble(carte);
                 break;
             }
         }
@@ -650,7 +652,7 @@ void continuerLaPartie(sqlite3* db,
     for (int carteId : cartesNobleIds) {
         for (const CarteNoble* carte : cartesNoble) {
             if (carte && carte->getID() == carteId) {
-                joueur2->ajouterCarteNoble(*carte);
+                joueur2->ajouterCarteNoble(carte);
                 break;
             }
         }
@@ -865,8 +867,8 @@ void sauvegarderPartie(sqlite3* db,
     for (int id : ids) { insertJoueurCarte(db, "JoueurCartesReservees", 1, id); }
     ids.clear();
 
-    std::vector<CarteNoble*> cartesNobles = joueur1.getCartesNoble();
-    for (CarteNoble* carte : cartesNobles) { ids.push_back(carte->getID()); }
+    std::vector<const CarteNoble*> cartesNobles = joueur1.getCartesNoble();
+    for (const CarteNoble* carte : cartesNobles) { ids.push_back(carte->getID()); }
     for (int id : ids) { insertJoueurCarte(db, "JoueurCartesNoble", 1, id); }
     ids.clear();
 
@@ -885,7 +887,7 @@ void sauvegarderPartie(sqlite3* db,
     ids.clear();
 
     cartesNobles = joueur2.getCartesNoble();
-    for (CarteNoble* carte : cartesNobles) { ids.push_back(carte->getID()); }
+    for (const CarteNoble* carte : cartesNobles) { ids.push_back(carte->getID()); }
     for (int id : ids) { insertJoueurCarte(db, "JoueurCartesNoble", 2, id); }
     ids.clear();
 
@@ -1218,14 +1220,9 @@ void VueJeu::dessinerPartie() {
 
 
     // ---------------------- update widgets ------------------
-    /*
-     * Il faudrait mettre à jour tous les affichages après un
-    * chargement depuis la mémoire. POUR L'INSTANT, la fonction
-     * continuerLaPartie ne fonctionne pas (d'où la mise en commentaire
-     * ci-dessus) donc pas besoin de udpate les widgets du jeu(d'où la
-     * mise en commentaire ci-dessous.
-     */
-    //vue_plateau->affichageJetons();
+    setJoueurActuelInfo();
+    vueJoueur1->displayCartes(j1);
+    vueJoueur2->displayCartes(j2);
 
     // ---------------- Layout Choix Action ---------------
     layout_top = new QHBoxLayout();
@@ -1235,6 +1232,8 @@ void VueJeu::dessinerPartie() {
 
 
     afficherChoix();
+
+
     layout_jeu->addLayout(layout_top);
     layout_jeu->addLayout(layout_centre);
     layout_jeu->addLayout(layout_bas);
@@ -1387,7 +1386,8 @@ void VueJeu::boutonRemplirPlateau() {
 
 void VueJeu::boutonAcheterCarte() {
     desactiverOuActiverBouton(false);
-    vue_plateau->affichageJetons(false);
+    //vue_plateau->affichageJetons(false);
+    vue_plateau->desactiverOuActiverLesJetons(false);
     finiAction(3);
 }
 
@@ -1395,7 +1395,8 @@ void VueJeu::boutonReserverCarte() {
     if (checkPlateau()) return;
     desactiverOuActiverBouton(false);
     vue_plateau->getPlateau()->setMaxSelectionPossible(1, true) ;
-    vue_plateau->affichageJetons(true);
+    //vue_plateau->affichageJetons(true);
+    vue_plateau->desactiverOuActiverLesJetons(false);
     //finiAction(4);
 }
 
@@ -1405,7 +1406,7 @@ void VueJeu::boutonPrendreJeton() {
     Plateau* p = vue_plateau->getPlateau();
     p->setMaxSelectionPossible(3, false);
     vue_plateau->affichageJetons(true);
-    finiAction(2);
+    //finiAction(2);
 }
 
 void VueJeu::desactiverOuActiverBouton(bool etat) {
@@ -1414,6 +1415,20 @@ void VueJeu::desactiverOuActiverBouton(bool etat) {
     bouton_remplir_plateau->setEnabled(etat);
     bouton_reserver_carte->setEnabled(etat);
     bouton_prendre_jeton->setEnabled(etat);
+}
+
+void VueJeu::setJoueurActuelInfo() {
+    Joueur* j = jeu->getJoueurActuel();
+    vueJoueur1->setJoueurCourrant(j);
+    vueJoueur2->setJoueurCourrant(j);
+    vueJoueur2->miseAJourInformations();
+    vueJoueur1->miseAJourInformations();
+}
+
+void VueJeu::choixCarteNoble(bool ok_pour_choix) {
+    peut_passer_tour_suivant=!ok_pour_choix;
+    desactiverOuActiverBouton(!ok_pour_choix);
+    vue_plateau->desactiverOuActiverLesJetons(!ok_pour_choix);
 }
 
 void VueJeu::finiAction(int action) {
@@ -1432,16 +1447,34 @@ void VueJeu::finiAction(int action) {
         }
     }else   if (action == 1) {
         a_fini_optionnelles = true;
-    } else if (action >2) {
+    } else if (action >=2) {
+        jeu->verifCarteNoble(jeu->getJoueurActuel(), vue_plateau->getPlateau());
+        if (!peut_passer_tour_suivant) return;
         a_fini_optionnelles = true;
         a_fini_obligatoires = true;
         desactiverOuActiverBouton(true);
+
         // Remise à défaut des paramètres de choix plateau :
         vue_plateau->getPlateau()->setMaxSelectionPossible(3,false) ;
-        jeu->verifGagnant(j1, j2);
+
+        jeu->verifGagnant(j1, j2); // modifie le joueur actuelle
+
+        // MIse à jour pour le joueur actuel
+        setJoueurActuelInfo();
+        if (action == 3 || action == 4) {
+            if (jeu->getJoueurActuel() == j1) {
+                // Si le joueur actuel est 1, alors au moment de l'action passé,
+                // le joueur qui a modiié ses cartes est le joueur 2.
+                vueJoueur2->displayCartes(j2);
+            } else {
+                vueJoueur1->displayCartes(j1);
+            }
+        }
 
         if (jeu->getJoueurGagnant() == nullptr) {
+            // Tour suivant
             setEtatBoutonPrivilege();
+            setJoueurActuelInfo();
         } else {
             // ----------------Popup pour gagnat ici ! ----------------
             //

@@ -639,9 +639,9 @@ void Plateau::donnePrivilege(Privilege* p) {
 
 
 const CarteNoble* Plateau::prendreCarteNoble(unsigned int numero) {
-    if (numero > nb_carte_noble-1) {
-        std::cout<<"Le numéro de carte noble est trop grand ! ";
-        std::cout<<"Il n'y a que "<<nb_carte_noble<<" sur le plateau!"<<std::endl;
+    if (numero > nb_cartes_nobles_MAX) {
+        std::cerr<<"Le numéro de carte noble est trop grand ! ";
+        std::cerr<<"Il n'y a que "<<nb_carte_noble<<" sur le plateau!"<<std::endl;
         return nullptr;
     }
     if (cartes_nobles[numero] == nullptr)
@@ -649,7 +649,9 @@ const CarteNoble* Plateau::prendreCarteNoble(unsigned int numero) {
         std::cout<<"Cette carte n'est plus sur le plateau... ¯\\_(^^')_/¯"<<"\n";
 
     const CarteNoble* resultat = cartes_nobles[numero];
-    cartes_nobles.erase(cartes_nobles.begin() + numero); //cartes_nobles[numero] = nullptr;
+    cartes_nobles[numero] = nullptr;
+//    cartes_nobles.erase(cartes_nobles.begin() + numero); //cartes_nobles[numero] = nullptr;
+//    cartes_nobles.insert(cartes_nobles.begin() + numero, nullptr);
     nb_carte_noble--;
     return  resultat;
 }
@@ -874,21 +876,35 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent),
 void VuePlateau::carteNobleClick_Plateau(VueCarteNoble* vc) {
    const CarteNoble* cn= plateau->prendreCarteNoble(vc->getNumero()) ;
    if (cn == nullptr) {
-       std::cout<<"Erreur lors du click : le plateau a renvoye un pointeur null";
+       std::cerr<<"Erreur lors du click : le plateau a renvoye un pointeur null";
        return;
    }
    std::cout<<"La carte choisie a "<<cn->getCouronne()<<" couronnes\n";
    try {
-       Jeu::getJeu().getJoueurActuel()->ajouterCarteNoble(*cn);
+       Joueur* j = Jeu::getJeu().getJoueurActuel();
+
+       if ((j->getNombreCouronnes() >= 3 && j->getNombreCartesNobles()==0) || (j->getNombreCartesNobles() == 1 && j->getNombreCouronnes() >= 6)) {
+           j->ajouterCarteNoble(cn);
+           Jeu::getJeu().getVueJeu()->message("Bravo !", "La carte noble a été prise !");
+           affichageCartes();
+       } else {
+           Jeu::getJeu().getVueJeu()->message("Patience...", "Attendez d'avoir le nombre de couronnes nécessaires pour prendre une carte noble !");
+           plateau->cartes_nobles.insert(
+                   plateau->cartes_nobles.begin() + vc->getNumero(),
+                   cn
+           );// push_back(cn);
+           plateau->nb_carte_noble++;
+       }
    } catch(const char* e) {
-       std::cout<<e;
+       std::cerr<<e;
        plateau->cartes_nobles.insert(
                plateau->cartes_nobles.begin() + vc->getNumero(),
                cn
                );// push_back(cn);
        plateau->nb_carte_noble++;
    }
-   affichageCartes();
+   Jeu::getJeu().getVueJeu()->choixCarteNoble(false);
+    Jeu::getJeu().getVueJeu()->finiAction(5);
 }
 
 void VuePlateau::jetonClick_Plateau(VueJeton* vj) {

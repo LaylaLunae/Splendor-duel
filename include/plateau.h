@@ -232,18 +232,20 @@ Q_OBJECT
 public:
     explicit VuePlateau(QWidget *parent = nullptr);
     Plateau* getPlateau() {return plateau;}
+    std::vector<VueCarteNoble*> getVuesNobles() {return vuesCartes;}
 
     void affichageJetons(bool  etat_actif=false); // à appeler si chargement mémoire
 
     void desactiverOuActiverLesJetons(bool nouvel_etat) {
         for (auto j : vuesJetons) {
             //j->setCliquable(nouvel_etat);
-            j->setEnabled(nouvel_etat);
-            j->repaint();
+            if (j != nullptr) {
+                j->setEnabled(nouvel_etat);
+                j->repaint();
+            }
         }
         repaint();
     }
-
 private:
     friend class Plateau;
     Plateau* plateau;

@@ -49,6 +49,7 @@ public:
         QIcon icon (pixmap);
         this->setIcon(icon);
         this->setIconSize(this->size());
+        setEnabled(true);
         //setIconSize(pixmap.rect().size());
         //setFixedSize(pixmap.rect().size());
     };
@@ -57,6 +58,7 @@ public:
     unsigned int getNumero() const {return numero;}
 
     //void setCarte(const CarteNoble* c) {carte = c;}
+
 
 
 protected:
@@ -71,5 +73,6 @@ private:
 public slots:
 private slots:
     void clickedEvent() { emit carteClick(this); }
+
 };
 #endif // CARTENOBLE_H

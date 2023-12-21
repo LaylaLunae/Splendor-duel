@@ -42,7 +42,7 @@ class VueCarteJoaillerie : public QPushButton {
 Q_OBJECT
 
 public:
-    explicit VueCarteJoaillerie(unsigned int id, const std::vector<const CarteJoaillerie*>& cartes, QWidget* parent = nullptr)
+    explicit VueCarteJoaillerie(unsigned int id, const std::vector<const CarteJoaillerie*> cartes, QWidget* parent = nullptr)
             : QPushButton(parent), carteJoaillerieId(id) {
         setFixedSize(100, 150);
         const CarteJoaillerie* carte = findCarteById(id, cartes);
@@ -53,7 +53,24 @@ public:
         connect(this, SIGNAL(clicked()), this, SLOT(clickedEvent()));
     }
 
-    unsigned int getCarteJoaillerieId() const {
+    VueCarteJoaillerie(const CarteJoaillerie* c, const std::vector<CarteJoaillerie*> cartes, QWidget* parent = nullptr)
+            : QPushButton(parent) {
+        /*
+         * Constructeur défini pour passer une carte en paramètre.
+         * L'id est pris de cette carte.
+         */
+        unsigned int id = c->getID();
+        carteJoaillerieId = id;
+        setFixedSize(100, 150);
+        const CarteJoaillerie *carte = findCarteById(id, cartes);
+        if (carte) {
+            QString cheminImage = QString::fromStdString(carte->getCheminVersImage());
+            setStyleSheet("QPushButton { border-image: url(" + cheminImage + "); }");
+        }
+        connect(this, SIGNAL(clicked()), this, SLOT(clickedEvent()));
+    }
+
+        unsigned int getCarteJoaillerieId() const {
         return carteJoaillerieId;
     }
 
@@ -74,6 +91,16 @@ private:
         }
         return nullptr;
     }
+
+    const CarteJoaillerie* findCarteById(unsigned int id, const std::vector< CarteJoaillerie*>& cartes) const {
+        for (const auto& carte : cartes) {
+            if (carte && carte->getID() == id) {
+                return carte;
+            }
+        }
+        return nullptr;
+    }
+
 };
 
 // code pour tester QT de CarteJoaillerie

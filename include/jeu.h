@@ -14,6 +14,7 @@
 #include "joueur.h"
 
 
+
 #include <sqlite3.h>
 #include "query.h"
 
@@ -105,10 +106,14 @@ class VueJeu : public QWidget {
     Q_OBJECT
 public:
     VueJeu(Jeu* jeu, QWidget *parent = nullptr);
+    VuePlateau* getVuePlateau() {
+        return vue_plateau;
+    }
 
     void finiAction(int action);
 
     void message(const char title[], const char texte[]);
+    void choixCarteNoble(bool ok_pour_choix);
 
 private:
 
@@ -116,6 +121,7 @@ private:
     int compteur_action_optionelles= 2;
     bool a_fini_optionnelles = false;
     bool a_fini_obligatoires = false;
+    bool peut_passer_tour_suivant = true; // false quand doit choisir carte noble.
 
     Jeu* jeu;
     Joueur* j1;
@@ -157,6 +163,7 @@ private:
    void afficherChoix();
     void desactiverOuActiverBouton(bool etat);
     void setEtatBoutonPrivilege();
+    void setJoueurActuelInfo();
 
    // Ecrit un message console si le plateau n'est pas définie
    bool checkPlateau() {
