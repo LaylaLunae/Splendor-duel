@@ -6,6 +6,7 @@
 #include "../include/jeu.h"
 enum class Couleur;
 
+//initialisation de pioche
 Pioche::Pioche(int np, int mcr, int mcp):numero_pioche(np),
                                          max_cartes_revelees(mcr), max_cartes_pioche(mcp){
     cartes_dans_pioche = new const CarteJoaillerie*[mcp];
@@ -19,6 +20,7 @@ Pioche::Pioche(int np, int mcr, int mcp):numero_pioche(np),
     }
 }
 
+//destructeur de pioche
 Pioche::~Pioche(){
     for (int i = 0; i < max_cartes_pioche; i++) {
         delete cartes_dans_pioche[i];
@@ -30,17 +32,16 @@ Pioche::~Pioche(){
     delete [] cartes_dehors;
 }
 
+// prendre une carte dans les cartes révélées
 const CarteJoaillerie * Pioche::joueurPrend(int numero_carte) {
     int i = 0;
-    while(cartes_dehors[i]->getID() != numero_carte) {
+    while(cartes_dehors[i]->getID() != numero_carte) { //cherche la carte en question
         std::cout << cartes_dehors[i]->getID() << "\n";
         i++;
     }
-    std::cout << "Passe\n";
-    const CarteJoaillerie * temp = cartes_dehors[i];
-    if (max_cartes_pioche != -1) {
-        //std::srand(std::time(0));
-        int nombreAleatoire = std::rand() % max_cartes_pioche;
+    const CarteJoaillerie * temp = cartes_dehors[i]; //pour retourner la carte
+    if (max_cartes_pioche != -1) { //si la pioche est pas vide, on remplace le trou par une carte
+        int nombreAleatoire = std::rand() % max_cartes_pioche; //choix d'une carte au hasard
         cartes_dehors[i] = cartes_dans_pioche[nombreAleatoire];
         cartes_dans_pioche[nombreAleatoire] = cartes_dans_pioche[max_cartes_pioche-1];
         max_cartes_pioche--;
@@ -51,8 +52,7 @@ const CarteJoaillerie * Pioche::joueurPrend(int numero_carte) {
 void Pioche::distribution(){ // ne servira que pour la création de partie
     int i = 0;
     while (i < max_cartes_revelees && max_cartes_pioche != -1) {
-        //std::srand(std::time(0));
-        int nombreAleatoire = std::rand() % max_cartes_pioche;
+        int nombreAleatoire = std::rand() % max_cartes_pioche; //choix d'une carte au hasard
         cartes_dehors[i] = cartes_dans_pioche[nombreAleatoire];
         cartes_dans_pioche[nombreAleatoire] = cartes_dans_pioche[max_cartes_pioche-1];
         max_cartes_pioche--;
@@ -60,8 +60,8 @@ void Pioche::distribution(){ // ne servira que pour la création de partie
     }
 }
 
+//cas où on prend dans la pioche
 const CarteJoaillerie * Pioche::joueurPrendPioche() {
-    //std::srand(std::time(0));
     int nombreAleatoire = std::rand() % max_cartes_pioche;
     const CarteJoaillerie * temp = cartes_dans_pioche[nombreAleatoire];
     cartes_dans_pioche[nombreAleatoire] = cartes_dans_pioche[max_cartes_pioche-1];
