@@ -3,30 +3,23 @@
 #include "../include/jeu.h"
 #include <QMessageBox>
 
-/* Jeu& Jeu::getJeu(){
-    if (handler.instance == nullptr)
-        handler.instance = new Jeu();
-    return * handler.instance;
-}
-
-void Jeu::libereJeu() {
-    delete handler.instance;
-    handler.instance = nullptr;
-}*/
 
 Jeu * Jeu::instance = nullptr;
 
+//création de Jeu ou récupération de Jeu si déjà créé
 Jeu& Jeu::getJeu(){
     if (instance == nullptr)
         instance = new Jeu;
     return * instance;
 }
 
+//destruction du Jeu
 void Jeu::libereJeu() {
     delete instance;
     instance = nullptr;
 }
 
+//création de la nouvelle partie
 void Jeu::nouvellePartie() {
     Plateau * plateau_jeu = new Plateau();
     std::string sortie = plateau_jeu->etatPlateau();
