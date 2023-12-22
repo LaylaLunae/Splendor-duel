@@ -45,18 +45,23 @@ public:
     Joueur* getJoueurGagnant() const {return joueur_gagnant;}
     void setJoueurActuel(Joueur* joueur) {joueur_actuel = joueur;}
     void setJoueurGagnant(Joueur* joueur) {joueur_gagnant = joueur;}
-    void setVueJeu(VueJeu* vj) {vue_jeu=vj;}
 
     void validationAction();
 
+    //pour l'instant dans public
     void nouvellePartie();
+    //void reprendrePartie(); //faut bdd
+    //void verifAnciennePartie(); //faut bdd
     void verifGagnant(Joueur * j1, Joueur * j2);
+    //void sauvegarderPartie(); //faut bdd
     void vainqueur(Joueur * j);
     void auSuivant(Joueur * j1, Joueur * j2);
     void verifCarteNoble(Joueur * j, Plateau * p);
+    void initCarteJoa (Pioche * p1, Pioche * p2, Pioche * p3, Plateau * p);
 
     void manche(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j1, Joueur * j2, Obligatoire * obl, Optionnelle * opt);
     void tour(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j, Obligatoire * obl, Optionnelle * opt);
+
 };
 
 /* =============================================== Fonctions avec BDD =============================================== */
