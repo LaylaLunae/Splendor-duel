@@ -276,10 +276,10 @@ T queryPlateauCartesNobleField(sqlite3* db, const std::string& fieldName, int pl
     std::string query = "SELECT " + fieldName + " FROM PlateauCartesNoble WHERE plateau_id = ?;";
     T result = T();
 
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) == SQLITE_OK) {
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
         sqlite3_bind_int(stmt, 1, plateauId);
 
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
+        if(sqlite3_step(stmt) == SQLITE_ROW) {
             result = sqlite3_column_int(stmt, 0);
         }
         sqlite3_finalize(stmt);
@@ -288,6 +288,7 @@ T queryPlateauCartesNobleField(sqlite3* db, const std::string& fieldName, int pl
     return result;
 }
 
+std::vector<int> queryPlateauCartesNobleFieldVector(sqlite3* db, const std::string& fieldName, int plateauId);
 
 // Optionelle et Obligatoire
 template <typename T>

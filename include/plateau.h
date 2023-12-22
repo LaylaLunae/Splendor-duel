@@ -235,6 +235,7 @@ public:
     std::vector<VueCarteNoble*> getVuesNobles() {return vuesCartes;}
 
     void affichageJetons(bool  etat_actif=false); // à appeler si chargement mémoire
+    void affichageCartes();
 
     void desactiverOuActiverLesJetons(bool nouvel_etat) {
         for (auto j : vuesJetons) {
@@ -262,7 +263,6 @@ private:
     std::vector<VuePrivilege*> vuesPrivileges;
 
     void miseAJourJetons();
-    void affichageCartes();
     void affichagePrivileges();
 
 

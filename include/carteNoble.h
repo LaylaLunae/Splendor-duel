@@ -41,7 +41,7 @@ public:
          */
         setFixedSize(100,150);
         vue_plateau = vp;
-        QString chemin_image = QString::fromStdString("../images/" + std::to_string(numero+68) + ".png");
+        QString chemin_image = QString::fromStdString("../images/" + std::to_string(numero+67) + ".png");
         setStyleSheet("QPushButton { border-image: url(" + chemin_image + "); }");
         connect(this,SIGNAL(clicked()),this,SLOT(clickedEvent()));
         QPixmap pixmap(chemin_image);

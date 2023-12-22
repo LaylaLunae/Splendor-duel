@@ -68,6 +68,7 @@ public:
 void executeSQL(sqlite3* db, const std::string& sql);
 
 void initCarteJoaillerie(sqlite3* db, std::vector<const CarteJoaillerie*>* cartes);
+void initCarteJoaillerieNonConst(sqlite3* db, std::vector<CarteJoaillerie*>* cartes);
 void initCarteNoble(sqlite3* db, std::vector<const CarteNoble*>* cartesNoble);
 Jeton* queryJetonById(sqlite3* db, int jetonId);
 
@@ -85,14 +86,14 @@ void sauvegarderPartie(sqlite3* db,
                        const Plateau& plateau);
 
 // Interface de récupération de données pour continuer le jeu
-void continuerLaPartie(sqlite3* db,
+std::vector<Joueur*> continuerLaPartie(sqlite3* db,
                        std::vector<CarteJoaillerie*>& cartesJoaillerie, // Avant de continuer le jeu, vous devez initialiser toutes les cartesJoaillerie
                        std::vector<const CarteNoble*>& cartesNoble, // Avant de continuer le jeu, vous devez initialiser toutes les cartesNoble
                        //std::vector<CarteJoaillerie>& cartesDansPioche,
                        //std::vector<CarteJoaillerie>& cartesDehors,
                        Jeu* jeu, // Avant de continuer le jeu, vous devez initialiser un objet vide pour stocker les données lues.
-                       Joueur* joueur1,
-                       Joueur* joueur2,
+//                       Joueur* joueur1,
+//                       Joueur* joueur2,
                        std::vector<Pioche*>& pioches,
                        Plateau& plateau,
                        std::vector<Privilege*> privileges);
@@ -126,6 +127,7 @@ private:
     Pioche* pioche2;
     Pioche* pioche3;
     std::vector<Pioche*> pioches;
+    VuePioche* vue_pioche;
     std::vector<CarteJoaillerie*> cartesJoaillerie;
 
 

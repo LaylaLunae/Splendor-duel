@@ -3,6 +3,16 @@
 #include "../include/jeu.h"
 #include <QMessageBox>
 
+/* Jeu& Jeu::getJeu(){
+    if (handler.instance == nullptr)
+        handler.instance = new Jeu();
+    return * handler.instance;
+}
+
+void Jeu::libereJeu() {
+    delete handler.instance;
+    handler.instance = nullptr;
+}*/
 
 Jeu * Jeu::instance = nullptr;
 
@@ -19,92 +29,10 @@ void Jeu::libereJeu() {
     instance = nullptr;
 }
 
-//pour le test de Jeu sans la bdd
-void Jeu::initCarteJoa(Pioche * p1, Pioche * p2, Pioche * p3, Plateau * p){
-    std::map<Couleur,int> prix1;
-    prix1[Couleur::bleu] = 1;
-
-    std::map<Couleur,int> prix2;
-    prix2[Couleur::rose] = 1;
-
-    std::map<Couleur,int> prix3;
-    prix3[Couleur::noir] = 1;
-
-    std::map<Couleur,int> prix4;
-    prix4[Couleur::vert] = 1;
-
-    std::array<Couleur, 2> pierre1 = {Couleur::blanc,Couleur::rien};
-    std::array<Couleur, 2> pierre2 = {Couleur::vert,Couleur::rien};
-    std::array<Couleur, 2> pierre3 = {Couleur::bleu,Couleur::rien};
-    std::array<Couleur, 2> pierre4 = {Couleur::rouge,Couleur::rien};
-    std::array<Couleur, 2> pierre5 = {Couleur::noir,Couleur::rien};
-
-    for (int i = 0; i<p1->getMaxCartesPioche(); i += 4) {
-        const CarteJoaillerie * c1 = new const CarteJoaillerie(p,nullptr,1,3,pierre1,prix1,"rien",2,Pouvoir::rien,Pouvoir::rien,i);
-        p1->setCartesDansPioche(c1,i);
-        if ((i+1) < p1->getMaxCartesPioche()) {
-            const CarteJoaillerie *c2 = new const CarteJoaillerie(p, nullptr, 1, 3, pierre2, prix2, "rien", 2,
-                                                                  Pouvoir::rien, Pouvoir::rien, i + 1);
-            p1->setCartesDansPioche(c2, i + 1);
-        }
-        if ((i+2) < p1->getMaxCartesPioche()) {
-            const CarteJoaillerie *c3 = new const CarteJoaillerie(p, nullptr, 1, 3, pierre3, prix3, "rien", 2,
-                                                                  Pouvoir::rien, Pouvoir::rien, i + 2);
-            p1->setCartesDansPioche(c3, i + 2);
-        }
-        if ((i+3) < p1->getMaxCartesPioche()) {
-            const CarteJoaillerie *c4 = new const CarteJoaillerie(p, nullptr, 1, 3, pierre4, prix4, "rien", 2,
-                                                                  Pouvoir::rien, Pouvoir::rien, i + 3);
-            p1->setCartesDansPioche(c4, i + 3);
-        }
-    }
-    for (int i = 0; i<p2->getMaxCartesPioche(); i += 4) {
-        const CarteJoaillerie * c1 = new const CarteJoaillerie(p,nullptr,2,3,pierre5,prix1,"rien",3,Pouvoir::rien,Pouvoir::rien,i);
-        p2->setCartesDansPioche(c1,i);
-        if ((i+1) < p2->getMaxCartesPioche()) {
-            const CarteJoaillerie *c2 = new const CarteJoaillerie(p, nullptr, 2, 3, pierre4, prix2, "rien", 3,
-                                                                  Pouvoir::rien, Pouvoir::rien, i + 1);
-            p2->setCartesDansPioche(c2, i + 1);
-        }
-        if ((i+2) < p2->getMaxCartesPioche()) {
-            const CarteJoaillerie *c3 = new const CarteJoaillerie(p, nullptr, 2, 3, pierre2, prix3, "rien", 3,
-                                                                  Pouvoir::rien, Pouvoir::rien, i + 2);
-            p2->setCartesDansPioche(c3, i + 2);
-        }
-        if ((i+3) < p2->getMaxCartesPioche()) {
-            const CarteJoaillerie *c4 = new const CarteJoaillerie(p, nullptr, 2, 3, pierre3, prix4, "rien", 3,
-                                                                  Pouvoir::rien, Pouvoir::rien, i + 3);
-            p2->setCartesDansPioche(c4, i + 3);
-        }
-    }
-
-    for (int i = 0; i<p3->getMaxCartesPioche(); i += 4) {
-        const CarteJoaillerie * c1 = new const CarteJoaillerie(p,nullptr,3,3,pierre2,prix4,"rien",4,Pouvoir::rien,Pouvoir::rien,i);
-        p3->setCartesDansPioche(c1,i);
-        if ((i+1) < p3->getMaxCartesPioche()) {
-            const CarteJoaillerie *c2 = new const CarteJoaillerie(p, nullptr, 3, 3, pierre5, prix2, "rien", 4,
-                                                                  Pouvoir::rien, Pouvoir::rien, i + 1);
-            p3->setCartesDansPioche(c2, i + 1);
-        }
-        if ((i+2) < p3->getMaxCartesPioche()) {
-            const CarteJoaillerie *c3 = new const CarteJoaillerie(p, nullptr, 3, 3, pierre1, prix3, "rien", 4,
-                                                                  Pouvoir::rien, Pouvoir::rien, i + 2);
-            p3->setCartesDansPioche(c3, i + 2);
-        }
-        if ((i+3) < p3->getMaxCartesPioche()) {
-            const CarteJoaillerie *c4 = new const CarteJoaillerie(p, nullptr, 3, 3, pierre4, prix1, "rien", 4,
-                                                                  Pouvoir::rien, Pouvoir::rien, i + 3);
-            p3->setCartesDansPioche(c4, i + 3);
-        }
-    }
-}
-
-//création d'une nouvelle partie
 void Jeu::nouvellePartie() {
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
-    //création de plateau
     Plateau * plateau_jeu = new Plateau();
+    std::string sortie = plateau_jeu->etatPlateau();
+    std::cout << sortie << "\n";
 
     // création des pioches
     Pioche * pioche1 = new Pioche(1,5,30);
@@ -112,7 +40,7 @@ void Jeu::nouvellePartie() {
     Pioche * pioche3 = new Pioche(3,3,13);
 
     // à retirer
-    initCarteJoa(pioche1, pioche2, pioche3, plateau_jeu);
+    //initCarteJoa(pioche1, pioche2, pioche3, plateau_jeu);
 
     //distribution des pioches
     pioche1->distribution();
@@ -152,6 +80,9 @@ void Jeu::nouvellePartie() {
 
             //début de la partie
             manche(plateau_jeu, pioche1, pioche2, pioche3, joueur1, joueur2, act_obl, act_opt);
+            /*joueur_actuel->nombre_couronnes = 3;
+            std::cout << "Nb carte noble : " << joueur_actuel->cartes_noble.size() << "\n";
+            verifCarteNoble(joueur_actuel,plateau_jeu);*/
 
             break;
         }
@@ -208,7 +139,7 @@ void Jeu::nouvellePartie() {
 
 //Partie
 void Jeu::manche(Plateau * p, Pioche * p1, Pioche * p2, Pioche * p3, Joueur * j1, Joueur * j2, Obligatoire * obl, Optionnelle * opt) {
-   while(joueur_gagnant == nullptr) { //tant qu'on n'a pas de gagnant
+    while(joueur_gagnant == nullptr) { //tant qu'on n'a pas de gagnant
         tour(p, p1, p2, p3, joueur_actuel, obl, opt); //tour du joueur
         verifCarteNoble(joueur_actuel, p); //le joueur reçoit-il une carte noble ?
         verifGagnant(j1, j2); //le joueur a-t-il gagné ?
@@ -380,15 +311,18 @@ void Jeu::verifCarteNoble(Joueur * j, Plateau * p) {
                     }
                 } while(verif != 1);
                 std::cout << "Choix de la carte noble : " << choix << "\n";
+                const CarteNoble * carte = p->prendreCarteNoble(choix-1);
+                j->ajouterCarteNoble(carte); //attribution de la carte
+                auto* carte_non_const = const_cast<CarteNoble*>(carte);
+                carte_non_const->actionPouvoir(p, j); //activation des pouvoirs si elle en a
             }
             else { //cas pour un humain
                 std::cout << "Choix de la carte noble : ";
-                std::cin >> choix;
+                //std::cin >> choix;
+                vue_jeu->message("Action", "Vous pouvez prendre une carte noble !");
+                vue_jeu->choixCarteNoble(true);
             }
-            const CarteNoble * carte = p->prendreCarteNoble(choix-1);
-            j->ajouterCarteNoble(*carte); //attribution de la carte
-            auto* carte_non_const = const_cast<CarteNoble*>(carte);
-            carte_non_const->actionPouvoir(p, j); //activation des pouvoirs si elle en a
+
         }
     }
 }
@@ -410,7 +344,17 @@ void Jeu::verifGagnant(Joueur * j1, Joueur * j2) {
         else
             auSuivant(j1, j2); //sinon au suivant
     }
+//    int choix = -1;
+//    std::cout << "On continue ? 1 - oui, 0 - non :";
+//    std::cin >> choix;
+//    if (choix == 0) {
+//        vainqueur(joueur_actuel);
+//    }
+//    else {
+//        auSuivant(j1, j2);
+//    }
 }
+
 
 void Jeu::validationAction() {
     // si bouton pressé
@@ -452,6 +396,29 @@ void initCarteJoaillerie(sqlite3* db, std::vector<const CarteJoaillerie*>* carte
     }
 }
 
+
+void initCarteJoaillerieNonConst(sqlite3* db, std::vector<CarteJoaillerie*>* cartes) {
+    for (int id = 1; id <= 67; ++id) {
+        CarteJoaillerieData data = queryCarteJoaillerie(db, id);
+
+        // Convertissez les données interrogées au format requis
+        std::array<Couleur, 2> pierres = {static_cast<Couleur>(data.pierres[0]), static_cast<Couleur>(data.pierres[1])};
+        std::map<Couleur, int> prix;
+        for (const auto& p : data.prix) {
+            prix[static_cast<Couleur>(p.first)] = p.second;
+        }
+
+        std::string imagePath = "../images/" + (id < 10 ? "0" + std::to_string(id) : std::to_string(id)) + ".png";
+
+        CarteJoaillerie* carte = new CarteJoaillerie(
+                nullptr, nullptr, data.niveau, data.couronnes, pierres, prix, imagePath,
+                data.pointPrestige, static_cast<Pouvoir>(data.pouvoirs[0]),
+                static_cast<Pouvoir>(data.pouvoirs[1]), id
+        );
+
+        cartes->push_back(carte);
+    }
+}
 
 void initCarteNoble(sqlite3* db, std::vector<const CarteNoble*>* cartesNoble) {
     for (int id = 1; id <=4; ++id) {
@@ -560,21 +527,28 @@ void clearAndInitializeTables(sqlite3* db) {
     std::cout << "Database tables cleared and initialized successfully." << std::endl;
 }
 
-void continuerLaPartie(sqlite3* db,
+std::vector<Joueur*> continuerLaPartie(sqlite3* db,
                        std::vector<CarteJoaillerie*>& cartesJoaillerie,
                        std::vector<const CarteNoble*>& cartesNoble,
                        //std::vector<CarteJoaillerie>& cartesDansPioche,
                        //std::vector<CarteJoaillerie>& cartesDehors,
                        Jeu* jeu,
-                       Joueur* joueur1,
-                       Joueur* joueur2,
+//                       Joueur* joueur1,
+//                       Joueur* joueur2,
                        std::vector<Pioche*>& pioches,
                        Plateau& plateau,
                        std::vector<Privilege*> privileges) {
+    /*
+     * Doit retourner les deux joueurs, car leur type (humain/ia) n'est pas connu
+     * lors de l'appelle de cette fonction ! Nous retournons donc les deux
+     * objets créés dans un variable joueur_resultat.
+     */
 
 //    Présentation de deux classes "Humain" et d'une classe "IA" car nous ne pouvons pas être sûrs si le jeu se joue avec deux Humains ou un Humain et un IA
 //
 //    En fonction des données lues dans la base de données, décidez si vous souhaitez utiliser deux « Humain » ou un « Humain » et un « IA » après avoir restauré les données.
+
+    std::vector<Joueur*> joueur_resultat (0);
 
     for (auto& pioche : pioches) {
         // 1. Obtenir des informations sur CartesDansPioche
@@ -585,7 +559,7 @@ void continuerLaPartie(sqlite3* db,
         // Requête cartes_dans_pioche dans Pioche
         for (int id: cartesDansPiocheIds) {
             const CarteJoaillerie *carte = nullptr;
-            for (const auto &c: cartesJoaillerie) {
+            for (auto c: cartesJoaillerie) {
                 if (c->getID() == id) {
                     carte = c;
                     break;
@@ -646,6 +620,9 @@ void continuerLaPartie(sqlite3* db,
     int difficulteValue = queryJoueurField<int>(db, "difficulte", 1);
     Difficulte difficulte = static_cast<Difficulte>(difficulteValue);
 
+    Joueur* joueur1;
+    if (isIA) {joueur1 = new IA(pseudo, difficulte);}
+    else { joueur1 = new Humain(pseudo);}
     joueur1->setPseudo(pseudo);
     joueur1->setNombreCouronnes(nombre_couronnes);
     joueur1->setPointsPrestigeTotal(points_prestige_total);
@@ -669,7 +646,6 @@ void continuerLaPartie(sqlite3* db,
     joueur1->setNbJeton(5, nb_jeton6);
     joueur1->setNbJeton(6, nb_jeton7);
     joueur1->resetRejouer(droit_de_rejouer);
-    joueur1->setAdversaire(joueur2);
     joueur1->setIsIA(isIA);
     joueur1->setDifficulte(difficulte);
 
@@ -702,6 +678,11 @@ void continuerLaPartie(sqlite3* db,
     difficulteValue = queryJoueurField<int>(db, "difficulte", 2);
     difficulte = static_cast<Difficulte>(difficulteValue);
 
+
+    Joueur* joueur2;
+    if (isIA) {joueur2 = new IA(pseudo, difficulte);}
+    else { joueur2 = new Humain(pseudo);}
+
     joueur2->setPseudo(pseudo);
     joueur2->setNombreCouronnes(nombre_couronnes);
     joueur2->setPointsPrestigeTotal(points_prestige_total);
@@ -725,9 +706,14 @@ void continuerLaPartie(sqlite3* db,
     joueur2->setNbJeton(5, nb_jeton6);
     joueur2->setNbJeton(6, nb_jeton7);
     joueur2->resetRejouer(droit_de_rejouer);
-    joueur2->setAdversaire(joueur1);
     joueur2->setIsIA(isIA);
     joueur2->setDifficulte(difficulte);
+
+    joueur1->setAdversaire(joueur2);
+    joueur2->setAdversaire(joueur1);
+
+    joueur_resultat.push_back(joueur1);
+    joueur_resultat.push_back(joueur2);
 
     // 4. Obtenir des informations JoueurCartesMain, JoueurCartesNoble, JoueurCartesReservees, JoueurJetons, JoueurPrivilege
     // 查询玩家的特权和卡片信息
@@ -747,7 +733,7 @@ void continuerLaPartie(sqlite3* db,
     for (int carteId : cartesMainIds) {
         for (CarteJoaillerie* carte : cartesJoaillerie) {
             if (carte->getID() == carteId) {
-                joueur1->ajouterCarteJoaillerie(*carte);
+                joueur1->ajouterCarteJoaillerie(carte);
                 break;
             }
         }
@@ -790,7 +776,7 @@ void continuerLaPartie(sqlite3* db,
     for (int carteId : cartesMainIds) {
         for (CarteJoaillerie *carte : cartesJoaillerie) {
             if (carte->getID() == carteId) {
-                joueur2->ajouterCarteJoaillerie(*carte);
+                joueur2->ajouterCarteJoaillerie(carte);
                 break;
             }
         }
@@ -852,12 +838,12 @@ void continuerLaPartie(sqlite3* db,
 
     // 7. Obtenir des informations PlateauCartesNoble，PlateauJetons，PlateauPrivileges，PlateauSac
 
-    std::vector<const CarteNoble*> cartesNobles;
-    for (int i = 1; i <= 4; ++i) {
-        int carteNobleId = queryPlateauCartesNobleField<int>(db, "carte_noble_id", plateauId);
+    std::vector<const CarteNoble*> cartesNobles(0);
+    std::vector<int> carteNobleIds = queryPlateauCartesNobleFieldVector(db, "carte_noble_id", plateauId);
+    for (int i = 0; i < 4; i++) {
         const CarteNoble* carteNoble = nullptr;
-        for (const CarteNoble* cn : cartesNoble) { if (cn && cn->getID() == carteNobleId) { carteNoble = cn; break; } }
-        if (carteNoble) { cartesNobles.push_back(carteNoble); }
+        for (const CarteNoble* cn : cartesNoble) { if (cn && cn->getID() == carteNobleIds[i]) { carteNoble = cn; break; } }
+        if (carteNoble != nullptr) { cartesNobles.push_back(carteNoble); }
     }
     plateau.setCartesNobles(cartesNobles);
 
@@ -914,6 +900,7 @@ void continuerLaPartie(sqlite3* db,
         plateau.setJetonsByColor(color, index);
         index++;
     }
+    return joueur_resultat;
 }
 
 void sauvegarderPartie(sqlite3* db,
@@ -1298,7 +1285,22 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
     pioches.push_back(pioche1);
     pioches.push_back(pioche2);
     pioches.push_back(pioche3);
-
+    initCarteJoaillerieNonConst(db, &cartesJoaillerie);
+    int niveau = 1;
+    for (size_t i = 0; i <= 30 ; i ++) {
+        pioche1->setCartesDansPioche(cartesJoaillerie[i], i);
+    }
+    niveau++;
+    for (size_t i = 31; i <= 54 ; i ++) {
+        pioche2->setCartesDansPioche(cartesJoaillerie[i], i-31);
+    }
+    niveau++;
+    for (size_t i = 55; i <= 67 ; i ++) {
+        pioche3->setCartesDansPioche(cartesJoaillerie[i], i-55);
+    }
+    pioche1->distribution();
+    pioche2->distribution();
+    pioche3->distribution();
 
     // ------------------ init vuePlateau ------------
     vue_plateau = new VuePlateau(this);
@@ -1357,8 +1359,10 @@ void VueJeu::dessinerPartie() {
 
     // ---------------------- update widgets ------------------
     setJoueurActuelInfo();
-    vueJoueur1->displayCartes(j1);
-    vueJoueur2->displayCartes(j2);
+    vueJoueur1->displayCartes();
+    vueJoueur2->displayCartes();
+    vueJoueur1->show();
+    vueJoueur2->show();
 
     // ---------------- Layout Choix Action ---------------
     layout_top = new QHBoxLayout();
@@ -1367,8 +1371,11 @@ void VueJeu::dessinerPartie() {
     layout_bas->addWidget(bouton_sauvegarde);
 
 
+    vue_pioche = new VuePioche(pioche1, pioche2, pioche3, cartesJoaillerie, this);
+
     afficherChoix();
 
+    layout_top->addWidget(vue_pioche);
 
     layout_jeu->addLayout(layout_top);
     layout_jeu->addLayout(layout_centre);
@@ -1546,20 +1553,31 @@ void VueJeu::boutonChargerPartie() {
     deleteLayout(layout_main);
 
     // Load partie
-    continuerLaPartie(
+    std::vector<Joueur*> joueurs =  continuerLaPartie(
             db,
             cartesJoaillerie,
             cartesNoble,
             //cartesDansPioche, cartesDehors,
-            jeu, j1, j2, pioches,
+            jeu,
+//            j1, j2,
+            pioches,
             *vue_plateau->getPlateau(),
             vue_plateau->getPlateau()->getPrivileges()
     );
 
+    jeu->setVueJeu(this);
+    j1 = joueurs[0];
+    j2 = joueurs[1];
+    vueJoueur1 = new FenetreInformations(j1);
+    vueJoueur2 = new FenetreInformations(j2);
+    j1->setInfo(vueJoueur1);
+    j2 ->setInfo(vueJoueur2);
+
     // ---------- MIse a jour  des composants------------
     vue_plateau->affichageJetons(false);
-    vueJoueur1->miseAJourInformations();
-    vueJoueur2->miseAJourInformations();
+    vue_plateau->affichageCartes();
+//    vueJoueur1->miseAJourInformations();
+//    vueJoueur2->miseAJourInformations();
 
     this->dessinerPartie();
     layout_main->addLayout(layout_jeu);
@@ -1630,6 +1648,7 @@ void VueJeu::setJoueurActuelInfo() {
     Joueur* j = jeu->getJoueurActuel();
     vueJoueur1->setJoueurCourrant(j);
     vueJoueur2->setJoueurCourrant(j);
+    // mise à jour déjà faite dans setJoueurCourrant
     vueJoueur2->miseAJourInformations();
     vueJoueur1->miseAJourInformations();
 }
@@ -1670,13 +1689,13 @@ void VueJeu::finiAction(int action) {
 
         // MIse à jour pour le joueur actuel
         setJoueurActuelInfo();
-        if (action == 3 || action == 4) {
+        if (action == 3 || action == 4 || action==5) {
             if (jeu->getJoueurActuel() == j1) {
                 // Si le joueur actuel est 1, alors au moment de l'action passé,
                 // le joueur qui a modiié ses cartes est le joueur 2.
-                vueJoueur2->displayCartes(j2);
+                vueJoueur2->displayCartes();
             } else {
-                vueJoueur1->displayCartes(j1);
+                vueJoueur1->displayCartes();
             }
         }
 

@@ -106,7 +106,7 @@ public:
     void setDifficulte(Difficulte difficulte);
 
     //méthodes d'ajouts :
-    void ajouterCarteJoaillerie(CarteJoaillerie& carte);
+    void ajouterCarteJoaillerie(CarteJoaillerie* carte);
     void ajouterCarteNoble(const CarteNoble* carte);
     void ajouterCarteReservee(CarteJoaillerie* carte);
     void ajouterPrivilege(Privilege* privilege);
@@ -189,31 +189,63 @@ class FenetreInformations : public QWidget {
 Q_OBJECT
 
 public:
-    FenetreInformations(Joueur *j, QWidget *parent = nullptr) : QWidget(parent), joueur(nullptr) {
+    FenetreInformations(Joueur *j, QWidget *parent = nullptr) : QWidget(parent), joueur(j) {
         setFixedSize(400, 400);
         setWindowTitle("Informations du Joueur");
 
-        QVBoxLayout *layout = new QVBoxLayout(this);
-        // Ajout des labels au layout principal
-        setupLabels(j, layout);
-        // Ajout du layout principal à la fenêtre
-        setLayout(layout);
+        layout = new QVBoxLayout();
+        layout_cartes = new QGridLayout();
+        main_layout = new QVBoxLayout(this);
+        miseAJourInformations();
 
-        // Affichage des cartes du joueur
-        //displayCartes(j);
-        // Pas au début, le joueur n'en a pas, et pour afficher les cartes il faut a
-        // que le jeu et plateau soient créés. On va appelé cette méthode
-        // de l'extérieur une fois que tout est prêt.
+        displayCartes();
+
+        main_layout->addLayout(layout);
+        main_layout->addLayout(layout_cartes);
 
 
-        // Initialisation du joueur
-        setJoueur(j);
+        setLayout(main_layout);
+//        // toujours le meme model : un label, un style, et le widget
+//        labelNom = new QLabel(QString::fromStdString(j->getPseudo()), this);
+//        labelNom->setStyleSheet("QLabel { background-color: white; color: black; }");
+//        layout->addWidget(labelNom);
+//
+//        labelPriviliges = new QLabel("Nombre de Privilèges: 0", this);
+//        labelPriviliges->setStyleSheet("QLabel { background-color: grey; color: white; }");
+//        layout->addWidget(labelPriviliges);
+//
+//        labelCouronnes = new QLabel("Nombre de Couronnes: 0", this);
+//        labelCouronnes->setStyleSheet("QLabel { background-color: grey; color: white; }");
+//        layout->addWidget(labelCouronnes);
+//
+//        labelCartesNobles = new QLabel("Nombre de Cartes Nobles: 0", this);
+//        labelCartesNobles->setStyleSheet("QLabel { background-color: grey; color: white; }");
+//        layout->addWidget(labelCartesNobles);
+//
+//        labelCartesReservees = new QLabel("Nombre de Cartes Réservées: 0", this);
+//        labelCartesReservees->setStyleSheet("QLabel { background-color: grey; color: white; }");
+//        layout->addWidget(labelCartesReservees);
+//
+//        labelJetons = new QLabel("Nombre de Jetons: 0", this);
+//        labelJetons->setStyleSheet("QLabel { background-color: grey; color: white; }");
+//        layout->addWidget(labelJetons);
+//
+//        // Labels pour le nombre de jetons par couleur
+//        for (int couleur = 0; couleur < 7; couleur++) {
+//            labelJetonsParCouleur[couleur] = new QLabel(QString("Nombre de %1 : 0").arg(getNomCouleur(couleur)), this);
+//            labelJetonsParCouleur[couleur]->setStyleSheet("QLabel { background-color: grey; color: white; }");
+//            layout->addWidget(labelJetonsParCouleur[couleur]);
+//        }
+
+        // permet de faire cela pour le joueur
+        //setJoueur(j);
     }
+
 
 
     // fonction pour afficher les cartes du joueur
     // Appelée par VueJeu donc public
-    void displayCartes(Joueur *j);
+    void displayCartes();
 
 
 public slots:
@@ -221,26 +253,55 @@ public slots:
     // fonction pour mettre à jour tous les compteurs
     void miseAJourInformations() {
         if (joueur != nullptr) {
-//            labelPriviliges->setText(QString("Nombre de Privilèges: %1").arg(joueur->getNombreDePrivileges()));
-//            labelCouronnes->setText(QString("Nombre de Couronnes: %1").arg(joueur->getNombreCouronnes()));
-//            labelCartesNobles->setText(QString("Nombre de Cartes Nobles: %1").arg(joueur->getNombreCartesNobles()));
-//            labelCartesReservees->setText(
-//                    QString("Nombre de Cartes Réservées: %1").arg(joueur->getNbCartesReservees()));
-//            labelJetons->setText(QString("Nombre de Jetons: %1").arg(joueur->getNbJetonTotal()));
-//
-//            for (int couleur = 0; couleur < 7; ++couleur) {
-//                labelJetonsParCouleur[couleur]->setText(
-//                        QString("Nombre de %1: %2").arg(getNomCouleur(couleur)).arg(joueur->getNbJeton(couleur)));
-//                labelJetonsParCouleur[couleur]->setStyleSheet(
-//                        QString("QLabel { background-color: grey; color: %1; }").arg(getCouleurTexte(couleur)));
-//            }
+            std::cout<<"\n\n\n\n"<<joueur->getPseudo()<<"\n";
+
+            while (QLayoutItem *item = layout->takeAt(0)) {
+                if (QWidget *widget = item->widget()) {
+                    widget->deleteLater();
+                }
+                delete item;
+            }
+
+            // toujours le meme model : un label, un style, et le widget
+            labelNom = new QLabel(QString::fromStdString(joueur->getPseudo()), this);
+            labelNom->setStyleSheet("QLabel { background-color: white; color: black; }");
+            layout->addWidget(labelNom);
+
+
+            labelPriviliges = new QLabel(QString("Nombre de Privilèges: %1").arg(joueur->getNombreDePrivileges()));
+            labelCouronnes = new QLabel(QString("Nombre de Couronnes: %1").arg(joueur->getNombreCouronnes()));
+            labelCartesNobles = new QLabel(QString("Nombre de Cartes Nobles: %1").arg(joueur->getNombreCartesNobles()));
+            labelCartesReservees = new QLabel(QString("Nombre de Cartes Réservées: %1").arg(joueur->getNbCartesReservees()));
+            labelJetons = new QLabel(QString("Nombre de Jetons: %1").arg(joueur->getNbJetonTotal()))
+            ;
+            labelPriviliges->setStyleSheet("QLabel { background-color: grey; color: white; }");
+            layout->addWidget(labelPriviliges);
+
+            labelCouronnes->setStyleSheet("QLabel { background-color: grey; color: white; }");
+            layout->addWidget(labelCouronnes);
+
+            labelCartesNobles->setStyleSheet("QLabel { background-color: grey; color: white; }");
+            layout->addWidget(labelCartesNobles);
+
+            labelCartesReservees->setStyleSheet("QLabel { background-color: grey; color: white; }");
+            layout->addWidget(labelCartesReservees);
+
+            labelJetons->setStyleSheet("QLabel { background-color: grey; color: white; }");
+            layout->addWidget(labelJetons);
+
+            for (int couleur = 0; couleur < 7; ++couleur) {
+                labelJetonsParCouleur[couleur] = new QLabel(QString("Nombre de %1: %2").arg(getNomCouleur(couleur)).arg(joueur->getNbJeton(couleur)));
+                labelJetonsParCouleur[couleur] ->setStyleSheet(QString("QLabel { background-color: grey; color: %1; }").arg(getCouleurTexte(couleur)));
+                layout->addWidget(labelJetonsParCouleur[couleur]);
+            }
+
         }
-//        if (joueurCourant != nullptr && joueur == joueurCourant) {
-//            labelNom->setStyleSheet("QLabel { background-color: white; color: red; }");
-//        } else {
-//            labelNom->setStyleSheet("QLabel { background-color: white; color: black; }");
-//        }
-//        repaint();
+        if (joueurCourant != nullptr && joueur == joueurCourant) {
+            labelNom->setStyleSheet("QLabel { background-color: white; color: red; }");
+        } else {
+            labelNom->setStyleSheet("QLabel { background-color: white; color: black; }");
+        }
+        repaint();
     }
 
     // fonction pour mettre à jour le joueur
@@ -256,6 +317,9 @@ public slots:
     }
 
 private:
+    QLayout* layout;
+    QGridLayout* layout_cartes;
+    QVBoxLayout* main_layout;
     QLabel *labelNom;
     QLabel *labelPriviliges;
     QLabel *labelCouronnes;

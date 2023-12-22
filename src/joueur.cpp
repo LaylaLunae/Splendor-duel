@@ -229,6 +229,11 @@ const std::vector<Privilege *>& Joueur::getPrivileges() const {
 }
 
 int Joueur::getNombreDePrivileges() const {
+    // Count the number of non-nullptr items using std::count_if and a lambda function
+//    std::size_t countNonNullPtrs = std::count_if(privileges.begin(), privileges.end(),
+//                                                 [](Privilege* ptr) { return ptr != nullptr; });
+//    return countNonNullPtrs;
+
     return privileges.size();
 }
 
@@ -240,18 +245,17 @@ int Joueur::getNombreCartesNobles() const {
     return cartes_noble.size();
 }
 
-// Les maéthodes d'ajouts :
 
-void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {
-    int nombrePointsCarte = carte.getPointsPrestige();
-    int nombreCouronnesCarte = carte.getCourronnes();
+void Joueur::ajouterCarteJoaillerie(CarteJoaillerie* carte) {
+    int nombrePointsCarte = carte->getPointsPrestige();
+    int nombreCouronnesCarte = carte->getCourronnes();
 
     // Ajouter les points de prestige si la carte en a
     if (nombrePointsCarte > 0) {
         points_prestige_total += nombrePointsCarte;
     }
     // Ajouter les points dans la couleur du bijou si la carte en a
-    Couleur couleurBijou = carte.getTypePierre();
+    Couleur couleurBijou = carte->getTypePierre();
     if (Couleur::rien!= couleurBijou) {
         points_prestige_couleurs[static_cast<int>(couleurBijou)] += nombrePointsCarte;
     }
@@ -259,26 +263,32 @@ void Joueur::ajouterCarteJoaillerie(CarteJoaillerie& carte) {
     if (nombreCouronnesCarte > 0) {
         nombre_couronnes += nombreCouronnesCarte;
     }
-    if(carte.getTypePierre()!=Couleur::choix_utilisateur){
-        int j = static_cast<int>(carte.getTypePierre());
+    if(carte->getTypePierre()!=Couleur::choix_utilisateur){
+        int j = static_cast<int>(carte->getTypePierre());
         gemmes_bonus[j]++;
     }
     // Ajouter le nombre de bonus (gemme) si la carte en a
-    if(carte.getTypePierre()!=Couleur::rien){
-        if(carte.getNombrePierre()==1) {
-            int i = static_cast<int>(carte.getTypePierre());
-            gemmes_bonus[i]+=carte.getNombrePierre();
+    if(carte->getTypePierre()!=Couleur::rien){
+        if(carte->getNombrePierre()==1) {
+            int i = static_cast<int>(carte->getTypePierre());
+            gemmes_bonus[i]+=carte->getNombrePierre();
         }
     }
-    CarteJoaillerie* temp = &carte;
-    cartes_main.push_back(const_cast<CarteJoaillerie*>(temp));
+    CarteJoaillerie* temp = carte;
+    cartes_main.push_back(temp);
 }
 
 void Joueur::ajouterCarteNoble(const CarteNoble* carte) {
+    int nombreCouronnesCarte = carte->getCouronne();
+
+    // Ajouter le nombre de couronnes à la variable nombre_couronnes
+    // Alexandre : NON ! La carte noble ne donne QUE du prestige/pouvoir.
+    //nombre_couronnes += nombreCouronnesCarte;
     cartes_noble.push_back(carte);
     // Ajouter les points de prestige de la carte à la variable points_prestige_total
     points_prestige_total += carte->getPointPrestige();
-    info->miseAJourInformations();
+//    info->miseAJourInformations();
+//    info->displayCartes();
 }
 
 void Joueur::ajouterCarteReservee(CarteJoaillerie *carte) {
@@ -299,7 +309,7 @@ void Joueur::ajouterPrivilege(Privilege *privilege) {
     }
 }
 
-// méhotdes pour savoir si un joueur possède un privilège
+
 bool Joueur::hasPrivilege() {
     return !privileges.empty();
 }
@@ -375,32 +385,28 @@ void Joueur::initialiserJoueur() {
     }
 }
 
+void FenetreInformations::displayCartes() {
 
-
-
-// fonction necessaire pour l'interface graphique avec QT.
-void FenetreInformations::displayCartes(Joueur* j) {
-    while (QLayoutItem *item = layout()->takeAt(0)) {
+    while (QLayoutItem *item = layout_cartes->takeAt(0)) {
         if (QWidget *widget = item->widget()) {
             widget->deleteLater();
         }
         delete item;
     }
-    const std::vector<CarteJoaillerie *> cartesJoueur = j->getCartesMain();
+
+    const std::vector<CarteJoaillerie *> cartesJoueur = joueur->getCartesMain();
     for (const CarteJoaillerie *carte: cartesJoueur) {
         //QPushButton *vueCarte = new QPushButton(this);
         VueCarteJoaillerie *vueCarte = new VueCarteJoaillerie(carte, cartesJoueur, this);
-        layout()->addWidget(vueCarte);
+        layout_cartes->addWidget(vueCarte);
     }
-    while (QLayoutItem *item = layout()->takeAt(0)) {
-        if (QWidget *widget = item->widget()) {
-            widget->deleteLater();
-        }
-        delete item;
-    }
-    const std::vector<const CarteNoble*> cartesNobles = j->getCartesNoble();
+
+
+    const std::vector<const CarteNoble*> cartesNobles = joueur->getCartesNoble();
     for (const CarteNoble* cn : cartesNobles) {
         VueCarteNoble* vc = new VueCarteNoble(cn->getID(), Jeu::getJeu().getVueJeu()->getVuePlateau(), this);
-        layout()->addWidget(vc);
+        layout_cartes->addWidget(vc);
     }
+
+    repaint();
 }

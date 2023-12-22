@@ -61,7 +61,7 @@ CarteJoaillerie* IA::melangerEtObtenirDerniereCarte(Pioche& pioche, Joueur& joue
             Obligatoire::remettreJetonSac(&joueur, &plateau, cout.first, joueur.getNbJeton((int) cout.first) - cout.second, cout.second,(int) cout.first);
         }
     }
-    joueur.ajouterCarteJoaillerie(*derniereCarte);  // on ajoute à la main du joueur les bonus
+    joueur.ajouterCarteJoaillerie(derniereCarte);  // on ajoute à la main du joueur les bonus
 
     auto* carte_non_const = const_cast<CarteJoaillerie*>(derniereCarte);
     carte_non_const->actionPouvoir(&plateau, &joueur);

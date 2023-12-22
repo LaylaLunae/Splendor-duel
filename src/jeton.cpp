@@ -28,7 +28,7 @@ void VueJeton::paintEvent(QPaintEvent*  event) {
                     bg_color_tmp = Qt::blue;
                     break;
                 case Couleur::noir:
-                    bg_color_tmp = Qt::gray;
+                    bg_color_tmp = Qt::black;
                     break;
                 case Couleur::blanc:
                     bg_color_tmp = Qt::white;
@@ -55,21 +55,55 @@ void VueJeton::paintEvent(QPaintEvent*  event) {
 //    this->setText(buttonText);
 //    painter.drawText(0, 0, buttonText);
 
+// ---------------- round v1 -----------------
+//    setButtonColors(bg_color,Qt::black);
+//    int h, s, v;
+//    bg_color.getHsv(&h, &s, &v);
+//    setStyleSheet(QString("QPushButton {"
+//                          "    border-radius: 25px;"
+//                          "    background-color: %1;" // Set background color dynamically
+//                          "    color: white;" // Set text color
+//                          "}"
+//                          "QPushButton:hover {"
+//                          "    background-color:%2;" // Change color on hover
+//                          "}").arg(bg_color.name(), QColor::fromHsv(h, s, qMin(255, v + 20)).name()));
+//    QRect rect(0,0,40,40);
+//    QRegion region(rect, QRegion::Ellipse);
+//    setMask(region);
+// -------------- end v1 ----------------------
+
+// ------------------- round v2 -------------------------
+//    Q_UNUSED(event);
+//    setFixedSize(70,70);
+////    painter.setRenderHint(QPainter::Antialiasing, true);
+//    if (isEnabled()) {
+//        painter.setBrush(QColor(bg_color_tmp)); // Set your background color
+//    } else {
+//        painter.setBrush(QColor(bg_color_tmp)); // Set a different color for disabled state
+//    }
+//    painter.setPen(Qt::NoPen);
+//    painter.drawEllipse(rect().adjusted(1, 1, -1, -1)); // Adjust for a 1-pixel border
+//    // Draw the text
+//    painter.setPen(Qt::white);
+//    painter.drawText(rect(), Qt::AlignCenter, text());
+// ------------------- end v2----------------------------
+
+    setFixedSize(40, 40);
     setButtonColors(bg_color,Qt::black);
-    int h, s, v;
-    bg_color.getHsv(&h, &s, &v);
-    setStyleSheet(QString("QPushButton {"
-                          "    border-radius: 25px;"
-                          "    background-color: %1;" // Set background color dynamically
-                          "    color: white;" // Set text color
-                          "}"
-                          "QPushButton:hover {"
-                          "    background-color:%2;" // Change color on hover
-                          "}").arg(bg_color.name(), QColor::fromHsv(h, s, qMin(255, v + 20)).name()));
-    setFixedSize(70,70);
-    QRect rect(0,0,40,40);
+    base_couleur = bg_color_tmp;
+    QRect rect(0,0,30,30);
     QRegion region(rect, QRegion::Ellipse);
     setMask(region);
+//    QPixmap pixmap(size());
+//    pixmap.fill(Qt::transparent); // Fill with a transparent background
+//    QPainter painter(&pixmap);
+//    painter.setRenderHint(QPainter::Antialiasing, true);
+//    painter.setBrush(bg_color_tmp);
+//    painter.setPen(Qt::NoPen);
+//    painter.drawEllipse(rect().adjusted(1, 1, -1, -1));
+//    setIcon(QIcon(pixmap));
+//    setIconSize(size());
+
     QPushButton::paintEvent(event);
 }
 

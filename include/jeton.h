@@ -72,6 +72,7 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 private:
     const Jeton* jeton = nullptr;
+    QColor base_couleur;
     QWidget* parent;
     QPen pen;
     QBrush brush;

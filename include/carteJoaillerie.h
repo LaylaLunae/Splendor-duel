@@ -47,6 +47,7 @@ public:
         setFixedSize(100, 150);
         const CarteJoaillerie* carte = findCarteById(id, cartes);
         if (carte) {
+            carte_rep = carte;
             QString cheminImage = QString::fromStdString(carte->getCheminVersImage());
             setStyleSheet("QPushButton { border-image: url(" + cheminImage + "); }");
         }
@@ -64,24 +65,43 @@ public:
         setFixedSize(100, 150);
         const CarteJoaillerie *carte = findCarteById(id, cartes);
         if (carte) {
+            carte_rep = carte;
             QString cheminImage = QString::fromStdString(carte->getCheminVersImage());
             setStyleSheet("QPushButton { border-image: url(" + cheminImage + "); }");
+            QPixmap pixmap(cheminImage);
+            pixmap.scaled(50, 50);
+            QIcon icon (pixmap);
+            this->setIcon(icon);
+            this->setIconSize(this->size());
         }
         connect(this, SIGNAL(clicked()), this, SLOT(clickedEvent()));
     }
 
-        unsigned int getCarteJoaillerieId() const {
+    unsigned int getCarteJoaillerieId() const {
         return carteJoaillerieId;
     }
 
+    std::map<Couleur, int> getPrix() {
+        if (carte_rep != nullptr) {
+            return carte_rep->getPrix();
+        }
+        return std::map<Couleur, int>();
+    }
+
+    const CarteJoaillerie* getCarte() {return carte_rep;}
+
+signals:
+    void carteClickJ(VueCarteJoaillerie *);
+
+
 private slots:
     void clickedEvent() {
-        // Implémenter la fonction lorsque le bouton est cliqué
-        // Les fonctions mises en œuvre par les membres de l'équipe pourront être ajoutées ici à l'avenir.
+        emit carteClickJ(this);
     }
 
 private:
     unsigned int carteJoaillerieId;
+    const CarteJoaillerie* carte_rep;
 
     const CarteJoaillerie* findCarteById(unsigned int id, const std::vector<const CarteJoaillerie*>& cartes) const {
         for (const auto& carte : cartes) {

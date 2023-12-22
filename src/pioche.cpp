@@ -118,3 +118,148 @@ void Pioche::afficherCartesRevelees(std::ostream &f) {
     }
     f << "\n";
 }
+
+
+VuePioche::VuePioche(Pioche * p1, Pioche * p2, Pioche * p3, std::vector<CarteJoaillerie*> tot_cartes_jo_, QWidget * parent): QWidget(parent) {
+    layoutPioches = new QVBoxLayout;
+    layoutPioche1 = new QHBoxLayout;
+    layoutPioche2 = new QHBoxLayout;
+    layoutPioche3 = new QHBoxLayout;
+    layoutDosPioche = new QVBoxLayout;
+    layoutPlateauCarte = new QHBoxLayout;
+    carteSelectionnee = nullptr;
+    valider = new QPushButton("Valider");
+    vuecartes1 = std::vector<VueCarteJoaillerie*>(0);
+    vuecartes2 = std::vector<VueCarteJoaillerie*>(0);
+    vuecartes3 = std::vector<VueCarteJoaillerie*>(0);
+    //const std::vector<CarteJoaillerie*> test(0);
+    pioches = std::vector<Pioche*>();
+    pioches.push_back(p1);
+    pioches.push_back(p2);
+    pioches.push_back(p3);
+    tot_cartes_jo = std::vector<CarteJoaillerie*>();
+    for (auto vc : tot_cartes_jo_) {tot_cartes_jo.push_back(vc); }
+    vuescartes_tot =    std::vector<std::vector<VueCarteJoaillerie*>>();
+    vuescartes_tot.push_back(vuecartes1);
+    vuescartes_tot.push_back(vuecartes2);
+    vuescartes_tot.push_back(vuecartes3);
+
+    for (size_t row = 0; row < p3->getMaxCartesRevelees(); row++) {
+        std::cout << "Test \n";
+        const CarteJoaillerie* c = p3->cartes_dehors[row];
+        std::cout << "Test2 \n";
+        VueCarteJoaillerie * carte = new VueCarteJoaillerie(c, tot_cartes_jo, this);
+        carte->setStyleSheet("border: 1px solid black;");  // Ajouter une bordure pour la séparation
+        carte->setFixedSize(150, 200);
+        vuecartes3.push_back(carte);
+        layoutPioche3->addWidget(vuecartes3[row]);
+        connect(vuecartes3[row], SIGNAL(carteClickJ(VueCarteJoaillerie*)), this, SLOT(carteClique(VueCarteJoaillerie*)));
+    }
+
+    for (size_t row = 0; row < p2->getMaxCartesRevelees(); row++) {
+        VueCarteJoaillerie * carte = new VueCarteJoaillerie(p2->cartes_dehors[row], tot_cartes_jo, this);
+        carte->setStyleSheet("border: 1px solid black;");  // Ajouter une bordure pour la séparation
+        carte->setFixedSize(150, 200);
+        vuecartes2.push_back(carte);
+        layoutPioche2->addWidget(vuecartes2[row]);
+        connect(vuecartes2[row], SIGNAL(carteClickJ(VueCarteJoaillerie*)), this, SLOT(carteClique(VueCarteJoaillerie*)));
+    }
+
+    for (size_t row = 0; row < p1->getMaxCartesRevelees(); row++) {
+        VueCarteJoaillerie * carte = new VueCarteJoaillerie(p1->cartes_dehors[row], tot_cartes_jo, this);
+        carte->setStyleSheet("border: 1px solid black;");  // Ajouter une bordure pour la séparation
+        carte->setFixedSize(150, 200);
+        vuecartes1.push_back(carte);
+        layoutPioche1->addWidget(vuecartes1[row]);
+        connect(vuecartes1[row], SIGNAL(carteClickJ(VueCarteJoaillerie*)), this, SLOT(carteClique(VueCarteJoaillerie*)));
+    }
+
+    QPushButton * dos1 = new QPushButton("Pioche 1");
+    vuedoscartes.push_back(dos1);
+    vuedoscartes[0]->setStyleSheet("border: 1px solid black;");
+    vuedoscartes[0]->setFixedSize(150, 200);
+    layoutDosPioche->addWidget(vuedoscartes[0]);
+
+    QPushButton * dos2 = new QPushButton("Pioche 2");
+    vuedoscartes.push_back(dos2);
+    vuedoscartes[1]->setStyleSheet("border: 1px solid black;");
+    vuedoscartes[1]->setFixedSize(150, 200);
+    layoutDosPioche->addWidget(vuedoscartes[1]);
+
+    QPushButton * dos3 = new QPushButton("Pioche 3");
+    vuedoscartes.push_back(dos3);
+    vuedoscartes[2]->setStyleSheet("border: 1px solid black;");
+    vuedoscartes[2]->setFixedSize(150, 200);
+    layoutDosPioche->addWidget(vuedoscartes[2]);
+
+    QObject::connect(
+            valider, &QPushButton::clicked,
+            this,
+            &VuePioche::validerCarte);
+
+    layoutPioches->addLayout(layoutPioche3);
+    layoutPioches->addLayout(layoutPioche2);
+    layoutPioches->addLayout(layoutPioche1);
+    layoutPioches->setAlignment(Qt::AlignCenter);
+    layoutPlateauCarte->addLayout(layoutDosPioche);
+    layoutPlateauCarte->addLayout(layoutPioches);
+    layoutPlateauCarte->addWidget(valider);
+
+    layout_pioches = std::vector<QHBoxLayout*>();
+    layout_pioches.push_back(layoutPioche1);
+    layout_pioches.push_back(layoutPioche2);
+    layout_pioches.push_back(layoutPioche3);
+
+    setLayout(layoutPlateauCarte);
+}
+
+void VuePioche::carteClique(VueCarteJoaillerie * c) {
+    carteSelectionnee = c;
+    std::cout<<"Got it! \n";
+}
+
+void VuePioche::validerCarte() {
+    if (carteSelectionnee != nullptr){
+        std::cout<<"\nCarte sel "<<carteSelectionnee->getCarteJoaillerieId()<<"\n";
+        //const CarteJoaillerie* carte_sel_carte = carteSelectionnee->getCarte();
+        const CarteJoaillerie* carte_sel_carte = nullptr;
+        int numero_pioche = carteSelectionnee->getCarte()->getNiveau();
+        carte_sel_carte = pioches[numero_pioche-1]->joueurPrend(carteSelectionnee->getCarteJoaillerieId());
+        Joueur* actif = Jeu::getJeu().getJoueurActuel();
+        std::map<Couleur, int> prix = carteSelectionnee->getPrix();
+        std::vector<int> difference = Obligatoire::calculDifference(actif, prix);
+        bool peut_acheter = Obligatoire::achatCartePossible(actif, difference);
+        if (peut_acheter) {
+            actif->ajouterCarteJoaillerie(const_cast<CarteJoaillerie *>(carte_sel_carte));
+
+            mettreAJour(numero_pioche-1);
+            Jeu::getJeu().getVueJeu()->finiAction(3);
+
+        } else {
+            Jeu::getJeu().getVueJeu()->message("Action", "Vous ne pouvez pas acheter cette carte");
+        }
+        //return carteSelectionnee->getCarteJoaillerieId();
+    }
+    else {
+        std::cout << "\nCarte sel " << "nullptr" << "\n";
+    }
+//        return -1;
+}
+
+void VuePioche::mettreAJour(int index_to_update) {
+    while (QLayoutItem *item = layout_pioches[index_to_update]->takeAt(0)) {
+        if (QWidget *widget = item->widget()) {
+            widget->deleteLater();
+        }
+        delete item;
+    }
+    for (size_t row = 0; row < pioches[index_to_update]->getMaxCartesRevelees(); row++) {
+        VueCarteJoaillerie * carte = new VueCarteJoaillerie(pioches[index_to_update]->cartes_dehors[row], tot_cartes_jo, this);
+        carte->setStyleSheet("border: 1px solid black;");  // Ajouter une bordure pour la séparation
+        carte->setFixedSize(100, 150);
+        vuescartes_tot[index_to_update].push_back(carte);
+        layout_pioches[index_to_update]->addWidget(vuescartes_tot[index_to_update][row]);
+        connect(vuecartes2[row], SIGNAL(carteClickJ(VueCarteJoaillerie*)), this, SLOT(carteClique(VueCarteJoaillerie*)));
+    }
+    repaint();
+}

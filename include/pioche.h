@@ -8,7 +8,8 @@ class CarteJoaillerie;
 class Jeu;
 
 class Pioche {
-    friend class Jeu;
+    friend Jeu;
+    friend class VuePioche;
 private:
     const int numero_pioche; //le numéro de la pioche
     const CarteJoaillerie ** cartes_dans_pioche; // les cartes de la pioche
@@ -28,7 +29,13 @@ public:
     const int getMaxCartesRevelees() const {return max_cartes_revelees;}
     int getMaxCartesPioche() const {return max_cartes_pioche;}
 
-    const CarteJoaillerie * setCartesDansPioche(const CarteJoaillerie * c, int i) {cartes_dans_pioche[i] = c; return cartes_dans_pioche[i];} //change la carte de la pioche
+    const CarteJoaillerie * setCartesDansPioche(const CarteJoaillerie * c, int i) {
+        cartes_dans_pioche[i] = c;
+        std::cout<<"\n              Carte numero  "<<i <<" Elle est nullptr : ";
+        if (c== nullptr)
+            std::cout<<"VRAI";
+        return cartes_dans_pioche[i];
+    }
     const CarteJoaillerie * setCartesDehors(const CarteJoaillerie * c, int i) {cartes_dehors[i] = c; return cartes_dehors[i];}
     //change la carte du tas de cartes révélées
 
@@ -42,5 +49,37 @@ public:
     void afficherCartesRevelees(std::ostream& f = std::cout); //pour l'affichage en console
 
 };
+
+class VuePioche : public QWidget {
+Q_OBJECT
+private:
+    std::vector<VueCarteJoaillerie*> vuecartes1;
+    std::vector<VueCarteJoaillerie*> vuecartes2;
+    std::vector<VueCarteJoaillerie*> vuecartes3;
+    std::vector<std::vector<VueCarteJoaillerie*>> vuescartes_tot;
+    std::vector<QPushButton*> vuedoscartes;
+    QVBoxLayout * layoutPioches;
+    QHBoxLayout * layoutPioche1;
+    QHBoxLayout * layoutPioche2;
+    QHBoxLayout * layoutPioche3;
+    std::vector<QHBoxLayout*> layout_pioches;
+    QVBoxLayout * layoutDosPioche;
+    QHBoxLayout * layoutPlateauCarte;
+    VueCarteJoaillerie * carteSelectionnee;
+    QPushButton * valider;
+    std::vector<Pioche*> pioches;
+    std::vector<CarteJoaillerie*> tot_cartes_jo;
+
+    void mettreAJour(int index_to_update);
+
+private slots:
+    void carteClique(VueCarteJoaillerie *);
+    void validerCarte();
+
+public:
+    VuePioche(Pioche * p1, Pioche * p2, Pioche * p3, std::vector<CarteJoaillerie*> tot_cartes_jo, QWidget * parent = nullptr);
+
+};
+
 
 #endif // PIOCHE_H_INCLUDED

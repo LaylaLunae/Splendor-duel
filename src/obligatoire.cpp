@@ -385,7 +385,7 @@ bool Obligatoire::acheterCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pio
     } while (!achatCartePossible(joueur, difference));
 
     // On ajoute la carte au joueur
-    joueur->ajouterCarteJoaillerie(*(const_cast<CarteJoaillerie*>(carte)));
+    joueur->ajouterCarteJoaillerie(const_cast<CarteJoaillerie*>(carte));
 
     // On retire les jetons au joueur et les remet dans le sac
     for (auto elem = prix.begin(); elem != prix.end(); elem++) {
@@ -470,7 +470,7 @@ std::vector<int> Obligatoire::ajouterJetonsJoueur(Joueur* joueur, std::vector<co
         }
     }
 
-    joueur->getInfo()->miseAJourInformations();
+    //joueur->getInfo()->miseAJourInformations();
     return nb_couleurs;
 }
 

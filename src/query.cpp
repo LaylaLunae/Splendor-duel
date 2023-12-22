@@ -459,6 +459,22 @@ std::vector<int> queryAllJetonIdsForPlateau(sqlite3* db, const std::string& tabl
     return jetonIds;
 }
 
+std::vector<int> queryPlateauCartesNobleFieldVector(sqlite3* db, const std::string& fieldName, int plateauId) {
+    sqlite3_stmt* stmt;
+    std::string query = "SELECT " + fieldName + " FROM PlateauCartesNoble WHERE plateau_id = ?;";
+    std::vector<int> result (0);
+
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+        sqlite3_bind_int(stmt, 1, plateauId);
+
+        while(sqlite3_step(stmt) == SQLITE_ROW) {
+            result.push_back(sqlite3_column_int(stmt, 0));
+        }
+        sqlite3_finalize(stmt);
+    }
+
+    return result;
+}
 
 std::vector<const char*>
         queryAllJetonColorsForPlateau(sqlite3* db, const std::string& tableName) {

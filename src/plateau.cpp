@@ -639,7 +639,8 @@ void Plateau::donnePrivilege(Privilege* p) {
 
 
 const CarteNoble* Plateau::prendreCarteNoble(unsigned int numero) {
-    if (numero > nb_cartes_nobles_MAX) {
+    std::cout<<"prendreCarteNoble avec numero = "<<numero<<std::endl;
+    if (numero >= nb_cartes_nobles_MAX) {
         std::cerr<<"Le numéro de carte noble est trop grand ! ";
         std::cerr<<"Il n'y a que "<<nb_carte_noble<<" sur le plateau!"<<std::endl;
         return nullptr;
@@ -874,7 +875,7 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent),
 }
 
 void VuePlateau::carteNobleClick_Plateau(VueCarteNoble* vc) {
-   const CarteNoble* cn= plateau->prendreCarteNoble(vc->getNumero()) ;
+   const CarteNoble* cn= plateau->prendreCarteNoble(vc->getNumero()-1) ;
    if (cn == nullptr) {
        std::cerr<<"Erreur lors du click : le plateau a renvoye un pointeur null";
        return;
@@ -887,6 +888,8 @@ void VuePlateau::carteNobleClick_Plateau(VueCarteNoble* vc) {
            j->ajouterCarteNoble(cn);
            Jeu::getJeu().getVueJeu()->message("Bravo !", "La carte noble a été prise !");
            affichageCartes();
+           Jeu::getJeu().getVueJeu()->choixCarteNoble(false);
+           Jeu::getJeu().getVueJeu()->finiAction(5);
        } else {
            Jeu::getJeu().getVueJeu()->message("Patience...", "Attendez d'avoir le nombre de couronnes nécessaires pour prendre une carte noble !");
            plateau->cartes_nobles.insert(
@@ -903,8 +906,7 @@ void VuePlateau::carteNobleClick_Plateau(VueCarteNoble* vc) {
                );// push_back(cn);
        plateau->nb_carte_noble++;
    }
-   Jeu::getJeu().getVueJeu()->choixCarteNoble(false);
-    Jeu::getJeu().getVueJeu()->finiAction(5);
+
 }
 
 void VuePlateau::jetonClick_Plateau(VueJeton* vj) {
@@ -1009,11 +1011,11 @@ void VuePlateau::affichageCartes() {
     }
 
 
-    vuesCartes.clear();
+    //vuesCartes.clear();
     for (size_t i = 0; i < plateau->nb_cartes_nobles_MAX; i++) {
         const CarteNoble* pt = plateau->cartes_nobles[i];
         if (pt != nullptr) {
-            vuesCartes[i] = new VueCarteNoble(i, this, this);
+            vuesCartes[i] =new VueCarteNoble(pt->getID(), this, this);
             layout_carte->addWidget(vuesCartes[i], i/2, i%2);
             connect(
                     vuesCartes[i],
@@ -1021,6 +1023,8 @@ void VuePlateau::affichageCartes() {
                     this,
                     SLOT(carteNobleClick_Plateau(VueCarteNoble*))
             );
+        } else {
+            vuesCartes[i] = nullptr;
         }
     }
     repaint();
