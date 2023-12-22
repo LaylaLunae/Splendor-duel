@@ -245,6 +245,18 @@ class Pioche{
 - joueurPrendPioche(): const CarteJoaillerie *
 }
 
+class VuePioche {
+- layoutPioches: QVBoxLayout *
+- layoutPioche1: QHBoxLayout *
+- layoutPioche2: QHBoxLayout *
+- layoutPioche3: QHBoxLayout *
+- layoutDosPioche: QVBoxLayout *
+- layoutPlateauCarte: QHBoxLayout *
+- carteSelectionnee: VueCarteJoaillerie *
+- carteClique(VueCarteJoaillerie *): void
+- validerCarte(): void
+}
+
 class Carte {
 # chemin_vers_image:string
 # point_prestige:int
