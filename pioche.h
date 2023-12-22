@@ -78,7 +78,7 @@ private slots:
 
 public:
     VuePioche(Pioche * p1, Pioche * p2, Pioche * p3, QWidget * parent = nullptr);
-
+    ~VuePioche() = default;
 };
 
 #endif // PIOCHE_H_INCLUDED
