@@ -452,10 +452,8 @@ std::vector<int> queryAllJetonIdsForPlateau(sqlite3* db, const std::string& tabl
             int jetonId = sqlite3_column_int(stmt, 0);
             jetonIds.push_back(jetonId);
         }
-
         sqlite3_finalize(stmt);
     }
-
     return jetonIds;
 }
 
@@ -489,15 +487,12 @@ std::vector<const char*>
         int step = sqlite3_step(stmt);
         while (step == SQLITE_ROW) {
             const  char* res = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
-
             // Duplicate res to a fully functional const char*
             // Begin
             char* duplicate = new char[std::strlen(res) + 1];
-
             // Copy the content to the duplicate
             std::strcpy(duplicate, res);
             // End
-
             std::cout<<res<<",  ";
             //int jetonId = sqlite3_column_int(stmt, 0);i
             jetonColors.push_back(duplicate);
@@ -506,27 +501,10 @@ std::vector<const char*>
             std::cout<<std::endl;
         }
         std::cout<<"\n";
-
         sqlite3_finalize(stmt);
     }
-
     return jetonColors;
 }
 
-// Exemples d'utilisation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//int main() {
-//    sqlite3* db;
-//
-//    int pointsPrestigeTotal = queryJoueurField<int>(db, "points_prestige_total", 1);
-//    std::string pseudo = queryJoueurField<std::string>(db, "pseudo", 1);
-//    bool isIA = queryJoueurField<bool>(db, "is_IA", 1);
-//
-//    bool updateSuccess = updateJoueurField<int>(db, "nombre_couronnes", 5, 1);
-
-//    int joueur1Id = queryJeuField(db, "Joueur1_id", 1);
-//
-//    bool updateSuccess = updateJeuField(db, "Pioche1_id", 5, 1);
-//
-//}
 
 #endif //SPLENDOR_QUERY_H
