@@ -30,7 +30,7 @@ public:
     std::map<Couleur, int> getPrix() const;
     int getNiveau() const;
     int getCouronne() const;
-    const int getID() const;
+    int getID() const;
     bool hasPierre() const;
     Couleur getTypePierre() const;
     void setPierreColor(int index, Couleur couleur);

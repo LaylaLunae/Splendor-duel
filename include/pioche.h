@@ -31,9 +31,12 @@ public:
 
     const CarteJoaillerie * setCartesDansPioche(const CarteJoaillerie * c, int i) {
         cartes_dans_pioche[i] = c;
-        std::cout<<"\n              Carte numero  "<<i <<" Elle est nullptr : ";
-        if (c== nullptr)
-            std::cout<<"VRAI";
+        std::cout<<"              Carte numero  "<<i <<" Elle est nullptr : ";
+        if (c== nullptr) {
+            std::cout << "VRAI\n";
+        } else {
+            std::cout<<"FAUX\n";
+        }
         return cartes_dans_pioche[i];
     }
     const CarteJoaillerie * setCartesDehors(const CarteJoaillerie * c, int i) {cartes_dehors[i] = c; return cartes_dehors[i];}

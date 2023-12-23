@@ -12,10 +12,10 @@ Pioche::Pioche(int np, int mcr, int mcp):numero_pioche(np),
     cartes_dans_pioche = new const CarteJoaillerie*[mcp];
     cartes_dehors = new const CarteJoaillerie*[mcr];
 
-    for (int i = 0; i < mcp; ++i) {
+    for (int i = 0; i < mcp; i++) {
         cartes_dans_pioche[i] = nullptr;
     }
-    for (int i = 0; i < mcr; ++i) {
+    for (int i = 0; i < mcr; i++) {
         cartes_dehors[i] = nullptr;
     }
 }
@@ -147,7 +147,7 @@ VuePioche::VuePioche(Pioche * p1, Pioche * p2, Pioche * p3, std::vector<CarteJoa
     int card_width = 100;
     int card_height = 150;
     for (size_t row = 0; row < p3->getMaxCartesRevelees(); row++) {
-        const CarteJoaillerie* c = p3->cartes_dehors[row];
+        const CarteJoaillerie* c = p3->getCartesDehors(row);
         VueCarteJoaillerie * carte = new VueCarteJoaillerie(c, tot_cartes_jo, this);
         carte->setStyleSheet("border: 1px solid black;");  // Ajouter une bordure pour la séparation
         carte->setFixedSize(card_width, card_height);
@@ -165,7 +165,8 @@ VuePioche::VuePioche(Pioche * p1, Pioche * p2, Pioche * p3, std::vector<CarteJoa
         connect(vuecartes2[row], SIGNAL(carteClickJ(VueCarteJoaillerie*)), this, SLOT(carteClique(VueCarteJoaillerie*)));
     }
 
-    for (size_t row = 0; row < p1->getMaxCartesRevelees(); row++) {
+    int maxp1 = p1->getMaxCartesRevelees();
+    for (size_t row = 0; row < maxp1; row++) {
         VueCarteJoaillerie * carte = new VueCarteJoaillerie(p1->cartes_dehors[row], tot_cartes_jo, this);
         carte->setStyleSheet("border: 1px solid black;");  // Ajouter une bordure pour la séparation
         carte->setFixedSize(card_width, card_height);

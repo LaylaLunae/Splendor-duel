@@ -71,6 +71,7 @@ nombre_jetons_dans_selection(0), vuePlateau(vp){
     nb_privileges = nb_privileges_MAX;
 
     // --------------- Début init carte Noble -----------------
+    /* Charge la bdd ou charge des valeurs alétaoires si bdd introuvable */
     cartes_nobles = std::vector<const CarteNoble*>(nb_cartes_nobles_MAX);
     std::map<Couleur, int> c;
     c.insert(std::make_pair(Couleur::rouge, 3));
@@ -186,6 +187,7 @@ std::string Plateau::etatPlateau() {
 
 bool Plateau::remplissagePlateau(bool avecAffichage) {
     /**
+     * Si avecAffichage est vrai : détail le remplissage dans la console.
      * Retourne faux si le remplissage ne peut pas se faire.
      */
 
@@ -197,7 +199,6 @@ bool Plateau::remplissagePlateau(bool avecAffichage) {
         pointeur_case_libre++;
     }
     if (pointeur_case_libre == nb_jetons_plateau_MAX) {
-        // throwPlateauException("Tous les jetons sont déjà sur le plateau ! ¯\\_(^^')_/¯");
         std::cout << "Tous les jetons sont deja sur le plateau !  \"\\_(^^')_/\"\n";
         return false;
     }
@@ -692,14 +693,12 @@ Plateau::~Plateau() {
 
 const Jeton* Plateau::prendreJeton(unsigned int position_x, unsigned int position_y) {
     if (nb_jetons_plateau == 0) {
-       //throw PlateauException("Aucun jeton dans la selection <('o'<)");
        std::cout<<"Aucun jeton dans la selection <('o'<)"<<"\n";
     }
     unsigned int position_dans_plateau = nombre_jetons_par_cote_de_plateau  *  (position_y-1) + position_x-1;
 
 
     if (jetons[position_dans_plateau] == nullptr) {
-            //throw PlateauException("Aucun jeton ici... <(-_-)>");
             std::cout<<"Aucun jeton ici... <(-_-)>"<<"\n";
     }
 

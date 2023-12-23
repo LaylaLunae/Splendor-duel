@@ -400,7 +400,7 @@ void initCarteJoaillerie(sqlite3* db, std::vector<const CarteJoaillerie*>* carte
 void initCarteJoaillerieNonConst(sqlite3* db, std::vector<CarteJoaillerie*>* cartes) {
     for (int id = 1; id <= 67; id++) {
         CarteJoaillerieData data = queryCarteJoaillerie(db, id);
-
+        std::cout<<"------ création cartes id : "<< id<<"\n";
         // Convertissez les données interrogées au format requis
         std::array<Couleur, 2> pierres = {static_cast<Couleur>(data.pierres[0]), static_cast<Couleur>(data.pierres[1])};
         std::map<Couleur, int> prix;
@@ -911,6 +911,7 @@ std::vector<Joueur*> continuerLaPartie(sqlite3* db,
     }
     plateau.setPrivileges(plateauPrivileges);
 
+    // ------------------ Jetons du plateau ------------------
     std::vector<const char*> jc = queryAllJetonColorsForPlateau(db, "PlateauJetonsColors");
     unsigned int index = 0;
     std::vector<std::vector<int>> matrix = plateau.getMatrix();
@@ -919,6 +920,17 @@ std::vector<Joueur*> continuerLaPartie(sqlite3* db,
 
         //plateau.setJetonsByColor(color, plateau.getMatrix()[index%5][index/5]-1);
         plateau.setJetonsByColor(color, index);
+        index++;
+    }
+
+    // ------------------ Jetons du sac ---------------
+    jc = queryAllJetonColorsForPlateau(db, "PlateauJetonsColorsSac");
+    index = 0;
+    for (auto color : jc) {
+        std::cout<<"index sac : "<<index<<" : "<<color<<std::endl;
+
+        //plateau.setJetonsByColor(color, plateau.getMatrix()[index%5][index/5]-1);
+        plateau.setJetonsByColorSac(color, index);
         index++;
     }
     return joueur_resultat;
@@ -930,18 +942,23 @@ void sauvegarderPartie(sqlite3* db,
                        const Jeu& jeu,
                        const Joueur& joueur1,
                        const Joueur& joueur2,
-                       std::vector<Pioche*> pioches,
+                       std::vector<Pioche*>* pioches,
                        const Plateau& plateau) {
 
     // 0 先清空之前的信息
     clearAndInitializeTables(db);
 
     // 1 存储和Pioche有关的信息
-    for (Pioche* pioche : pioches) {
+    const CarteJoaillerie* tmp = nullptr;
+    int id_tmp = 0;
+    for (Pioche* pioche : *pioches) {
         // 存储 cartes_dans_pioche
-        for (int i = 0; i < pioche->getMaxCartesPioche(); ++i) {
-            if (pioche->getCartesDansPioche(i) != nullptr)
-                insertCarteInPioche(db, "CartesDansPioche", pioche->getNumeroPioche(), pioche->getCartesDansPioche(i)->getID());
+        for (int i = 0; i < pioche->getMaxCartesPioche(); i++) {
+            tmp = pioche->getCartesDansPioche(i);
+            if (tmp != nullptr) {
+                id_tmp = tmp->getID();
+                insertCarteInPioche(db, "CartesDansPioche", pioche->getNumeroPioche(), id_tmp);
+            }
         }
         // 存储 cartes_dehors
         for (int i = 0; i < pioche->getMaxCartesRevelees(); ++i) {
@@ -1273,7 +1290,49 @@ void sauvegarderPartie(sqlite3* db,
             sqlite3_finalize(stmtPlateauJetonColors);
         }
     }
-}
+
+    // ---------------------------------  Sauvegarde de la couleur des jetons du sac ------------
+    for (auto jeton : plateau.getJetonsSac()) {
+        if (jeton != nullptr) {
+
+            // ---------------- Utilisation de la table PlateauJetonsColorsSac non null --------------------
+            std::string updateOrInsertColor = R"(INSERT INTO PlateauJetonsColorsSac(colors) VALUES (?);)";
+            sqlite3_stmt *stmtPlateauJetonColors;
+            if (sqlite3_prepare_v2(db, updateOrInsertColor.c_str(), -1, &stmtPlateauJetonColors, nullptr) !=
+                SQLITE_OK) {
+                std::cerr << "Error preparing statement for PlateauJetonsColorsSac: " << sqlite3_errmsg(db) << std::endl;
+                return;
+            }
+
+            sqlite3_bind_text(stmtPlateauJetonColors, 1, jeton->getCouleurString().c_str(), -1, SQLITE_STATIC);
+
+            if (sqlite3_step(stmtPlateauJetonColors) != SQLITE_DONE) {
+                std::cerr << "Error executing statement for PlateauJetonsColorsSac: " << sqlite3_errmsg(db) << std::endl;
+            }
+
+            sqlite3_finalize(stmtPlateauJetonColors);
+
+        } else {
+            // ---------------- Utilisation de la table PlateauJetonsColorsSac null --------------------
+            std::string updateOrInsertColor = R"(INSERT INTO PlateauJetonsColorsSac(colors) VALUES (?);)";
+            sqlite3_stmt *stmtPlateauJetonColors;
+            if (sqlite3_prepare_v2(db, updateOrInsertColor.c_str(), -1, &stmtPlateauJetonColors, nullptr) !=
+                SQLITE_OK) {
+                std::cerr << "Error preparing statement for PlateauJetonsColors: " << sqlite3_errmsg(db) << std::endl;
+                return;
+            }
+
+            sqlite3_bind_text(stmtPlateauJetonColors, 1, "", -1, SQLITE_STATIC);
+
+            if (sqlite3_step(stmtPlateauJetonColors) != SQLITE_DONE) {
+                std::cerr << "Error executing statement for PlateauJetonsColors: " << sqlite3_errmsg(db) << std::endl;
+            }
+
+            sqlite3_finalize(stmtPlateauJetonColors);
+        }
+    }
+
+    }
 
 /*
  *
@@ -1291,6 +1350,10 @@ void sauvegarderPartie(sqlite3* db,
 // ----------------------- Partie Vue Jeu --------------------
 VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
 
+    // ---------------- bg color ------------
+    //setStyleSheet("background-color: #736f72;");
+
+
     // ---------------------- init bdd  ---------------------
     if (sqlite3_open("../base.db", &db) != SQLITE_OK) {
         std::cerr << "Can't open database, from VueJeu constructor: " ;
@@ -1299,33 +1362,38 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
 
     // --------------------- init pioches et cartes -----------------
     cartesJoaillerie = std::vector<CarteJoaillerie*>(0);
-    pioche1 = new Pioche(1, 5, 30);
+    pioche1 = new Pioche(1, 5, 31);
     pioche2 = new Pioche(2, 4, 24);
     pioche3 = new Pioche(3, 3, 13);
     pioches  = std::vector<Pioche*>(0);
-    pioches.push_back(pioche1);
-    pioches.push_back(pioche2);
-    pioches.push_back(pioche3);
     initCarteJoaillerieNonConst(db, &cartesJoaillerie);
     int niveau = 1;
-    for (size_t i = 0; i <= 30 ; i ++) {
-        pioche1->setCartesDansPioche(cartesJoaillerie[i], i);
+    const CarteJoaillerie* tmp = nullptr;
+    for (int i = 0; i < 30 ; i ++) {
+        tmp = pioche1->setCartesDansPioche(cartesJoaillerie[i], i);
+        if (tmp == nullptr) std::cerr<<"---- init VueJeu : CarteJo nulle\n";
     }
     niveau++;
-    for (size_t i = 31; i <= 54 ; i ++) {
-        pioche2->setCartesDansPioche(cartesJoaillerie[i], i-31);
+    for (int i = 30; i < 54 ; i ++) {
+        tmp = pioche2->setCartesDansPioche(cartesJoaillerie[i], i-30);
+        if (tmp == nullptr) std::cerr<<"---- init VueJeu : CarteJo nulle\n";
     }
     niveau++;
-    for (size_t i = 55; i <= 67 ; i ++) {
-        pioche3->setCartesDansPioche(cartesJoaillerie[i], i-55);
+    int index_dans_pioche3 = 0;
+    for (int i_ = 54; i_ < 67 ; i_ ++) {
+        tmp = pioche3->setCartesDansPioche(cartesJoaillerie[i_], index_dans_pioche3);
+        if (tmp == nullptr) std::cerr<<"---- init VueJeu : CarteJo nulle\n";
+        index_dans_pioche3++;
+        tmp = nullptr;
     }
+
     pioche1->distribution();
     pioche2->distribution();
     pioche3->distribution();
 
-    // ------------------ init vuePlateau ------------
-    vue_plateau = new VuePlateau(this);
-
+    pioches.push_back(pioche1);
+    pioches.push_back(pioche2);
+    pioches.push_back(pioche3);
 
     // ---------------- init layout ----------------
     layout_bas = new QHBoxLayout();
@@ -1376,6 +1444,7 @@ void VueJeu::dessinerPartie() {
     // ------------------ layout centre --------------
     layout_centre->addWidget(vueJoueur1);
     layout_centre->addWidget(vueJoueur2);
+
 
 
     // ---------------------- update widgets ------------------
@@ -1529,6 +1598,10 @@ void VueJeu::deleteLayout(QLayout* layout) {
 }
 
 void VueJeu::boutonNouvellePartie() {
+    // ------------------ init vuePlateau ------------
+    vue_plateau = new VuePlateau(this);
+
+    // ------------------- init partie --------------------
     deleteLayout(layout_main);
     this->choixDesJoueurs();
     layout_main->addLayout(layout_choix_joueurs);
@@ -1591,8 +1664,11 @@ void VueJeu::initJoueurs(bool j1EstHumain, bool j2EstHumain) {
 }
 
 void VueJeu::boutonChargerPartie() {
+    // ------------------ init vuePlateau ------------
+    vue_plateau = new VuePlateau(this);
+
     // ----------------- Load dernière partie ------------
-    // Récupération des vecteurs cartes nobles et cartes joailleries
+    // Récupération du vecteur cartes nobles
     std::vector<const CarteNoble*> cartesNoble = vue_plateau->getPlateau()->getCartesNobles();
 
     deleteLayout(layout_main);
@@ -1602,9 +1678,7 @@ void VueJeu::boutonChargerPartie() {
             db,
             cartesJoaillerie,
             cartesNoble,
-            //cartesDansPioche, cartesDehors,
             jeu,
-//            j1, j2,
             pioches,
             *vue_plateau->getPlateau(),
             vue_plateau->getPlateau()->getPrivileges()
@@ -1628,6 +1702,8 @@ void VueJeu::boutonChargerPartie() {
     layout_main->addLayout(layout_jeu);
     setLayout(layout_main);
     repaint();
+
+    std::cout<<vue_plateau->getPlateau()->etatPlateau();
 }
 
 void VueJeu::boutonSauvegardeClick() {
@@ -1635,7 +1711,7 @@ void VueJeu::boutonSauvegardeClick() {
      * Méthode appelée pour sauvegarder la partie en cours, quand le bouton
      * est appuyé.
      */
-    sauvegarderPartie(db, *jeu, *j1,*j2, pioches, *vue_plateau->getPlateau());
+    sauvegarderPartie(db, *jeu, *j1,*j2, &pioches, *vue_plateau->getPlateau());
 }
 
 void VueJeu::boutonActionPrivilege() {

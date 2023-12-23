@@ -177,9 +177,35 @@ public:
         jetons[index] =new const Jeton(jt,  c, 0, index%5+1, index*5+1);
     }
 
+    void setJetonsByColorSac(const char* color, unsigned  int index) {
+        /*
+         * index doit être compris entre [0, 24]
+         */
+        delete sac[index];
+        if (std::strcmp("", color) == 0) {
+            sac[index] = nullptr;
+            return;
+        }
+
+        JetonType jt;
+        if (std::strcmp( "Or",color) == 0) {
+            // equals
+            jt = JetonType::Or;
+        } else {jt = JetonType::Gemme;}
+        Couleur c = couleurMapFirstCap.find(*(new std::string(color)))->second;
+        std::cout<<"Recu "<<color<<" - "<<std::endl;
+        sac[index] =new const Jeton(jt,  c, 0, index%5+1, index*5+1);
+    }
+
     std::vector<const Jeton*> getJetons() const {
         std::vector<const Jeton*> jetonsCopy;
         for (unsigned int i = 0; i < nb_jetons_plateau_MAX; ++i) { jetonsCopy.push_back(jetons[i]); }
+        return jetonsCopy;
+    }
+
+    std::vector<const Jeton*> getJetonsSac() const {
+        std::vector<const Jeton*> jetonsCopy;
+        for (unsigned int i = 0; i < nb_jetons_plateau_MAX; ++i) { jetonsCopy.push_back(sac[i]); }
         return jetonsCopy;
     }
 

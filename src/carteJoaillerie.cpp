@@ -25,7 +25,7 @@ int CarteJoaillerie::getCouronne() const {
     return couronne;
 }
 
-const int CarteJoaillerie::getID() const {
+int CarteJoaillerie::getID() const {
     return id;
 }
 
