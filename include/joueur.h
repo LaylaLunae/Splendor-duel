@@ -170,12 +170,12 @@ class FenetreInformations : public QWidget {
 Q_OBJECT
 public:
     FenetreInformations(Joueur *j, QWidget *parent = nullptr) : QWidget(parent), joueur(j) {
-        setFixedSize(400, 400);
+        //setFixedSize(400, 400);
         setWindowTitle("Informations du Joueur");
 
         layout = new QVBoxLayout();
         layout_cartes = new QGridLayout();
-        main_layout = new QVBoxLayout(this);
+        main_layout = new QHBoxLayout(this);
         miseAJourInformations();
 // nous voulons afficher les différentes cartes acheter par le joueur
         displayCartes();
@@ -253,7 +253,7 @@ public slots:
 private:
     QLayout* layout;
     QGridLayout* layout_cartes;
-    QVBoxLayout* main_layout;
+    QHBoxLayout* main_layout;
     QLabel *labelNom;
     QLabel *labelPriviliges;
     QLabel *labelCouronnes;

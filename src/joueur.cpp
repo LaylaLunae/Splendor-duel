@@ -390,16 +390,19 @@ void FenetreInformations::displayCartes() {
         }
         delete item;
     }
+    int i = 0;
     const std::vector<CarteJoaillerie *> cartesJoueur = joueur->getCartesMain();
     for (const CarteJoaillerie *carte: cartesJoueur) {
         //QPushButton *vueCarte = new QPushButton(this);
         VueCarteJoaillerie *vueCarte = new VueCarteJoaillerie(carte, cartesJoueur, this);
-        layout_cartes->addWidget(vueCarte);
+        layout_cartes->addWidget(vueCarte, i/4, i%4);
+        i++;
     }
     const std::vector<const CarteNoble*> cartesNobles = joueur->getCartesNoble();
     for (const CarteNoble* cn : cartesNobles) {
         VueCarteNoble* vc = new VueCarteNoble(cn->getID(), Jeu::getJeu().getVueJeu()->getVuePlateau(), this);
-        layout_cartes->addWidget(vc);
+        layout_cartes->addWidget(vc, i/4, i%4);
+        i++;
     }
     repaint();
 }
