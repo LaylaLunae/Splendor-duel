@@ -398,14 +398,35 @@ void initCarteJoaillerie(sqlite3* db, std::vector<const CarteJoaillerie*>* carte
 
 
 void initCarteJoaillerieNonConst(sqlite3* db, std::vector<CarteJoaillerie*>* cartes) {
-    for (int id = 1; id <= 67; ++id) {
+    for (int id = 1; id <= 67; id++) {
         CarteJoaillerieData data = queryCarteJoaillerie(db, id);
 
         // Convertissez les données interrogées au format requis
         std::array<Couleur, 2> pierres = {static_cast<Couleur>(data.pierres[0]), static_cast<Couleur>(data.pierres[1])};
         std::map<Couleur, int> prix;
+        Couleur couleur;
         for (const auto& p : data.prix) {
-            prix[static_cast<Couleur>(p.first)] = p.second;
+            switch (p.first) {
+                case 1:
+                    couleur = Couleur::rouge;
+                    break;
+                case 2:
+                    couleur= Couleur::bleu;
+                    break;
+                case 3:
+                    couleur= Couleur::vert;
+                    break;
+                case 4:
+                    couleur= Couleur::blanc;
+                    break;
+                case 5:
+                    couleur= Couleur::noir;
+                    break;
+                case 6:
+                    couleur= Couleur::rose;
+                    break;
+            }
+            prix[couleur] = p.second;
         }
 
         std::string imagePath = "../images/" + (id < 10 ? "0" + std::to_string(id) : std::to_string(id)) + ".png";
@@ -1613,9 +1634,9 @@ void VueJeu::boutonRemplirPlateau() {
 
 void VueJeu::boutonAcheterCarte() {
     desactiverOuActiverBouton(false);
-    //vue_plateau->affichageJetons(false);
+    if (checkPlateau()) vue_plateau->affichageJetons(false);
     vue_plateau->desactiverOuActiverLesJetons(false);
-    finiAction(3);
+    //finiAction(3);
 }
 
 void VueJeu::boutonReserverCarte() {

@@ -41,6 +41,7 @@ public:
     static void libereJeu();
 
     VueJeu* getVueJeu() {return vue_jeu;}
+    void setVueJeu(VueJeu* vj) {vue_jeu = vj;}
     Joueur* getJoueurActuel() const {return joueur_actuel;}
     Joueur* getJoueurGagnant() const {return joueur_gagnant;}
     void setJoueurActuel(Joueur* joueur) {joueur_actuel = joueur;}

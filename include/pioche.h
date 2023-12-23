@@ -70,7 +70,7 @@ private:
     std::vector<Pioche*> pioches;
     std::vector<CarteJoaillerie*> tot_cartes_jo;
 
-    void mettreAJour(int index_to_update);
+    void mettreAJour(int index_to_update, int index_carte);
 
 private slots:
     void carteClique(VueCarteJoaillerie *);

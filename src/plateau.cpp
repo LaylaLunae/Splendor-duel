@@ -1016,7 +1016,7 @@ void VuePlateau::affichageCartes() {
         const CarteNoble* pt = plateau->cartes_nobles[i];
         if (pt != nullptr) {
             vuesCartes[i] =new VueCarteNoble(pt->getID(), this, this);
-            layout_carte->addWidget(vuesCartes[i], i/2, i%2);
+            layout_carte->addWidget(vuesCartes[i], 0, i);
             connect(
                     vuesCartes[i],
                     SIGNAL(carteClick(VueCarteNoble*)),

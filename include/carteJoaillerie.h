@@ -69,7 +69,7 @@ public:
             QString cheminImage = QString::fromStdString(carte->getCheminVersImage());
             setStyleSheet("QPushButton { border-image: url(" + cheminImage + "); }");
             QPixmap pixmap(cheminImage);
-            pixmap.scaled(50, 50);
+            pixmap.scaled(100, 150);
             QIcon icon (pixmap);
             this->setIcon(icon);
             this->setIconSize(this->size());
