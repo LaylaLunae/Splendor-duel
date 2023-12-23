@@ -13,7 +13,7 @@ enum PrivilegeStatus {
 class Privilege {
 public:
     Privilege(int id) : status(NONE),id(id) {}
-    PrivilegeStatus getStatus();
+    PrivilegeStatus getStatus()  ;
     void setStatus(PrivilegeStatus p);
     int getID() const;
 
@@ -29,16 +29,20 @@ public:
         privilege = p;
         setFixedSize(50,50);
         connect(this,SIGNAL(clicked()),this,SLOT(clickedEvent()));
+        QPalette palette = this->palette();
+        palette.setColor(QPalette::Button, QColor("#FFB000"));
+        palette.setColor(QPalette::ButtonText, Qt::black);
+        setPalette(palette);
+        setText("Privilège");
         update();
-        //setCheckable(false);
     };
-    explicit VuePrivilege(QWidget *parent = nullptr):QPushButton(parent){
-        setBackgroundRole(QPalette::Base);
-        setAutoFillBackground(true);
-        setFixedSize(50, 50);
-        connect(this, SIGNAL(clicked()), this, SLOT(clickedEvent()));
-        setCheckable(false);
-    };
+//    explicit VuePrivilege(QWidget *parent = nullptr):QPushButton(parent){
+//        setBackgroundRole(QPalette::Base);
+//        setAutoFillBackground(true);
+//        setFixedSize(50, 50);
+//        connect(this, SIGNAL(clicked()), this, SLOT(clickedEvent()));
+//        setCheckable(false);
+//    };
 
     const Privilege* getPrivilege() const {
         return privilege;

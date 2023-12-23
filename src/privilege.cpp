@@ -4,7 +4,7 @@
 #include "../include/jeu.h"
 //#include "../include/privilege.h"
 
-PrivilegeStatus Privilege::getStatus() {
+PrivilegeStatus Privilege::getStatus()  {
     return status;
 }
 
@@ -18,9 +18,12 @@ int Privilege::getID() const {
 
 
 void VuePrivilege::paintEvent(QPaintEvent *event) {
-
     QPalette palette = this->palette();
-    palette.setColor(QPalette::Button, Qt::white);
+    palette.setColor(QPalette::Button, QColor("beige"));
+    palette.setColor(QPalette::ButtonText, Qt::black);
     setPalette(palette);
+//    QPalette palette = this->palette();
+//    palette.setColor(QPalette::Button, Qt::white);
+//    setPalette(palette);
     QPushButton::paintEvent(event);
 }

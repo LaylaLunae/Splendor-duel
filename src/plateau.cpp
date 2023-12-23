@@ -200,6 +200,11 @@ bool Plateau::remplissagePlateau(bool avecAffichage) {
     }
     if (pointeur_case_libre == nb_jetons_plateau_MAX) {
         std::cout << "Tous les jetons sont deja sur le plateau !  \"\\_(^^')_/\"\n";
+        Jeu::getJeu().getVueJeu()->message("Action", "Le plateau est déjà rempli !");
+        return false;
+    }
+    if (nb_jetons_sac == 0) {
+        Jeu::getJeu().getVueJeu()->message("Action", "Aucun jeton dans le sac !");
         return false;
     }
 

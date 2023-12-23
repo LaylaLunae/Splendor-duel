@@ -1621,11 +1621,9 @@ void VueJeu::boutonJoueurJoueur() {
 
 void VueJeu::boutonValiderAction() {
     if (action_en_cours == 1) {
-        //if (checkPlateau()) {
-            vue_plateau->getPlateau()->remplissagePlateau();
-            vue_plateau->affichageJetons();
-        //}
-    } else if (action_en_cours == 2) {
+        vue_plateau->getPlateau()->remplissagePlateau();
+        vue_plateau->affichageJetons();
+    } else if (action_en_cours == 2 || action_en_cours==0) {
         vue_plateau->actionValiderSelection();
     }else if (action_en_cours == 3) {
         vue_pioche->validerCarte();
@@ -1722,6 +1720,7 @@ void VueJeu::boutonActionPrivilege() {
     vue_plateau->getPlateau()->setMaxSelectionPossible(1, false, false) ;
     vue_plateau->affichageJetons(true);
     finiAction(0);
+    action_en_cours = 0;
 }
 
 void VueJeu::boutonRemplirPlateau() {
@@ -1732,9 +1731,13 @@ void VueJeu::boutonRemplirPlateau() {
        desactiverOuActiverBouton(false);
         bouton_depenser_privilege->setEnabled(false);
         vue_plateau->affichageJetons();
-    } else {
-       message("Action", "Le plateau est déjà rempli !");
-   }
+        Joueur* actif = jeu->getJoueurActuel();
+
+        // ---- Donner un privilège à l'opposant ----
+        Obligatoire::donnerPrivilegeAdversaire(actif, vue_plateau->getPlateau());
+        actif->getAdversaire()->getInfo()->miseAJourInformations();
+        vue_plateau->affichagePrivileges();
+    }
     std::cout<<vue_plateau->getPlateau()->etatPlateau();
     finiAction(1);
 }

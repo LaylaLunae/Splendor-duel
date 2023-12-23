@@ -262,6 +262,7 @@ public:
 
     void affichageJetons(bool  etat_actif=false); // à appeler si chargement mémoire
     void affichageCartes();
+    void affichagePrivileges();
     void actionValiderSelection();
 
     void desactiverOuActiverLesJetons(bool nouvel_etat) {
@@ -290,7 +291,6 @@ private:
     std::vector<VuePrivilege*> vuesPrivileges;
 
     void miseAJourJetons();
-    void affichagePrivileges();
 
 
 

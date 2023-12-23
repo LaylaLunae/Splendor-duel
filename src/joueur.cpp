@@ -311,15 +311,16 @@ bool Joueur::hasPrivilege() {
     return !privileges.empty();
 }
 // méthode pour enlever un privilège d'un joueur
-Privilege Joueur::removePrivilege() {
+ Privilege Joueur::removePrivilege() {
     for (int i = 0; i < MAX_PRIVILEGES; i++) {
         if (privileges[i]->getStatus() != PrivilegeStatus::NONE) {
-            Privilege* tmp = privileges[i];
+            const Privilege* tmp = privileges[i];
             privileges[i]->setStatus(PrivilegeStatus::NONE);
             return *tmp;
         }
     }
-    throw std::runtime_error("No privilege to remove");
+    //throw std::runtime_error("No privilege to remove");
+
 }
 
 

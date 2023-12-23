@@ -109,10 +109,10 @@ public:
     void ajouterCarteJoaillerie(CarteJoaillerie* carte);
     void ajouterCarteNoble(const CarteNoble* carte);
     void ajouterCarteReservee(CarteJoaillerie* carte);
-    void ajouterPrivilege(Privilege* privilege);
+    void ajouterPrivilege( Privilege* privilege);
 
     bool hasPrivilege();
-    Privilege removePrivilege();
+    Privilege  removePrivilege();
 
     // Méthode pour vérifier si le joueur a le droit de jouer à nouveau.
     bool peutRejouer() const;
