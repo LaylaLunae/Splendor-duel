@@ -354,7 +354,41 @@ class VueCarteJoaillerie {
   - findCarteById(unsigned int id, const std::vector< CarteJoaillerie*>& cartes): const CarteJoaillerie*
 }
 
+class VueCarteNoble {
+  - vue_plateau: VuePlateau*
+  - carte: const CarteNoble*
+  - numero: unsigned int
+  - parent: QWidget*
+  + VueCarteNoble(unsigned int n, VuePlateau* vp, QWidget* parent = nullptr)
+  + getNumero(): unsigned int
+  <<signal>> - carteClick(VueCarteNoble*): void
+  <<slot>> - clickedEvent(): void
+}
 
+class VueJeton {
+  - jeton: const Jeton*
+  - pos_x: unsigned int
+  - pos_y: unsigned int
+  - is_selected: bool
+  - parent: QWidget*
+  - base_couleur: QColor
+  - pen: QPen
+  - brush: QBrush
+  - setButtonColors(backgroundColor : const QColor&, texteColor : const QColor&) : void
+  + VueJeton(const Jeton* j, unsigned int x, unsigned int y, QWidget* parent = nullptr)
+  + getJeton(): const Jeton*
+  + setJeton(const Jeton* j): void
+  + getX(): unsigned int
+  + getY(): unsigned int
+  + setSelected(bool s): void
+  # paintEvent(QPaintEvent *event): void
+  <<signal>> - jetonClick(VueJeton*): void
+  <<slot>> - clickedEvent(): void
+}
+
+Jeton "*" --- "1" VueJeton
+CarteNoble "*" --- "1" VueCarteNoble
+CarteJoaillerie "*"--- "1"VueCarteJoaillerie
 
 Joueur <|-- IA
 Joueur <|-- Humain
