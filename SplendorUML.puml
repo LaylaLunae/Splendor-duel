@@ -338,6 +338,24 @@ class Obligatoire {
 {static} donnerPrivilegeAdversaire(Joueur* joueur, Plateau* plateau)
 }
 
+
+class VueCarteJoaillerie {
+  - carteJoaillerieId: unsigned int
+  - carte_rep: const CarteJoaillerie*
+  + VueCarteJoaillerie(unsigned int id, const std::vector<const CarteJoaillerie*> cartes, QWidget* parent = nullptr)
+  + VueCarteJoaillerie(const CarteJoaillerie* c, const std::vector<CarteJoaillerie*> cartes, QWidget* parent = nullptr)
+  + getCarteJoaillerieId(): unsigned int
+  + getPrix(): std::map<Couleur, int>
+  + getCarte(): const CarteJoaillerie*
+  + carteClickJ(VueCarteJoaillerie*): void
+  <<signal>> + carteClickJ(VueCarteJoaillerie*): void
+  <<slot>> - clickedEvent(): void
+  - findCarteById(unsigned int id, const std::vector<const CarteJoaillerie*>& cartes): const CarteJoaillerie*
+  - findCarteById(unsigned int id, const std::vector< CarteJoaillerie*>& cartes): const CarteJoaillerie*
+}
+
+
+
 Joueur <|-- IA
 Joueur <|-- Humain
 Joueur *-- FenetreInformations
