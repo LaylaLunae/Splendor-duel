@@ -1333,6 +1333,7 @@ VueJeu::VueJeu(Jeu* jeu, QWidget *parent): QWidget(parent),jeu(jeu){
     layout_main = new QVBoxLayout(this);
     layout_jeu = new QVBoxLayout();
     layout_menu = new QVBoxLayout();
+    layout_pioche = new QHBoxLayout();
 
 
 
@@ -1374,7 +1375,6 @@ void VueJeu::dessinerPartie() {
 
     // ------------------ layout centre --------------
     layout_centre->addWidget(vueJoueur1);
-    layout_centre->addWidget(vue_plateau);
     layout_centre->addWidget(vueJoueur2);
 
 
@@ -1386,18 +1386,21 @@ void VueJeu::dessinerPartie() {
     vueJoueur2->show();
 
     // ---------------- Layout Choix Action ---------------
+    layout_choix_actions = new QVBoxLayout();
     layout_top = new QHBoxLayout();
 
     // ------------- connecter les layouts -------------
-    layout_bas->addWidget(bouton_sauvegarde);
-
+    layout_choix_actions->addWidget(bouton_sauvegarde);
 
     vue_pioche = new VuePioche(pioche1, pioche2, pioche3, cartesJoaillerie, this);
 
     afficherChoix();
 
-    layout_top->addWidget(vue_pioche);
-
+    layout_pioche->addWidget(vue_plateau);
+    //layout_top->addLayout(layout_choix_actions);
+    layout_pioche->addWidget(vue_pioche);
+    layout_top->addLayout(layout_choix_actions);
+    layout_top->addLayout(layout_pioche);
     layout_jeu->addLayout(layout_top);
     layout_jeu->addLayout(layout_centre);
     layout_jeu->addLayout(layout_bas);
@@ -1444,6 +1447,7 @@ void VueJeu::afficherChoix() {
     bouton_acheter_carte = new QPushButton("Acheter carte");
     bouton_reserver_carte = new QPushButton("Réserver carte");
     bouton_remplir_plateau = new QPushButton("Remplir plateau");
+    bouton_valider = new QPushButton("Valider\naction");
 
     // connect
     QObject::connect(
@@ -1477,21 +1481,28 @@ void VueJeu::afficherChoix() {
             this,
             &VueJeu::boutonReserverCarte
     );
-    //
+    QObject::connect(
+            bouton_valider,
+            &QPushButton::clicked,
+            this,
+            &VueJeu::boutonValiderAction
+    );
 
     bouton_depenser_privilege->show();
     bouton_prendre_jeton->show();
     bouton_acheter_carte->show();
     bouton_reserver_carte->show();
     bouton_remplir_plateau->show();
+    bouton_valider->show();
 
     setEtatBoutonPrivilege();
 
-    layout_top->addWidget(bouton_depenser_privilege);
-    layout_top->addWidget(bouton_prendre_jeton);
-    layout_top->addWidget(bouton_acheter_carte);
-    layout_top->addWidget(bouton_reserver_carte);
-    layout_top->addWidget(bouton_remplir_plateau);
+    layout_choix_actions->addWidget(bouton_depenser_privilege);
+    layout_choix_actions->addWidget(bouton_prendre_jeton);
+    layout_choix_actions->addWidget(bouton_acheter_carte);
+    layout_choix_actions->addWidget(bouton_reserver_carte);
+    layout_choix_actions->addWidget(bouton_remplir_plateau);
+    layout_choix_actions->addWidget(bouton_valider);
 }
 
 void VueJeu::setEtatBoutonPrivilege() {
@@ -1532,6 +1543,19 @@ void VueJeu::boutonJoueurJoueur() {
     layout_main->addLayout(layout_jeu);
     setLayout(layout_main);
     repaint();
+}
+
+void VueJeu::boutonValiderAction() {
+    if (action_en_cours == 1) {
+        //if (checkPlateau()) {
+            vue_plateau->getPlateau()->remplissagePlateau();
+            vue_plateau->affichageJetons();
+        //}
+    } else if (action_en_cours == 2) {
+        vue_plateau->actionValiderSelection();
+    }else if (action_en_cours == 3) {
+        vue_pioche->validerCarte();
+    }
 }
 
 void VueJeu::boutonJoueurIA() {
@@ -1625,17 +1649,27 @@ void VueJeu::boutonActionPrivilege() {
 
 void VueJeu::boutonRemplirPlateau() {
     if (checkPlateau()) return;
-   if (vue_plateau->getPlateau()->remplissagePlateau()) {
+    Plateau* plateau = vue_plateau->getPlateau();
+    bool a_rempli = plateau->remplissagePlateau();
+   if (a_rempli) {
        desactiverOuActiverBouton(false);
         bouton_depenser_privilege->setEnabled(false);
-    }
+        vue_plateau->affichageJetons();
+    } else {
+       message("Action", "Le plateau est déjà rempli !");
+   }
+    std::cout<<vue_plateau->getPlateau()->etatPlateau();
     finiAction(1);
 }
 
 void VueJeu::boutonAcheterCarte() {
     desactiverOuActiverBouton(false);
-    if (checkPlateau()) vue_plateau->affichageJetons(false);
-    vue_plateau->desactiverOuActiverLesJetons(false);
+    if (checkPlateau()) {
+        //vue_plateau->affichageJetons(false);
+        vue_plateau->desactiverOuActiverLesJetons(false);
+    }
+    vue_pioche->setStatutActif(true);
+    action_en_cours= 3;
     //finiAction(3);
 }
 
@@ -1654,6 +1688,7 @@ void VueJeu::boutonPrendreJeton() {
     Plateau* p = vue_plateau->getPlateau();
     p->setMaxSelectionPossible(3, false);
     vue_plateau->affichageJetons(true);
+    action_en_cours = 2;
     //finiAction(2);
 }
 
@@ -1696,6 +1731,7 @@ void VueJeu::finiAction(int action) {
         }
     }else   if (action == 1) {
         a_fini_optionnelles = true;
+        desactiverOuActiverBouton(true);
     } else if (action >=2) {
         jeu->verifCarteNoble(jeu->getJoueurActuel(), vue_plateau->getPlateau());
         if (!peut_passer_tour_suivant) return;
@@ -1711,6 +1747,7 @@ void VueJeu::finiAction(int action) {
         // MIse à jour pour le joueur actuel
         setJoueurActuelInfo();
         if (action == 3 || action == 4 || action==5) {
+            vue_pioche->setStatutActif(false);
             if (jeu->getJoueurActuel() == j1) {
                 // Si le joueur actuel est 1, alors au moment de l'action passé,
                 // le joueur qui a modiié ses cartes est le joueur 2.

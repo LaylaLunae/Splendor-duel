@@ -236,6 +236,7 @@ public:
 
     void affichageJetons(bool  etat_actif=false); // à appeler si chargement mémoire
     void affichageCartes();
+    void actionValiderSelection();
 
     void desactiverOuActiverLesJetons(bool nouvel_etat) {
         for (auto j : vuesJetons) {
@@ -267,7 +268,7 @@ private:
 
 
 
-private slots:
+public slots:
     void jetonClick_Plateau(VueJeton*) ;//{ std::cout<<"Clicked!\n"; }
     void validerPlateau();
     void remplirPlateau();

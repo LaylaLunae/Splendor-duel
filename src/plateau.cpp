@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <QLabel>
+
 
 #include "../include/jeu.h"
 //#include "./../include/plateau.h"
@@ -827,50 +829,17 @@ VuePlateau::VuePlateau(QWidget *parent) : QWidget(parent),
     affichageCartes();
     affichagePrivileges();
 
-    boutonValider = new QPushButton("Valider", this);
-    // Set the background color to light green
-    QString styleSheet = "background-color: lightgreen; color: black;";
-    boutonValider->setStyleSheet(styleSheet);
-    QObject::connect(
-            boutonValider,
-            &QPushButton::clicked,
-            this,
-            &VuePlateau::validerPlateau
-    );
-
-    boutonValider->show();
-    layout_info->addWidget(boutonValider);
-
-    boutonRemplissage = new QPushButton("Remplir", this);
-    // Set the background color to light green
-    QString styleSheetRemplissage = "background-color: lightblue; color: black;";
-    boutonRemplissage->setStyleSheet(styleSheetRemplissage);
-    QObject::connect(
-            boutonRemplissage,
-            &QPushButton::clicked,
-            this,
-            &VuePlateau::remplirPlateau
-    );
-
-    //boutonRemplissage->show();
-    layout_info->addWidget(boutonRemplissage);
-
-
-//    boutonDonnerPrivilege = new QPushButton("Déposer Privilège", this);
-//    QString styleSheetPrivilege = "background-color: lightyellow; color: black;";
-//    boutonDonnerPrivilege->setStyleSheet(styleSheetPrivilege);
-//    QObject::connect(
-//            boutonDonnerPrivilege,
-//            &QPushButton::clicked,
-//            this,
-//            &VuePlateau::donnerPrivilege
-//    );
-
+    // Set the background color for the custom widget
+    QPalette pal = palette();
+    pal.setColor(QPalette::Window, QColor(101, 67, 33));  // Set the background color (e.g., yellow)
+    setAutoFillBackground(true);
+    setPalette(pal);
 
     layout_info->addLayout(layout_privilege);
     main_layout->addLayout(layout_bouton);
     main_layout->addLayout(layout_carte);
     main_layout->addLayout(layout_info);
+
     setLayout(main_layout);
 }
 
@@ -995,6 +964,10 @@ void VuePlateau::validerPlateau() {
 void VuePlateau::remplirPlateau() {
     plateau->remplissagePlateau();
     affichageJetons();
+}
+
+void VuePlateau::actionValiderSelection() {
+    validerPlateau();
 }
 
 void VuePlateau::affichageCartes() {

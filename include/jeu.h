@@ -117,6 +117,7 @@ private:
 
 
     int compteur_action_optionelles= 2;
+    int action_en_cours = -1;
     bool a_fini_optionnelles = false;
     bool a_fini_obligatoires = false;
     bool peut_passer_tour_suivant = true; // false quand doit choisir carte noble.
@@ -138,6 +139,8 @@ private:
     QVBoxLayout* layout_jeu;
     QHBoxLayout* layout_centre;
     QHBoxLayout* layout_top;
+    QVBoxLayout* layout_choix_actions;
+    QHBoxLayout* layout_pioche;
     QHBoxLayout *layout_bas;
     VuePlateau* vue_plateau;
     FenetreInformations* vueJoueur1;
@@ -158,6 +161,7 @@ private:
     QPushButton* bouton_acheter_carte;
     QPushButton* bouton_reserver_carte;
     QPushButton* bouton_remplir_plateau;
+    QPushButton* bouton_valider;
 
     sqlite3* db;
 
@@ -191,6 +195,7 @@ private slots:
     void boutonAcheterCarte();
     void boutonReserverCarte();
     void boutonJoueurJoueur();
+    void boutonValiderAction();
     void boutonJoueurIA();
     void boutonIAIA();
 };

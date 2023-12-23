@@ -56,7 +56,7 @@ private:
     std::vector<VueCarteJoaillerie*> vuecartes1;
     std::vector<VueCarteJoaillerie*> vuecartes2;
     std::vector<VueCarteJoaillerie*> vuecartes3;
-    std::vector<std::vector<VueCarteJoaillerie*>> vuescartes_tot;
+    std::vector<std::vector<VueCarteJoaillerie*>*> vuescartes_tot;
     std::vector<QPushButton*> vuedoscartes;
     QVBoxLayout * layoutPioches;
     QHBoxLayout * layoutPioche1;
@@ -70,14 +70,18 @@ private:
     std::vector<Pioche*> pioches;
     std::vector<CarteJoaillerie*> tot_cartes_jo;
 
+    bool est_en_action_achat = false;
+
     void mettreAJour(int index_to_update, int index_carte);
 
-private slots:
+public slots:
     void carteClique(VueCarteJoaillerie *);
     void validerCarte();
 
 public:
     VuePioche(Pioche * p1, Pioche * p2, Pioche * p3, std::vector<CarteJoaillerie*> tot_cartes_jo, QWidget * parent = nullptr);
+
+    void setStatutActif(bool nouvel_etat = false);
 
 };
 
