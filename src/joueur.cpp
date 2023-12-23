@@ -407,3 +407,20 @@ void FenetreInformations::displayCartes() {
     }
     repaint();
 }
+
+// code de la méthode pour afficher les cartes réservées du joueur
+void FenetreInformations::displayCartesReservees() {
+    while (QLayoutItem *item = layout_cartes_reservees->takeAt(0)) {
+        if (QWidget *widget = item->widget()) {
+            widget->deleteLater();
+        }
+        delete item;
+    }
+    const std::vector<CarteJoaillerie *> cartesJoueur = joueur->getCartesReservees();
+    for (const CarteJoaillerie *carte: cartesJoueur) {
+        //QPushButton *vueCarte = new QPushButton(this);
+        VueCarteJoaillerie *vueCarte = new VueCarteJoaillerie(carte, cartesJoueur, this);
+        layout_cartes_reservees->addWidget(vueCarte);
+    }
+    repaint();
+}

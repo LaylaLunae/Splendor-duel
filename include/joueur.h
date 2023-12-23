@@ -175,10 +175,13 @@ public:
 
         layout = new QVBoxLayout();
         layout_cartes = new QGridLayout();
+        layout_cartes_reservees = new QVBoxLayout();
         main_layout = new QHBoxLayout(this);
+        displayCartesReservees();
         miseAJourInformations();
 // nous voulons afficher les différentes cartes acheter par le joueur
         displayCartes();
+        main_layout->addLayout(layout_cartes_reservees);
         main_layout->addLayout(layout);
         main_layout->addLayout(layout_cartes);
 
@@ -187,6 +190,7 @@ public:
     // fonction pour afficher les cartes du joueur
     // Appelée par VueJeu donc public
     void displayCartes();
+    void displayCartesReservees();
 
 public slots:
     // fonction pour mettre à jour tous les compteurs
@@ -253,6 +257,7 @@ public slots:
 private:
     QLayout* layout;
     QGridLayout* layout_cartes;
+    QVBoxLayout* layout_cartes_reservees;
     QHBoxLayout* main_layout;
     QLabel *labelNom;
     QLabel *labelPriviliges;
