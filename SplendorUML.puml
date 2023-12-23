@@ -386,6 +386,72 @@ class VueJeton {
   <<slot>> - clickedEvent(): void
 }
 
+class VueJeu {
+  - compteur_action_optionnelles: int
+  - a_fini_optionnelles: bool
+  - a_fini_obligatoires: bool
+  - peut_passer_tour_suivant: bool
+  - jeu: Jeu*
+  - j1: Joueur*
+  - j2: Joueur*
+  - pioche1: Pioche*
+  - pioche2: Pioche*
+  - pioche3: Pioche*
+  - pioches: std::vector<Pioche*>
+  - vue_pioche: VuePioche*
+  - cartesJoaillerie: std::vector<CarteJoaillerie*>
+  - layout_main: QVBoxLayout*
+  - layout_menu: QVBoxLayout*
+  - layout_choix_joueurs: QVBoxLayout*
+  - layout_jeu: QVBoxLayout*
+  - layout_centre: QHBoxLayout*
+  - layout_top: QHBoxLayout*
+  - layout_bas: QHBoxLayout*
+  - vue_plateau: VuePlateau*
+  - vueJoueur1: FenetreInformations*
+  - vueJoueur2: FenetreInformations*
+  - vuesCartesNobles: std::vector<VueCarteNoble*>
+  - bouton_nouvelle_partie: QPushButton*
+  - bouton_charger_partie: QPushButton*
+  - bouton_sauvegarde: QPushButton*
+  - bouton_joueur_joueur: QPushButton*
+  - bouton_joueur_IA: QPushButton*
+  - bouton_IA_IA: QPushButton*
+  - bouton_depenser_privilege: QPushButton*
+  - bouton_prendre_jeton: QPushButton*
+  - bouton_acheter_carte: QPushButton*
+  - bouton_reserver_carte: QPushButton*
+  - bouton_remplir_plateau: QPushButton*
+  - db: sqlite3*
+  + VueJeu(Jeu* jeu, QWidget* parent = nullptr)
+  + getVuePlateau(): VuePlateau*
+  + finiAction(int action): void
+  + message(const char title[], const char texte[]): void
+  + choixCarteNoble(bool ok_pour_choix): void
+  <<slot>> - boutonSauvegardeClick(): void
+  <<slot>> - boutonNouvellePartie(): void
+  <<slot>> - boutonChargerPartie(): void
+  <<slot>> - boutonActionPrivilege(): void
+  <<slot>> - boutonPrendreJeton(): void
+  <<slot>> - boutonRemplirPlateau(): void
+  <<slot>> - boutonAcheterCarte(): void
+  <<slot>> - boutonReserverCarte(): void
+  <<slot>> - boutonJoueurJoueur(): void
+  <<slot>> - boutonJoueurIA(): void
+  <<slot>> - boutonIAIA(): void
+  - checkPlateau(): bool
+  - dessinerPartie(): void
+  - choixDesJoueurs(): void
+  - initJoueurs(bool j1EstHumain, bool j2EstHumain): void
+  - deleteLayout(QLayout* layout): void
+  - afficherChoix(): void
+  - desactiverOuActiverBouton(bool etat): void
+  - setEtatBoutonPrivilege(): void
+  - setJoueurActuelInfo(): void
+}
+
+
+Jeu "1" -- "1" VueJeu
 Jeton "*" --- "1" VueJeton
 CarteNoble "*" --- "1" VueCarteNoble
 CarteJoaillerie "*"--- "1"VueCarteJoaillerie
