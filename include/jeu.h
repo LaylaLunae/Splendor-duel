@@ -104,6 +104,7 @@ public:
 
     void message(const char title[], const char texte[]);
     void choixCarteNoble(bool ok_pour_choix);
+    VuePioche* getVuePioche();
 
 private:
     int compteur_action_optionelles= 2;

@@ -229,21 +229,21 @@ void VuePioche::validerCarte() {
                 "Pour acheter une carte, appuyer sur le bouton action correspondant.");
         return;
     }
-    if (carteSelectionnee != nullptr){
-        std::cout<<"\nCarte sel "<<carteSelectionnee->getCarteJoaillerieId()<<"\n";
+    if (carteSelectionnee != nullptr) {
+        std::cout << "\nCarte sel " << carteSelectionnee->getCarteJoaillerieId() << "\n";
         //const CarteJoaillerie* carte_sel_carte = carteSelectionnee->getCarte();
-        const CarteJoaillerie* carte_sel_carte = nullptr;
-        Joueur* actif = Jeu::getJeu().getJoueurActuel();
+        const CarteJoaillerie *carte_sel_carte = nullptr;
+        Joueur *actif = Jeu::getJeu().getJoueurActuel();
         std::map<Couleur, int> prix = carteSelectionnee->getPrix();
         std::vector<int> difference = Obligatoire::calculDifference(actif, prix);
         bool peut_acheter = Obligatoire::achatCartePossible(actif, difference);
         if (peut_acheter) {
             int numero_pioche = carteSelectionnee->getCarte()->getNiveau();
-            carte_sel_carte = pioches[numero_pioche-1]->joueurPrend(carteSelectionnee->getCarteJoaillerieId());
+            carte_sel_carte = pioches[numero_pioche - 1]->joueurPrend(carteSelectionnee->getCarteJoaillerieId());
             actif->ajouterCarteJoaillerie(const_cast<CarteJoaillerie *>(carte_sel_carte));
 
             // On retire les jetons au joueur et les remet dans le sac
-            Plateau* plateau = Jeu::getJeu().getVueJeu()->getVuePlateau()->getPlateau();
+            Plateau *plateau = Jeu::getJeu().getVueJeu()->getVuePlateau()->getPlateau();
             for (auto elem = prix.begin(); elem != prix.end(); elem++) {
                 int prix_elem = elem->second;
                 switch (elem->first) {
@@ -270,22 +270,108 @@ void VuePioche::validerCarte() {
                 }
             }
 
-            std::cout<<plateau->etatPlateau();
+            std::cout << plateau->etatPlateau();
 
             carteSelectionnee = nullptr;
-            mettreAJour(numero_pioche-1, carte_sel_carte->getID());
+            mettreAJour(numero_pioche - 1, carte_sel_carte->getID());
             Jeu::getJeu().getVueJeu()->finiAction(3);
 
         } else {
             Jeu::getJeu().getVueJeu()->message("Action", "Vous ne pouvez pas acheter cette carte");
         }
         //return carteSelectionnee->getCarteJoaillerieId();
+    } else {
+        std::cout << "\nCarte sel " << "nullptr" << "\n";
+        Jeu::getJeu().getVueJeu()->message("Action", "Aucune carte sélectionnée.  ");
+    }
+//        return -1;
+
+}
+
+    void VuePioche::validerCarteReservee() {
+        if (!est_en_action_achat) {
+            Jeu::getJeu().getVueJeu()->message(
+                    "Action",
+                    "Pour acheter une carte, appuyer sur le bouton action correspondant.");
+            return;
+        }
+        if (carteSelectionnee != nullptr) {
+            std::cout << "\nCarte sel " << carteSelectionnee->getCarteJoaillerieId() << "\n";
+            //const CarteJoaillerie* carte_sel_carte = carteSelectionnee->getCarte();
+            const CarteJoaillerie *carte_sel_carte = nullptr;
+            Joueur *actif = Jeu::getJeu().getJoueurActuel();
+            std::map<Couleur, int> prix = carteSelectionnee->getPrix();
+            std::vector<int> difference = Obligatoire::calculDifference(actif, prix);
+            bool peut_acheter = Obligatoire::achatCartePossible(actif, difference);
+            if (peut_acheter) {
+                int numero_pioche = carteSelectionnee->getCarte()->getNiveau();
+                actif->ajouterCarteJoaillerie(const_cast<CarteJoaillerie *>(carte_sel_carte));
+
+                // On retire les jetons au joueur et les remet dans le sac
+                Plateau *plateau = Jeu::getJeu().getVueJeu()->getVuePlateau()->getPlateau();
+                for (auto elem = prix.begin(); elem != prix.end(); elem++) {
+                    int prix_elem = elem->second;
+                    switch (elem->first) {
+                        case Couleur::bleu:
+                            Obligatoire::remettreJetonSac(actif, plateau, Couleur::bleu, difference[0], prix_elem, 0);
+                            break;
+                        case Couleur::vert:
+                            Obligatoire::remettreJetonSac(actif, plateau, Couleur::vert, difference[1], prix_elem, 1);
+                            break;
+                        case Couleur::rouge:
+                            Obligatoire::remettreJetonSac(actif, plateau, Couleur::rouge, difference[2], prix_elem, 2);
+                            break;
+                        case Couleur::blanc:
+                            Obligatoire::remettreJetonSac(actif, plateau, Couleur::blanc, difference[3], prix_elem, 3);
+                            break;
+                        case Couleur::noir:
+                            Obligatoire::remettreJetonSac(actif, plateau, Couleur::noir, difference[4], prix_elem, 4);
+                            break;
+                        case Couleur::rose:
+                            Obligatoire::remettreJetonSac(actif, plateau, Couleur::rose, difference[5], prix_elem, 5);
+                            break;
+                        default:
+                            std::cout << "Il y a un probleme avec le jeton pris au joueur !\n";
+                    }
+                }
+
+                std::cout << plateau->etatPlateau();
+
+                carteSelectionnee = nullptr;
+                Jeu::getJeu().getVueJeu()->finiAction(3);
+
+            } else {
+                Jeu::getJeu().getVueJeu()->message("Action", "Vous ne pouvez pas acheter cette carte");
+            }
+        } else {
+            std::cout << "\nCarte sel " << "nullptr" << "\n";
+            Jeu::getJeu().getVueJeu()->message("Action", "Aucune carte sélectionnée.  ");
+        }
+    }
+
+void VuePioche::ReserverCarte() {
+
+    if (carteSelectionnee != nullptr){
+        std::cout<<"\nCarte sel "<<carteSelectionnee->getCarteJoaillerieId()<<"\n";
+        //const CarteJoaillerie* carte_sel_carte = carteSelectionnee->getCarte();
+        const CarteJoaillerie* carte_sel_carte = nullptr;
+
+        Joueur* actif = Jeu::getJeu().getJoueurActuel();
+            int numero_pioche = carteSelectionnee->getCarte()->getNiveau();
+            carte_sel_carte = pioches[numero_pioche-1]->joueurPrend(carteSelectionnee->getCarteJoaillerieId());
+            actif->ajouterCarteReservee(const_cast<CarteJoaillerie *>(carte_sel_carte));
+
+
+
+            carteSelectionnee = nullptr;
+            mettreAJour(numero_pioche-1, carte_sel_carte->getID());
+            Jeu::getJeu().getVueJeu()->finiAction(7);
+
     }
     else {
         std::cout << "\nCarte sel " << "nullptr" << "\n";
-        Jeu::getJeu().getVueJeu()->message("Action",  "Aucune carte sélectionnée..  ");
+        Jeu::getJeu().getVueJeu()->message("Action",  "Aucune carte sélectionnée.  ");
     }
-//        return -1;
 }
 
 void VuePioche::mettreAJour(int index_to_update, int index_carte) {

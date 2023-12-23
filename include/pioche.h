@@ -80,12 +80,14 @@ private:
 public slots:
     void carteClique(VueCarteJoaillerie *);
     void validerCarte();
+    void validerCarteReservee();
 
 public:
     VuePioche(Pioche * p1, Pioche * p2, Pioche * p3, std::vector<CarteJoaillerie*> tot_cartes_jo, QWidget * parent = nullptr);
 
+    friend class VueJeu;
     void setStatutActif(bool nouvel_etat = false);
-
+    void ReserverCarte();
 };
 
 

@@ -85,6 +85,11 @@ public:
         return std::map<Couleur, int>();
     }
 
+    Couleur getCouleur() {
+    if (carte_rep != nullptr && carte_rep->hasPierre()) return carte_rep->getTypePierre();
+    return Couleur::rien;
+}
+
     const CarteJoaillerie* getCarte() {return carte_rep;}
 
 signals:

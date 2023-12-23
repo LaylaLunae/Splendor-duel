@@ -385,6 +385,8 @@ void Joueur::initialiserJoueur() {
 
 // code de la méthode pour afficher les cartes du joueur
 void FenetreInformations::displayCartes() {
+
+    // ------------ update cartes JO en main
     while (QLayoutItem *item = layout_cartes->takeAt(0)) {
         if (QWidget *widget = item->widget()) {
             widget->deleteLater();
@@ -405,6 +407,7 @@ void FenetreInformations::displayCartes() {
         layout_cartes->addWidget(vc, i/4, i%4);
         i++;
     }
+
     repaint();
 }
 
@@ -420,6 +423,8 @@ void FenetreInformations::displayCartesReservees() {
     for (const CarteJoaillerie *carte: cartesJoueur) {
         //QPushButton *vueCarte = new QPushButton(this);
         VueCarteJoaillerie *vueCarte = new VueCarteJoaillerie(carte, cartesJoueur, this);
+        connect(vueCarte, SIGNAL(carteClickJ(VueCarteJoaillerie*)), Jeu::getJeu().getVueJeu()->getVuePioche(), SLOT(carteClique(VueCarteJoaillerie*)));
+
         layout_cartes_reservees->addWidget(vueCarte);
     }
     repaint();

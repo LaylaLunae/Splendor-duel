@@ -155,10 +155,12 @@ bool Obligatoire::reserverCarte(Joueur* joueur, Plateau* plateau, Pioche* p1, Pi
     // Vérifier que le plateau a au moins 1 jeton or et que le joueur n'a pas 3 cartes réservées déjà
     if (!plateau->hasJetonOr()) {
         std::cout << "Aucun jeton or de disponible sur le plateau !\n";
+        Jeu::getJeu().getVueJeu()->message("Action", "Aucun jeton Or sur le plateau, réservation impossible !");
         return false;
     }
     if (joueur->getNbCartesReservees() == 3) {
         std::cout << "Le joueur a deja 3 cartes reservees !";
+        Jeu::getJeu().getVueJeu()->message("Action", "Déjà 3 cartes réservées !");
         return false;
     }
 

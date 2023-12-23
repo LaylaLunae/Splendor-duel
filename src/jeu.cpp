@@ -1511,6 +1511,19 @@ void VueJeu::boutonValiderAction() {
         vue_plateau->actionValiderSelection();
     }else if (action_en_cours == 3) {
         vue_pioche->validerCarte();
+    } else if (action_en_cours == 4) {
+        Joueur* actif = Jeu::getJeu().getJoueurActuel();
+        int nb_or_avant = actif->getNbJeton(6);
+        vue_plateau->actionValiderSelection();
+        if (nb_or_avant < actif->getNbJeton(6)) {
+            message("Action", "Choissisez la carte à réserver.");
+            vue_pioche->setStatutActif(true);
+            action_en_cours = 7;
+        }
+    } else if (action_en_cours == 7) {
+        vue_pioche->ReserverCarte();
+
+//        }
     }
 }
 
@@ -1640,10 +1653,21 @@ void VueJeu::boutonAcheterCarte() {
 
 void VueJeu::boutonReserverCarte() {
     if (checkPlateau()) return;
+
+    if (!vue_plateau->getPlateau()->hasJetonOr()) {
+        message("Action", "Il n'y a plus de jetons or pour réserver.");
+        return;
+    }
+
     desactiverOuActiverBouton(false);
     vue_plateau->getPlateau()->setMaxSelectionPossible(1, true) ;
+    vue_pioche->setStatutActif(false);
     //vue_plateau->affichageJetons(true);
-    vue_plateau->desactiverOuActiverLesJetons(false);
+    vue_plateau->desactiverOuActiverLesJetons(true);
+    message("Action", "Vous allez reserver une carte. Cliquer sur un jeton or pour le réserver");
+
+    action_en_cours = 4;
+
     //finiAction(4);
 }
 
@@ -1680,7 +1704,7 @@ void VueJeu::choixCarteNoble(bool ok_pour_choix) {
     vue_plateau->desactiverOuActiverLesJetons(!ok_pour_choix);
 }
 
-void VueJeu::finiAction(int action) {
+void VueJeu::   finiAction(int action) {
     /**
      * 0 = dépenser privilège
      * 1 = remplissage plateau
@@ -1720,6 +1744,15 @@ void VueJeu::finiAction(int action) {
             } else {
                 vueJoueur1->displayCartes();
             }
+        } else if (action == 7) {
+            vue_pioche->setStatutActif(false);
+            if (jeu->getJoueurActuel() == j1) {
+                // Si le joueur actuel est 1, alors au moment de l'action passé,
+                // le joueur qui a modiié ses cartes est le joueur 2.
+                vueJoueur2->displayCartesReservees();
+            } else {
+                vueJoueur1->displayCartesReservees();
+            }
         }
 
         if (jeu->getJoueurGagnant() == nullptr) {
@@ -1738,7 +1771,9 @@ void VueJeu::finiAction(int action) {
 void VueJeu::message(const char  title[], const char  texte[]) {
     QMessageBox::warning(nullptr, title, texte);
 }
-
+VuePioche* VueJeu::getVuePioche() {
+    return vue_pioche;
+}
 
 
 
