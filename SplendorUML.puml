@@ -246,15 +246,26 @@ class Pioche{
 }
 
 class VuePioche {
+- vuecartes1: std::vector<VueCarteJoaillerie*>
+- vuecartes2: std::vector<VueCarteJoaillerie*>
+- vuecartes3: std::vector<VueCarteJoaillerie*>
+- vuescartes_tot: std::vector<std::vector<VueCarteJoaillerie*>>
+- vuedoscartes: std::vector<QPushButton*>
+- layout_pioches: std::vector<QHBoxLayout*>
 - layoutPioches: QVBoxLayout *
 - layoutPioche1: QHBoxLayout *
 - layoutPioche2: QHBoxLayout *
 - layoutPioche3: QHBoxLayout *
 - layoutDosPioche: QVBoxLayout *
 - layoutPlateauCarte: QHBoxLayout *
+- valider: QPushButton*
+- pioches: std::vector<Pioche*>
+- tot_cartes_jo: std::vector<CarteJoaillerie*>
+- mettreAJour(index_to_update: int, index_carte: int): void
 - carteSelectionnee: VueCarteJoaillerie *
 - carteClique(VueCarteJoaillerie *): void
 - validerCarte(): void
++ VuePioche(p1: Pioche*, p2: Pioche*, p3: Pioche*, tot_cartes_jo: std::vector<CarteJoaillerie*>, parent: QWidget = nullptr): void
 }
 
 class Carte {
@@ -356,8 +367,7 @@ Carte <|-- CarteNoble
 Carte <|-- CarteJoaillerie
 '(CarteJoaillerie, Pierre) .. AchatCarte
 
-
-
+Pioche --> "friend" VuePioche
 
 
 
