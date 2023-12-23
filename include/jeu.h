@@ -32,7 +32,6 @@ private:
     ~Jeu(){};
     Jeu(const Jeu& j) = delete;
     Jeu& operator=(const Jeu& j) = delete;
-    //void verifCarteNoble(Joueur * j, Plateau * p);
 
 public:
     static Jeu& getJeu();
@@ -49,10 +48,7 @@ public:
 
     //pour l'instant dans public
     void nouvellePartie();
-    //void reprendrePartie(); //faut bdd
-    //void verifAnciennePartie(); //faut bdd
     void verifGagnant(Joueur * j1, Joueur * j2);
-    //void sauvegarderPartie(); //faut bdd
     void vainqueur(Joueur * j);
     void auSuivant(Joueur * j1, Joueur * j2);
     void verifCarteNoble(Joueur * j, Plateau * p);
