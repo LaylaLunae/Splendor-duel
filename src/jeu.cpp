@@ -493,7 +493,8 @@ void clearAndInitializeTables(sqlite3* db) {
     std::vector<std::string> tablesToClear = {
             "CartesDansPioche", "CartesDehors", "JoueurCartesMain", "JoueurCartesNoble",
             "JoueurCartesReservees", "JoueurJetons", "JoueurPrivilege", "PlateauCartesNoble",
-            "PlateauJetons", "PlateauPrivileges", "PlateauSac", "PlateauJetonsColors", "Jeu", "Joueur", "Plateau"
+            "PlateauJetons", "PlateauPrivileges", "PlateauSac", "PlateauJetonsColors",
+            "PlateauJetonsColorsSac","Jeu", "Joueur", "Plateau"
     };
 
     // Clear tables
