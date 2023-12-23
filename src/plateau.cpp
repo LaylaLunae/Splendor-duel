@@ -722,7 +722,10 @@ const Jeton* Plateau::prendreJeton(unsigned int position_x, unsigned int positio
 
 bool Plateau::hasJetonOr() {
     for (int i=0; i<nb_jetons_plateau_MAX; i++) {
-        if (jetons[i]->getType() == JetonType::Or) return true;
+        if (jetons[i] != nullptr) {
+            if (jetons[i]->getType() == JetonType::Or) return true;
+
+        }
     }
     return false;
 }
@@ -959,9 +962,10 @@ void VuePlateau::validerPlateau() {
         std::cout << "Jetons donnés à  : " << jeu.getJoueurActuel()->getPseudo() << std::endl;
         Obligatoire::ajouterJetonsJoueur(jeu.getJoueurActuel(), main);
         affichageJetons();
-        jeu.getVueJeu()->finiAction(4);
+        a_pris_jeton = true;
     } else {
         jeu.getVueJeu()->message("Action incorrecte", "Votre sélection est vide... ne soyez pas timide!");
+        a_pris_jeton = false;
     }
 }
 
@@ -970,8 +974,10 @@ void VuePlateau::remplirPlateau() {
     affichageJetons();
 }
 
-void VuePlateau::actionValiderSelection() {
+bool VuePlateau::actionValiderSelection() {
+    a_pris_jeton = false;
     validerPlateau();
+    return a_pris_jeton;
 }
 
 void VuePlateau::affichageCartes() {

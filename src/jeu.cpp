@@ -341,8 +341,10 @@ void Jeu::verifGagnant(Joueur * j1, Joueur * j2) {
         }
         if (gagnant) //si l'une des conditions est valide -> appel de vainqueur
             vainqueur(joueur_actuel);
-        else
+        else {
+            joueur_gagnant = nullptr;
             auSuivant(j1, j2); //sinon au suivant
+        }
     }
 //    int choix = -1;
 //    std::cout << "On continue ? 1 - oui, 0 - non :";
@@ -1339,6 +1341,9 @@ void VueJeu::dessinerPartie() {
     vueJoueur1->show();
     vueJoueur2->show();
 
+    j1->setAdversaire(j2);
+    j2->setAdversaire(j1);
+
     // ---------------- Layout Choix Action ---------------
     layout_choix_actions = new QVBoxLayout();
     layout_top = new QHBoxLayout();
@@ -1508,7 +1513,9 @@ void VueJeu::boutonValiderAction() {
         vue_plateau->getPlateau()->remplissagePlateau();
         vue_plateau->affichageJetons();
     } else if (action_en_cours == 2 || action_en_cours==0) {
-        vue_plateau->actionValiderSelection();
+        if (vue_plateau->actionValiderSelection()) {
+            finiAction(action_en_cours);
+        }
     }else if (action_en_cours == 3) {
         vue_pioche->validerCarte();
     } else if (action_en_cours == 4) {
@@ -1583,19 +1590,25 @@ void VueJeu::boutonChargerPartie() {
     jeu->setVueJeu(this);
     j1 = joueurs[0];
     j2 = joueurs[1];
-    vueJoueur1 = new FenetreInformations(j1);
-    vueJoueur2 = new FenetreInformations(j2);
-    j1->setInfo(vueJoueur1);
-    j2 ->setInfo(vueJoueur2);
+
 
     // ---------- MIse a jour  des composants------------
     vue_plateau->affichageJetons(false);
     vue_plateau->affichageCartes();
     vue_plateau->affichagePrivileges();
-//    vueJoueur1->miseAJourInformations();
+    vueJoueur1 = new FenetreInformations(j1);
+    vueJoueur2 = new FenetreInformations(j2);
+    //    vueJoueur1->miseAJourInformations();
 //    vueJoueur2->miseAJourInformations();
 
     this->dessinerPartie();
+
+    // Mettre à jours les informations des joueurs
+    vueJoueur1->displayCartesReservees();
+    vueJoueur2->displayCartesReservees();
+    j1->setInfo(vueJoueur1);
+    j2 ->setInfo(vueJoueur2);
+
     layout_main->addLayout(layout_jeu);
     setLayout(layout_main);
     repaint();
@@ -1635,9 +1648,10 @@ void VueJeu::boutonRemplirPlateau() {
         Obligatoire::donnerPrivilegeAdversaire(actif, vue_plateau->getPlateau());
         actif->getAdversaire()->getInfo()->miseAJourInformations();
         vue_plateau->affichagePrivileges();
+        std::cout<<vue_plateau->getPlateau()->etatPlateau();
+        finiAction(1);
     }
-    std::cout<<vue_plateau->getPlateau()->etatPlateau();
-    finiAction(1);
+    desactiverOuActiverBouton(true);
 }
 
 void VueJeu::boutonAcheterCarte() {
@@ -1687,6 +1701,7 @@ void VueJeu::desactiverOuActiverBouton(bool etat) {
     bouton_remplir_plateau->setEnabled(etat);
     bouton_reserver_carte->setEnabled(etat);
     bouton_prendre_jeton->setEnabled(etat);
+    setEtatBoutonPrivilege();
 }
 
 void VueJeu::setJoueurActuelInfo() {
@@ -1712,11 +1727,12 @@ void VueJeu::   finiAction(int action) {
      * 3 = acheter carte
      * 4 = réservation
      * 5 utilisé également pour forcer la fin du tour
+     * 8 forcer la fin du tour après privilège tous utilisés
      */
     if (action == 0) {
         compteur_action_optionelles--;
         if (compteur_action_optionelles==0) {
-            finiAction(5);
+            finiAction(8);
         }
     }else   if (action == 1) {
         a_fini_optionnelles = true;
@@ -1759,9 +1775,13 @@ void VueJeu::   finiAction(int action) {
             // Tour suivant
             setEtatBoutonPrivilege();
             setJoueurActuelInfo();
+            compteur_action_optionelles = 2;
         } else {
             // ----------------Popup pour gagnat ici ! ----------------
             //
+            std::string m = jeu->getJoueurActuel()->getPseudo() + " a gagné !";
+            message("Bravo ! ", m.c_str());
+            QCoreApplication::quit();
         }
 
     }

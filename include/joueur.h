@@ -177,9 +177,10 @@ public:
         layout_cartes = new QGridLayout();
         layout_cartes_reservees = new QVBoxLayout();
         main_layout = new QHBoxLayout(this);
-        displayCartesReservees();
+        //displayCartesReservees(); // est fait dans VueJeu
         miseAJourInformations();
-// nous voulons afficher les différentes cartes acheter par le joueur
+
+        // nous voulons afficher les différentes cartes acheter par le joueur
         displayCartes();
         main_layout->addLayout(layout_cartes_reservees);
         main_layout->addLayout(layout);

@@ -263,7 +263,7 @@ public:
     void affichageJetons(bool  etat_actif=false); // à appeler si chargement mémoire
     void affichageCartes();
     void affichagePrivileges();
-    void actionValiderSelection();
+    bool actionValiderSelection();
 
     void desactiverOuActiverLesJetons(bool nouvel_etat) {
         for (auto j : vuesJetons) {
@@ -289,6 +289,8 @@ private:
     QPushButton* boutonRemplissage;
     QPushButton* boutonDonnerPrivilege;
     std::vector<VuePrivilege*> vuesPrivileges;
+
+    bool a_pris_jeton = false;
 
     void miseAJourJetons();
 
