@@ -385,28 +385,24 @@ void Joueur::initialiserJoueur() {
     }
 }
 
+// code de la méthode pour afficher les cartes du joueur
 void FenetreInformations::displayCartes() {
-
     while (QLayoutItem *item = layout_cartes->takeAt(0)) {
         if (QWidget *widget = item->widget()) {
             widget->deleteLater();
         }
         delete item;
     }
-
     const std::vector<CarteJoaillerie *> cartesJoueur = joueur->getCartesMain();
     for (const CarteJoaillerie *carte: cartesJoueur) {
         //QPushButton *vueCarte = new QPushButton(this);
         VueCarteJoaillerie *vueCarte = new VueCarteJoaillerie(carte, cartesJoueur, this);
         layout_cartes->addWidget(vueCarte);
     }
-
-
     const std::vector<const CarteNoble*> cartesNobles = joueur->getCartesNoble();
     for (const CarteNoble* cn : cartesNobles) {
         VueCarteNoble* vc = new VueCarteNoble(cn->getID(), Jeu::getJeu().getVueJeu()->getVuePlateau(), this);
         layout_cartes->addWidget(vc);
     }
-
     repaint();
 }
