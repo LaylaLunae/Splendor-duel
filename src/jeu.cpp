@@ -1694,6 +1694,7 @@ void VueJeu::boutonChargerPartie() {
     // ---------- MIse a jour  des composants------------
     vue_plateau->affichageJetons(false);
     vue_plateau->affichageCartes();
+    vue_plateau->affichagePrivileges();
 //    vueJoueur1->miseAJourInformations();
 //    vueJoueur2->miseAJourInformations();
 
