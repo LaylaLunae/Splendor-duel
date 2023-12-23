@@ -7,16 +7,14 @@
 #include <QPen>
 #include <QIcon>
 
-#include "couleur.h" // safe
+#include "couleur.h"
 #include "carte.h"
-
 
 class CarteNoble : public Carte{
 private:
     int couronne;
     int pointPrestige;
     const int id;
-
 
 public:
     CarteNoble();
@@ -26,7 +24,7 @@ public:
                const int id);
 
     int getCouronne() const;
-    int getPointPrestige()const;
+    int getPointPrestige() const;
     const int getID() const;
 };
 
@@ -56,7 +54,6 @@ public:
 
     //const CarteNoble* getCarte() const {return carte;}
     unsigned int getNumero() const {return numero;}
-
     //void setCarte(const CarteNoble* c) {carte = c;}
 
 
@@ -69,7 +66,7 @@ private:
     unsigned int numero; // est utilisé comme id bdd.
     QWidget* parent;
     signals:
-            void carteClick(VueCarteNoble*);
+        void carteClick(VueCarteNoble*);
 public slots:
 private slots:
     void clickedEvent() { emit carteClick(this); }

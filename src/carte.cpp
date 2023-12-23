@@ -1,7 +1,4 @@
-//#include "../include/jeu.h"
-//#include "../include/carte.h"
 #include "../include/jeu.h"
-//#include <bits/stdc++.h>
 
 Carte::Carte(const std::string& chemin, int prestige, int cour, Pouvoir pvr1, Pouvoir pvr2, Plateau* p, Joueur* j)
         : chemin_vers_image(chemin), point_prestige(prestige), courronnes(cour), pouvoirs({pvr1, pvr2}) {

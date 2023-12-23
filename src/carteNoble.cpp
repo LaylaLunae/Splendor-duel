@@ -1,4 +1,3 @@
-//#include "../include/carteNoble.h"
 #include "../include/jeu.h"
 CarteNoble::CarteNoble() : couronne(0), id(0) {}
 

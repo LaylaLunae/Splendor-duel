@@ -1,7 +1,3 @@
-//
-// Created by Pacino on 05/11/2023.
-//
-
 #ifndef SPLENDOR_CARTE_H
 #define SPLENDOR_CARTE_H
 
@@ -10,11 +6,10 @@
 #include <algorithm>
 
 #include "privilege.h"
-#include "pouvoir.h" // safe
-#include "jeton.h" // safe
-#include "joueur.h" //
+#include "pouvoir.h"
+#include "jeton.h"
+#include "joueur.h"
 #include "plateau.h"
-
 
 class CarteNoble;
 class CarteJoaillerie;
@@ -26,13 +21,11 @@ protected:
     int point_prestige;
     int courronnes;
     std::array<Pouvoir, 2> pouvoirs;
-//    Plateau* plateau;
-//    Joueur* joueur;
-    Privilege prendrePrivilege(Plateau* plateau, Joueur* joueur); // take 1 privilege. If none are available, take 1 from your opponent.
-    bool volerJeton(int couleurIndex, Joueur* joueur); // take 1 Gem or Pearl token from your opponent. If your opponent has no such tokens, ignore this effect. You can't take a Gold token from your opponent.
-    bool prendreJeton(unsigned int position_x, unsigned int position_y, Plateau* plateau, Joueur* joueur); // take 1 Token matching the color of this card from the board. If tere are no such tokens left, ignore this effect.
-    void rejouer(Joueur* joueur); // take antorher turn immediately after ths one ends.
-    void rajouteBonus(int couleurIndex, Joueur* joueur); // Place this card so that it overlaps a Jewel card with a bonus.
+    Privilege prendrePrivilege(Plateau* plateau, Joueur* joueur); // prenez 1 privilège. Si aucun n'est disponible, prenez-en 1 à votre adversaire.
+    bool volerJeton(int couleurIndex, Joueur* joueur); // prenez 1 jeton Gemme ou Perle à votre adversaire. Si votre adversaire n'a pas de tels jetons, ignorez cet effet. Vous ne pouvez pas prendre un jeton Or à votre adversaire.
+    bool prendreJeton(unsigned int position_x, unsigned int position_y, Plateau* plateau, Joueur* joueur); // prenez 1 jeton correspondant à la couleur de cette carte du plateau de jeu. S'il n'y a plus de jetons de ce type, ignorez cet effet.
+    void rejouer(Joueur* joueur); // prenez un autre tour immédiatement après la fin de celui-ci.
+    void rajouteBonus(int couleurIndex, Joueur* joueur); // placez cette carte de manière à ce qu'elle chevauche une carte Joyau avec un bonus.
 
 public:
     Carte(const std::string& chemin, int prestige, int cour, Pouvoir pvr1, Pouvoir pvr2, Plateau* p, Joueur* j);

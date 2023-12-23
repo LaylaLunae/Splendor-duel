@@ -1,7 +1,3 @@
-//
-// Created by Pacino on 03/12/2023.
-//
-
 #ifndef SPLENDOR_QUERY_H
 #define SPLENDOR_QUERY_H
 

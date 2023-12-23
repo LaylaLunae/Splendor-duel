@@ -1,4 +1,3 @@
-//#include "../include/jeton.h"
 #include <iostream>
 #include <string>
 #include <QPainter>

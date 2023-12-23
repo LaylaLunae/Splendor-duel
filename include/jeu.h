@@ -13,8 +13,6 @@
 #include "obligatoire.h"
 #include "joueur.h"
 
-
-
 #include <sqlite3.h>
 #include "query.h"
 
@@ -78,8 +76,6 @@ void clearAndInitializeTables(sqlite3* db);
 
 // Interface fonctionnelle pour stocker l'intégralité du jeu
 void sauvegarderPartie(sqlite3* db,
-        //const std::vector<CarteJoaillerie>& cartesDansPioche,
-        //const std::vector<CarteJoaillerie>& cartesDehors,
                        const Jeu& jeu,
                        const Joueur& joueur1,
                        const Joueur& joueur2,
@@ -90,11 +86,7 @@ void sauvegarderPartie(sqlite3* db,
 std::vector<Joueur*> continuerLaPartie(sqlite3* db,
                        std::vector<CarteJoaillerie*>& cartesJoaillerie, // Avant de continuer le jeu, vous devez initialiser toutes les cartesJoaillerie
                        std::vector<const CarteNoble*>& cartesNoble, // Avant de continuer le jeu, vous devez initialiser toutes les cartesNoble
-                       //std::vector<CarteJoaillerie>& cartesDansPioche,
-                       //std::vector<CarteJoaillerie>& cartesDehors,
                        Jeu* jeu, // Avant de continuer le jeu, vous devez initialiser un objet vide pour stocker les données lues.
-//                       Joueur* joueur1,
-//                       Joueur* joueur2,
                        std::vector<Pioche*>& pioches,
                        Plateau& plateau,
                        std::vector<Privilege*> privileges);
@@ -114,8 +106,6 @@ public:
     void choixCarteNoble(bool ok_pour_choix);
 
 private:
-
-
     int compteur_action_optionelles= 2;
     int action_en_cours = -1;
     bool a_fini_optionnelles = false;
@@ -131,7 +121,6 @@ private:
     std::vector<Pioche*> pioches;
     VuePioche* vue_pioche;
     std::vector<CarteJoaillerie*> cartesJoaillerie;
-
 
     QVBoxLayout* layout_main;
     QVBoxLayout* layout_menu;

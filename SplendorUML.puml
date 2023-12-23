@@ -193,15 +193,22 @@ Or
 Gemme
 }
 class Jeton {
+-id: unsigned int
 -type: JetonType
 -couleur: Couleur
 -chemin_vers_image: string
--positionX: int
--positionY: int
+-positionX: unsigned int
+-positionY: unsigned int
 +afficher() const;
-+getCouleurString() const: string;
-+getCouleur() const: Couleur;
++getCouleurString() const: string
++getCouleur() const: Couleur
 +getType() const: JetonType
++getID() const: unsigned int
++getX() const: unsigned int
++getY() const: unsigned int
++setID(i: unsigned int)
++setX(i: unsigned int)
++setY(i: unsigned int)
 }
 
 enum PrivilegeStatus <<enumeration>> {
@@ -211,8 +218,10 @@ POSSEDE
 
 class Privilege {
 -status: PrivilegeStatus
+-id: int
 +getStatus(): PrivilegeStatus
 +setStatus(p:PrivilegeStatus)
++getID() const: int
 }
 
 
@@ -273,39 +282,43 @@ class Carte {
 # point_prestige:int
 # courronnes:int
 # pouvoirs: array<Pouvoir, 2>
-# plateau: Plateau*
-# joueur: Joueur*
-+ actionPouvoir()
++ actionPouvoir(plateau: Plateau*, joueur: Joueur*)
 + getPointsPrestige(): int
 + getCourronnes(): int
++ getCheminVersImage() const: string
 + existancePouvoir():array<Pouvoir, 2>
-# prendrePrivilege():Privilege
-# volerJeton():bool
-# prendreJeton():bool
-# rejouer()
-# rajouteBonus()
+# prendrePrivilege(plateau: Plateau*, joueur: Joueur*):Privilege
+# volerJeton(couleurIndex: int, joueur: Joueur*):bool
+# prendreJeton(position_x: unsigned int, position_y: unsigned int, plateau: Plateau*, joueur: Joueur*): bool
+# rejouer(joueur: Joueur*)
+# rajouteBonus(couleurIndex: int, joueur: Joueur*)
 }
 note left: S'il n'y a pas de pouvoir, alors pouvoirs[index]=rien
 
 class CarteNoble {
--couronne{2,3}: int
+-couronne: int
 -pointPrestige: int
-+getCouronne(): int const;
-+getPointPrestige(): int const;
+-id: const int
++getCouronne() const: int
++getPointPrestige() const: int
++getID() const: int
 }
 
 class CarteJoaillerie {
--niveau[1..3]: int
--couronne[0..2]: int
+-niveau: int
+-couronne: int
 -pierres: array<Couleur, 2>
 -prix: map<Couleur, int>
-+getPrix():map<Couleur, int> const
-+getNiveau(): int const
-+hasPierre(): bool const;
-+getTypePierre(): Couleur const;
-+setPierreColor(index:int, couleur:Couleur);
-+getPierres(): array<Couleur, 2> const;
-+getNombrePierre(): int const;
+-id: const int
++getPrix() const:map<Couleur, int>
++getNiveau() const: int
++getCouronne() const: int
++getID() const: int
++hasPierre() const: bool
++getTypePierre() const : Couleur
++setPierreColor(index:int, couleur:Couleur)
++getPierres() const: array<Couleur, 2>
++getNombrePierre() const: int
 }
 note left: S'il n'y a pas de pierre, alors pierres[index]=rien
 

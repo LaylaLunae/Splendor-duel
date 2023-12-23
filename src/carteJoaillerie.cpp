@@ -1,4 +1,4 @@
-#include "../include/carteJoaillerie.h"
+#include "../include/jeu.h"
 
 CarteJoaillerie::CarteJoaillerie(Plateau* p, Joueur* j, int niv, int cour, const std::array<Couleur, 2>& pierres, std::map<Couleur, int> prx, const std::string& chemin, int prestige, const Pouvoir& pvr1, const Pouvoir& pvr2, const int id)
         : Carte(chemin, prestige, cour, pvr1, pvr2, p, j), niveau(niv), couronne(cour), pierres(pierres), prix(prx), id(id) {
@@ -10,7 +10,7 @@ CarteJoaillerie::CarteJoaillerie()
 
 
 CarteJoaillerie::~CarteJoaillerie() {
-    // Destructor implementation, if needed
+    // Implémentation du destructeur, si nécessaire
 }
 
 std::map<Couleur, int> CarteJoaillerie::getPrix() const {
@@ -38,7 +38,6 @@ bool CarteJoaillerie::hasPierre() const {
     return false;
 }
 
-// 如果您想返回第一个非rien的pierre的类型
 Couleur CarteJoaillerie::getTypePierre() const {
     for (const auto& pierre : pierres) {
         if (pierre != Couleur::rien) {

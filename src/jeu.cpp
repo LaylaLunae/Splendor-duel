@@ -1,7 +1,7 @@
 #include <iostream>
-#include <string.h>
-#include "../include/jeu.h"
 #include <QMessageBox>
+
+#include "../include/jeu.h"
 
 /* Jeu& Jeu::getJeu(){
     if (handler.instance == nullptr)
@@ -552,11 +552,7 @@ void clearAndInitializeTables(sqlite3* db) {
 std::vector<Joueur*> continuerLaPartie(sqlite3* db,
                        std::vector<CarteJoaillerie*>& cartesJoaillerie,
                        std::vector<const CarteNoble*>& cartesNoble,
-                       //std::vector<CarteJoaillerie>& cartesDansPioche,
-                       //std::vector<CarteJoaillerie>& cartesDehors,
                        Jeu* jeu,
-//                       Joueur* joueur1,
-//                       Joueur* joueur2,
                        std::vector<Pioche*>& pioches,
                        Plateau& plateau,
                        std::vector<Privilege*> privileges) {
@@ -700,7 +696,6 @@ std::vector<Joueur*> continuerLaPartie(sqlite3* db,
     difficulteValue = queryJoueurField<int>(db, "difficulte", 2);
     difficulte = static_cast<Difficulte>(difficulteValue);
 
-
     Joueur* joueur2;
     if (isIA) {joueur2 = new IA(pseudo, difficulte);}
     else { joueur2 = new Humain(pseudo);}
@@ -738,7 +733,7 @@ std::vector<Joueur*> continuerLaPartie(sqlite3* db,
     joueur_resultat.push_back(joueur2);
 
     // 4. Obtenir des informations JoueurCartesMain, JoueurCartesNoble, JoueurCartesReservees, JoueurJetons, JoueurPrivilege
-    // 查询玩家的特权和卡片信息
+    // Interroger les privilèges du joueur et les informations sur la carte
     std::vector<int> cartesReserveesIds = queryJoueurCartes(db, "JoueurCartesReservees", 1);
     std::vector<int> cartesMainIds = queryJoueurCartes(db, "JoueurCartesMain", 1);
     std::vector<int> cartesNobleIds = queryJoueurCartes(db, "JoueurCartesNoble", 1);
@@ -825,10 +820,6 @@ std::vector<Joueur*> continuerLaPartie(sqlite3* db,
 
     int joueur1Id = queryJeuField(db, "Joueur1_id", jeuId); // joueur actuel
     int joueur2Id = queryJeuField(db, "Joueur2_id", jeuId); // joueur gagnant
-//    int pioche1Id = queryJeuField(db, "Pioche1_id", jeuId);
-//    int pioche2Id = queryJeuField(db, "Pioche2_id", jeuId);
-//    int pioche3Id = queryJeuField(db, "Pioche3_id", jeuId);
-//    int plateauId = queryJeuField(db, "Plateau_id", jeuId);
 
     if(joueur1Id == 1) {
         jeu->setJoueurActuel(joueur1);
@@ -869,40 +860,6 @@ std::vector<Joueur*> continuerLaPartie(sqlite3* db,
     }
     plateau.setCartesNobles(cartesNobles);
 
-//    // Pour stocker les Jetons sur le Plateau
-//    std::vector<const Jeton*> newJetons;
-//    // Pour stocker les Jetons sur le sac dans Plateau
-//    std::vector<const Jeton*> newSac;
-//
-//    std::vector<int> jetonsPlateauIds = queryAllJetonIdsForPlateau(db, "PlateauJetons", 1);
-//    for (int jetonId : jetonsPlateauIds) {
-//        // 根据 Jeton ID 查询 Jeton 表中的记录
-//        Jeton* jeton = queryJetonById(db, jetonId);
-//        if (jeton != nullptr) {
-//            newJetons.push_back(jeton);
-//        }
-//    }
-
-//    std::vector<int> jetonsSacIds = queryAllJetonIdsForPlateau(db, "PlateauSac", 1);
-//    for (int jetonId : jetonsSacIds) {
-//        // 根据 Jeton ID 查询 Jeton 表中的记录
-//        Jeton* jeton = queryJetonById(db, jetonId);
-//        if (jeton != nullptr) {
-//            newSac.push_back(jeton);
-//        }
-//    }
-//    plateau.setJetons(newJetons);
-//    plateau.setSac(newSac);
-//
-//    std::vector<int> privilegeIds = queryPlateauPrivilegesField(db, plateauId);
-//    std::vector<Privilege*> plateauPrivileges;
-//    for (int id : privilegeIds) {
-//        for (Privilege* priv : privileges) {
-//            if (priv->getID() == id) { plateauPrivileges.push_back(priv); break; }
-//        }
-//    }
-//    plateau.setPrivileges(plateauPrivileges);
-
     std::vector<int> privilegeIds = queryPlateauPrivilegesField(db, plateauId);
     std::vector<Privilege*> plateauPrivileges;
     for (int id : privilegeIds) {
@@ -938,22 +895,20 @@ std::vector<Joueur*> continuerLaPartie(sqlite3* db,
 }
 
 void sauvegarderPartie(sqlite3* db,
-        //const std::vector<CarteJoaillerie>& cartesDansPioche,
-        //const std::vector<CarteJoaillerie>& cartesDehors,
                        const Jeu& jeu,
                        const Joueur& joueur1,
                        const Joueur& joueur2,
                        std::vector<Pioche*>* pioches,
                        const Plateau& plateau) {
 
-    // 0 先清空之前的信息
+    // Effacer d'abord les informations précédentes
     clearAndInitializeTables(db);
 
-    // 1 存储和Pioche有关的信息
+    // Stocker des informations relatives à Pioche
     const CarteJoaillerie* tmp = nullptr;
     int id_tmp = 0;
     for (Pioche* pioche : *pioches) {
-        // 存储 cartes_dans_pioche
+        // Rangement cartes_dans_pioche
         for (int i = 0; i < pioche->getMaxCartesPioche(); i++) {
             tmp = pioche->getCartesDansPioche(i);
             if (tmp != nullptr) {
@@ -961,7 +916,7 @@ void sauvegarderPartie(sqlite3* db,
                 insertCarteInPioche(db, "CartesDansPioche", pioche->getNumeroPioche(), id_tmp);
             }
         }
-        // 存储 cartes_dehors
+        // Cartes_dehors de rangement
         for (int i = 0; i < pioche->getMaxCartesRevelees(); ++i) {
             const int numero = pioche->getNumeroPioche();
             const CarteJoaillerie* carte= pioche->getCartesDehors(i);
@@ -974,7 +929,7 @@ void sauvegarderPartie(sqlite3* db,
     }
 
 
-    // 更新 Joueur 数据
+    // Mettre à jour les données Joueur
     std::string updateSql = R"(UPDATE Joueur SET
         is_IA = ?, pseudo = ?, nombre_couronnes = ?, points_prestige_total = ?,
         points_prestige_couleur1 = ?, points_prestige_couleur2 = ?,
@@ -990,8 +945,8 @@ void sauvegarderPartie(sqlite3* db,
     sqlite3_stmt* stmt;
     if (sqlite3_prepare_v2(db, updateSql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) { std::cerr << "Error preparing update statement: " << sqlite3_errmsg(db) << std::endl; return; }
 
-    // 绑定 Joueur 类的属性到 SQL 语句
-    sqlite3_bind_int(stmt, 1, joueur1.getIsIA() ? 1 : 0); // 假设 isIA 是 bool 类型
+    // Lier les propriétés de la classe Joueur aux instructions SQL
+    sqlite3_bind_int(stmt, 1, joueur1.getIsIA() ? 1 : 0);
     sqlite3_bind_text(stmt, 2, joueur1.getPseudo().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt, 3, joueur1.getNombreCouronnes());
     sqlite3_bind_int(stmt, 4, joueur1.getPointsPrestigeTotal());
@@ -1005,13 +960,12 @@ void sauvegarderPartie(sqlite3* db,
     sqlite3_bind_int(stmt, 26, diffInt);
     sqlite3_bind_int(stmt, 27, 1);
 
-    // 执行更新语句
+    // Exécuter l'instruction de mise à jour
     if (sqlite3_step(stmt) != SQLITE_DONE) { std::cerr << "Error executing update statement: " << sqlite3_errmsg(db) << std::endl; }
-
     if (sqlite3_prepare_v2(db, updateSql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) { std::cerr << "Error preparing update statement: " << sqlite3_errmsg(db) << std::endl; return; }
 
-    // 绑定 Joueur 类的属性到 SQL 语句
-    sqlite3_bind_int(stmt, 1, joueur2.getIsIA() ? 1 : 0); // 假设 isIA 是 bool 类型
+    // Lier les propriétés de la classe Player aux instructions SQL
+    sqlite3_bind_int(stmt, 1, joueur2.getIsIA() ? 1 : 0);
     sqlite3_bind_text(stmt, 2, joueur2.getPseudo().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt, 3, joueur2.getNombreCouronnes());
     sqlite3_bind_int(stmt, 4, joueur2.getPointsPrestigeTotal());
@@ -1080,7 +1034,7 @@ void sauvegarderPartie(sqlite3* db,
     JoueurPrivileges.clear();
 
 
-    // 更新Jeu
+    // Mettre à jour le jeu
     std::string updateJeuSql = "UPDATE Jeu SET Joueur1_id = ?, Joueur2_id = ? WHERE handler_id = ?;";
 
     sqlite3_stmt* stmtJeu;
@@ -1089,10 +1043,9 @@ void sauvegarderPartie(sqlite3* db,
         return;
     }
 
-
     sqlite3_bind_int(stmtJeu, 1, joueur1.getPseudo() == jeu.getJoueurActuel()->getPseudo() ? 1 : 2);
     if (jeu.getJoueurActuel() != nullptr && jeu.getJoueurGagnant() != nullptr) sqlite3_bind_int(stmtJeu, 2, joueur1.getPseudo() == jeu.getJoueurGagnant()->getPseudo() ? 1 : 2);
-    sqlite3_bind_int(stmtJeu, 3, 1); // 假设游戏 ID 为 1
+    sqlite3_bind_int(stmtJeu, 3, 1);
 
     if (sqlite3_step(stmtJeu) != SQLITE_DONE) {
         std::cerr << "Error executing update statement for Jeu: " << sqlite3_errmsg(db) << std::endl;
@@ -1100,15 +1053,14 @@ void sauvegarderPartie(sqlite3* db,
     sqlite3_finalize(stmtJeu);
 
 
-
-    // 更新 Plateau 数据
+    // Mettre à jour les données pour le Plateau
     updatePlateauField(db, "nb_jetons_sac", plateau.getNbJetonsSac(), 1);
     updatePlateauField(db, "nb_jetons_plateau", plateau.getNbJetonsPlateau(), 1);
     updatePlateauField(db, "pointeur_case_libre", plateau.getPointeurCaseLibre(), 1);
     updatePlateauField(db, "nb_privileges", plateau.getNbPrivileges(), 1);
     updatePlateauField(db, "nb_carte_noble", plateau.getNbCarteNoble(), 1);
 
-    // 更新PlateauCartesNoble PlateauJetons PlateauPrivileges PlateauSac
+    // Mettre à jour les données pour PlateauCartesNoble PlateauJetons PlateauPrivileges et PlateauSac
     auto plateauCartesNobles = plateau.getCartesNobles();
     for (auto carteNoble : plateauCartesNobles) {
         if (carteNoble) {
@@ -1116,8 +1068,6 @@ void sauvegarderPartie(sqlite3* db,
             insertIntoPlateauCartesNoble(db, 1, carteNobleId);
         }
     }
-
-
 
     auto plateauPrivileges = plateau.getPrivileges();
     for (auto privilege : plateauPrivileges) {
@@ -1127,72 +1077,6 @@ void sauvegarderPartie(sqlite3* db,
         }
     }
 
-//    // Stockage des données Jeton dans PlateauSac et dans Jeton
-//    for (auto jeton : plateau.getSac()) {
-//        if (jeton != nullptr) {
-//            std::string updateJetonSql = R"(UPDATE Jeton SET position_x = ?, position_y = ? WHERE id = ?;)";
-//
-//            sqlite3_stmt* stmtJeton;
-//            if (sqlite3_prepare_v2(db, updateJetonSql.c_str(), -1, &stmtJeton, NULL) != SQLITE_OK) {
-//                std::cerr << "Error preparing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
-//                return;
-//            }
-//
-//            sqlite3_bind_int(stmtJeton, 1, -1);
-//            sqlite3_bind_int(stmtJeton, 2, -1);
-//            sqlite3_bind_int(stmtJeton, 3, jeton->getID());
-//
-//            if (sqlite3_step(stmtJeton) != SQLITE_DONE) {
-//                std::cerr << "Error executing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
-//            }
-//
-//            sqlite3_finalize(stmtJeton);
-//        }
-//    }
-
-//    for (auto jeton : plateau.getJetons()) {
-//        if (jeton != nullptr) {
-//            std::string updateOrInsertSql = R"(REPLACE INTO PlateauSac (plateau_id, jeton_id) VALUES (?, ?);)";
-//
-//            sqlite3_stmt* stmtPlateauJeton;
-//            if (sqlite3_prepare_v2(db, updateOrInsertSql.c_str(), -1, &stmtPlateauJeton, NULL) != SQLITE_OK) {
-//                std::cerr << "Error preparing statement for PlateauJetons: " << sqlite3_errmsg(db) << std::endl;
-//                return;
-//            }
-//
-//            sqlite3_bind_int(stmtPlateauJeton, 1, 1); // 假设 Plateau ID 总是 1
-//            sqlite3_bind_int(stmtPlateauJeton, 2, jeton->getID());
-//
-//            if (sqlite3_step(stmtPlateauJeton) != SQLITE_DONE) {
-//                std::cerr << "Error executing statement for PlateauJetons: " << sqlite3_errmsg(db) << std::endl;
-//            }
-//
-//            sqlite3_finalize(stmtPlateauJeton);
-//        }
-//    }
-
-//    // Obtenez tous les jetons du Plateau et enregistrez leurs coordonnées
-//    for (auto jeton : plateau.getJetons()) {
-//        if (jeton != nullptr) {
-//            std::string updateJetonSql = R"(UPDATE Jeton SET position_x = ?, position_y = ? WHERE id = ?;)";
-//
-//            sqlite3_stmt* stmtJeton;
-//            if (sqlite3_prepare_v2(db, updateJetonSql.c_str(), -1, &stmtJeton, NULL) != SQLITE_OK) {
-//                std::cerr << "Error preparing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
-//                return;
-//            }
-//
-//            sqlite3_bind_int(stmtJeton, 1, jeton->getX());
-//            sqlite3_bind_int(stmtJeton, 2, jeton->getY());
-//            sqlite3_bind_int(stmtJeton, 3, jeton->getID());
-//
-//            if (sqlite3_step(stmtJeton) != SQLITE_DONE) {
-//                std::cerr << "Error executing update statement for Jeton: " << sqlite3_errmsg(db) << std::endl;
-//            }
-//
-//            sqlite3_finalize(stmtJeton);
-//        }
-//    }
     for (auto jeton : plateau.getJetons()) {
         if (jeton != nullptr) {
             std::string updateOrInsertSql = R"(REPLACE INTO PlateauSac (plateau_id, jeton_id) VALUES (?, ?);)";
@@ -1855,19 +1739,6 @@ void VueJeu::message(const char  title[], const char  texte[]) {
     QMessageBox::warning(nullptr, title, texte);
 }
 
-//int main() {
-//    sqlite3* db;
-//    if (sqlite3_open("path_to_your_database.db", &db) != SQLITE_OK) {
-//        std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
-//        return -1;
-//    }
-//
-//    clearAndInitializeTables(db);
-//
-//    // Close the database connection
-//    sqlite3_close(db);
-//    return 0;
-//}
 
 
 
