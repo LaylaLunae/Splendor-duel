@@ -450,7 +450,36 @@ class VueJeu {
   - setJoueurActuelInfo(): void
 }
 
+class VuePlateau {
+  - plateau: Plateau*
+  - layout_bouton: QGridLayout*
+  - layout_carte: QGridLayout*
+  - layout_info: QHBoxLayout*
+  - main_layout: QVBoxLayout*
+  - layout_privilege: QHBoxLayout*
+  - vuesJetons: std::vector<VueJeton*>
+  - vuesCartes: std::vector<VueCarteNoble*>
+  - boutonValider: QPushButton*
+  - boutonRemplissage: QPushButton*
+  - boutonDonnerPrivilege: QPushButton*
+  - vuesPrivileges: std::vector<VuePrivilege*>
+  + VuePlateau(QWidget* parent = nullptr)
+  + getPlateau(): Plateau*
+  + getVuesNobles(): std::vector<VueCarteNoble*>
+  + affichageJetons(bool etat_actif = false): void
+  + affichageCartes(): void
+  + desactiverOuActiverLesJetons(bool nouvel_etat): void
+  <<slot>> - jetonClick_Plateau(VueJeton*): void
+  <<slot>> - validerPlateau(): void
+  <<slot>> - remplirPlateau(): void
+  <<slot>> - privilegeClick_Plateau(VuePrivilege*): void
+  <<slot>> - carteNobleClick_Plateau(VueCarteNoble*): void
+  - miseAJourJetons(): void
+  - affichagePrivileges(): void
+}
 
+
+Plateau "1" --- "1" VuePlateau
 Jeu "1" -- "1" VueJeu
 Jeton "*" --- "1" VueJeton
 CarteNoble "*" --- "1" VueCarteNoble
