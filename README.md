@@ -31,6 +31,9 @@ Splendor Duel offre plusieurs fonctionnalités clés, y compris :
 ## Instructions d'Installation et d'Utilisation
 
 Pour installer et exécuter Splendor Duel, veuillez suivre les instructions disponibles dans le répertoire GitLab du projet.
+
+Rappel pour les Enseignants : Veuillez vous assurer d'avoir installé SQLite3 et le plugin PlantUML pour une expérience complète et fonctionnelle du projet.
+
 ```
 git clone https://gitlab.utc.fr/xuzhenya/lo21-projet-splendor-duel
 ```
